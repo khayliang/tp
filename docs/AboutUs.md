@@ -15,6 +15,13 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 
 [[github](https://github.com/khayliang)]
 
+### Minh Duc
+
+<img src="images/vuminhducvmd.png" width="200px">
+
+[[github](https://github.com/vuminhducvmd)]
+
+
 ### Jane Doe
 
 <img src="images/johndoe.png" width="200px">
