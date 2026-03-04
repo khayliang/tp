@@ -21,6 +21,11 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 
 [[github](https://github.com/vuminhducvmd)]
 
+### Tang Zhi Xiang
+
+<img src="images/darkrelicz.png" width="200px">
+
+[[github](https://github.com/darkrelicz)]
 
 ### Jane Doe
 
