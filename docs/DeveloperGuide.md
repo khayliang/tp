@@ -349,6 +349,52 @@ Use case ends.
 * Use case resumes at step 5.
 
 ---
+**Use case: Record student attendance**
+
+**MSS**
+1. Tutor requests to view all students
+2. TutorFlow shows all students
+3. Tutor selects a student
+4. Tutor records that the student has attended today’s lesson
+5. TutorFlow updates the student’s attendance and displays confirmation.
+
+Use case ends.
+
+**Extensions**
+
+* 3a. Tutor records that the student has attended a previous lesson
+* Use case resumes from step 5.
+
+* 4a. TutorFlow detects an error in the entered data.
+   * 4a1. TutorFlow requests for the correct data.
+   * 4a2. Tutor enters new data.
+* Steps 4a1-4a2 are repeated until the data entered are correct.
+* Use case resumes from step 5. 
+
+---
+**Use case: View student attendance for the week**
+
+**MSS**
+1. Tutor requests to view all students
+2. TutorFlow shows all students
+3. Tutor selects a student
+4. Tutor requests to view the student’s attendance for the current week
+5. TutorFlow shows the student’s attendance
+
+Use case ends.
+
+** Extensions**
+
+* 3a. Tutor requests to view the student’s attendance for another week
+* Use case resumes from step 5.
+
+* 4a. TutorFlow detects an error in the entered data.
+   * 4a1. TutorFlow requests for the correct data.
+   * 4a2. Tutor enters new data.
+* Steps 4a1-4a2 are repeated until the data entered are correct.
+* Use case resumes from step 5. 
+
+---
 
 **Use case: Record tuition payment for a student**
 
