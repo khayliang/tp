@@ -9,6 +9,7 @@ import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ import seedu.address.logic.commands.DeleteCommand;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditPersonCommand;
 import seedu.address.logic.commands.EditPersonCommand.EditPersonDescriptor;
+import seedu.address.logic.commands.EditTagCommand;
 import seedu.address.logic.commands.ExitCommand;
 import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.commands.FindPersonCommand;
@@ -27,6 +29,7 @@ import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.person.Person;
+import seedu.address.model.tag.Tag;
 import seedu.address.testutil.EditPersonDescriptorBuilder;
 import seedu.address.testutil.PersonBuilder;
 import seedu.address.testutil.PersonUtil;
@@ -63,6 +66,19 @@ public class AddressBookParserTest {
                 + EditPersonCommand.SUB_COMMAND_WORD + " "
                 + INDEX_FIRST_PERSON.getOneBased() + " " + PersonUtil.getEditPersonDescriptorDetails(descriptor));
         assertEquals(new EditPersonCommand(INDEX_FIRST_PERSON, descriptor), command);
+    }
+
+    @Test
+    public void parseCommand_editTag() throws Exception {
+        EditTagCommand command = (EditTagCommand) parser.parseCommand(
+                EditCommand.COMMAND_WORD + " "
+                        + EditTagCommand.SUB_COMMAND_WORD + " "
+                        + INDEX_FIRST_PERSON.getOneBased() + " t/friend");
+
+        EditTagCommand.EditTagDescriptor descriptor = new EditTagCommand.EditTagDescriptor();
+        descriptor.setTags(Set.of(new Tag("friend")));
+
+        assertEquals(new EditTagCommand(INDEX_FIRST_PERSON, descriptor), command);
     }
 
     @Test
