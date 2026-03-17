@@ -1,6 +1,5 @@
 package seedu.address.ui;
 
-import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 
 import javafx.fxml.FXML;
@@ -8,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import seedu.address.commons.util.DateTimeUtil;
 import seedu.address.model.person.Person;
 
 /**
@@ -58,7 +58,7 @@ public class PersonCard extends UiPart<Region> {
         address.setText(person.getAddress().value);
         email.setText(person.getEmail().value);
         String appointmentStartValue = person.getAppointmentStart()
-                .map(value -> value.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                .map(DateTimeUtil::formatIsoLocalDateTime)
                 .orElse("-");
         appointmentStart.setText("Start: " + appointmentStartValue);
         person.getTags().stream()

@@ -4,14 +4,13 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.time.format.ResolverStyle;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import seedu.address.commons.core.index.Index;
+import seedu.address.commons.util.DateTimeUtil;
 import seedu.address.commons.util.StringUtil;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Address;
@@ -27,10 +26,7 @@ import seedu.address.model.tag.Tag;
 public class ParserUtil {
 
     public static final String MESSAGE_INVALID_INDEX = "Index is not a non-zero unsigned integer.";
-    public static final String MESSAGE_INVALID_DATE_TIME =
-            "Date-time must be in ISO 8601 local format, e.g. 2026-01-13T08:00:00";
-    private static final DateTimeFormatter ISO_LOCAL_DATE_TIME_FORMATTER =
-            DateTimeFormatter.ISO_LOCAL_DATE_TIME.withResolverStyle(ResolverStyle.STRICT);
+    public static final String MESSAGE_INVALID_DATE_TIME = DateTimeUtil.getInvalidIsoLocalDateTimeMessage("Date-time");
 
     /**
      * Parses {@code oneBasedIndex} into an {@code Index} and returns it. Leading and trailing whitespaces will be
@@ -137,9 +133,8 @@ public class ParserUtil {
      */
     public static LocalDateTime parseIsoDateTime(String appointmentStart) throws ParseException {
         requireNonNull(appointmentStart);
-        String trimmedAppointmentStart = appointmentStart.trim();
         try {
-            return LocalDateTime.parse(trimmedAppointmentStart, ISO_LOCAL_DATE_TIME_FORMATTER);
+            return DateTimeUtil.parseIsoLocalDateTime(appointmentStart);
         } catch (DateTimeParseException e) {
             throw new ParseException(MESSAGE_INVALID_DATE_TIME);
         }

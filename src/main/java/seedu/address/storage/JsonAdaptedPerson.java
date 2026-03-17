@@ -1,9 +1,7 @@
 package seedu.address.storage;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -15,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import seedu.address.commons.exceptions.IllegalValueException;
+import seedu.address.commons.util.DateTimeUtil;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
@@ -29,10 +28,8 @@ import seedu.address.model.tag.Tag;
 class JsonAdaptedPerson {
 
     public static final String MISSING_FIELD_MESSAGE_FORMAT = "Person's %s field is missing!";
-    private static final String APPOINTMENT_START_MESSAGE_CONSTRAINTS =
-            "Appointment start date-time must be in ISO 8601 local format, e.g. 2026-01-13T08:00:00";
-    private static final DateTimeFormatter APPOINTMENT_START_FORMATTER =
-            DateTimeFormatter.ISO_LOCAL_DATE_TIME.withResolverStyle(ResolverStyle.STRICT);
+    private static final String APPOINTMENT_START_MESSAGE_CONSTRAINTS = DateTimeUtil
+            .getInvalidIsoLocalDateTimeMessage("Appointment start date-time");
 
     private final String name;
     private final String phone;
@@ -71,7 +68,7 @@ class JsonAdaptedPerson {
         email = source.getEmail().value;
         address = source.getAddress().value;
         appointmentStart = source.getAppointmentStart()
-                .map(value -> value.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                .map(DateTimeUtil::formatIsoLocalDateTime)
                 .orElse(null);
         tags.addAll(source.getTags().stream()
                 .map(JsonAdaptedTag::new)
@@ -125,7 +122,7 @@ class JsonAdaptedPerson {
         LocalDateTime modelAppointmentStart = null;
         if (appointmentStart != null) {
             try {
-                modelAppointmentStart = LocalDateTime.parse(appointmentStart, APPOINTMENT_START_FORMATTER);
+                modelAppointmentStart = DateTimeUtil.parseIsoLocalDateTime(appointmentStart);
             } catch (DateTimeParseException e) {
                 throw new IllegalValueException(APPOINTMENT_START_MESSAGE_CONSTRAINTS);
             }

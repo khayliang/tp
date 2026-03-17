@@ -1,11 +1,11 @@
 package seedu.address.logic;
 
-import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import seedu.address.commons.util.DateTimeUtil;
 import seedu.address.logic.parser.Prefix;
 import seedu.address.model.person.Person;
 
@@ -46,7 +46,7 @@ public class Messages {
                 .append("; Address: ")
                 .append(person.getAddress());
         person.getAppointmentStart().ifPresent(start -> builder.append("; Lesson start: ")
-                .append(start.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)));
+                .append(DateTimeUtil.formatIsoLocalDateTime(start)));
         builder.append("; Tags: ");
         person.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
