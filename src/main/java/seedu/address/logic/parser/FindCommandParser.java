@@ -1,9 +1,5 @@
 package seedu.address.logic.parser;
 
-import static java.util.Objects.requireNonNull;
-import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,7 +12,7 @@ import seedu.address.logic.parser.exceptions.ParseException;
  */
 public class FindCommandParser implements Parser<FindCommand> {
 
-    private final Map<String, Parser<? extends FindCommand>> subCommandParsers;
+    private final SubcommandDispatcherParser<FindCommand> dispatcher;
 
     /**
      * Constructs a FindCommandParser and initializes the subcommand parsers.
@@ -24,7 +20,7 @@ public class FindCommandParser implements Parser<FindCommand> {
     public FindCommandParser() {
         Map<String, Parser<? extends FindCommand>> parsers = new HashMap<>();
         parsers.put(FindPersonCommand.SUB_COMMAND_WORD, new FindPersonCommandParser());
-        this.subCommandParsers = Collections.unmodifiableMap(parsers);
+        this.dispatcher = new SubcommandDispatcherParser<>(parsers, FindCommand.MESSAGE_USAGE);
     }
 
     /**
@@ -32,24 +28,9 @@ public class FindCommandParser implements Parser<FindCommand> {
      * and returns a concrete find subcommand object for execution.
      * @throws ParseException if the user input does not conform the expected format
      */
+    @Override
     public FindCommand parse(String args) throws ParseException {
-        requireNonNull(args);
-
-        String trimmedArgs = args.trim();
-        if (trimmedArgs.isEmpty()) {
-            throw new ParseException(
-                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
-        }
-
-        String[] splitArgs = trimmedArgs.split("\\s+", 2);
-        String subcommand = splitArgs[0];
-        String subcommandArgs = splitArgs.length > 1 ? splitArgs[1] : "";
-
-        Parser<? extends FindCommand> subCommandParser = subCommandParsers.get(subcommand);
-        if (subCommandParser == null) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
-        }
-        return subCommandParser.parse(subcommandArgs);
+        return dispatcher.parse(args);
     }
 
 }

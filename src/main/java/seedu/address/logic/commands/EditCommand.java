@@ -1,9 +1,11 @@
 package seedu.address.logic.commands;
 
+import seedu.address.commons.core.index.Index;
+
 /**
  * Edits an entity in the address book via a subcommand.
  */
-public abstract class EditCommand extends Command {
+public abstract class EditCommand extends IndexedPersonCommand {
 
     public static final String COMMAND_WORD = "edit";
 
@@ -13,4 +15,8 @@ public abstract class EditCommand extends Command {
             + COMMAND_WORD + " appt 1 d/2026-01-13T08:00:00";
 
     public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
+
+    protected EditCommand(Index index) {
+        super(index);
+    }
 }

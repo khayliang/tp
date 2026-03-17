@@ -1,9 +1,5 @@
 package seedu.address.logic.parser;
 
-import static java.util.Objects.requireNonNull;
-import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +15,7 @@ import seedu.address.logic.parser.exceptions.ParseException;
  */
 public class EditCommandParser implements Parser<EditCommand> {
 
-    private final Map<String, Parser<? extends EditCommand>> subCommandParsers;
+    private final SubcommandDispatcherParser<EditCommand> dispatcher;
 
     /**
      * Creates an EditCommandParser and registers available sub-command parsers.
@@ -30,7 +26,7 @@ public class EditCommandParser implements Parser<EditCommand> {
         parsers.put(EditTagCommand.SUB_COMMAND_WORD, new EditTagCommandParser());
         parsers.put(EditParentCommand.SUB_COMMAND_WORD, new EditParentCommandParser());
         parsers.put(EditApptCommand.SUB_COMMAND_WORD, new EditApptCommandParser());
-        this.subCommandParsers = Collections.unmodifiableMap(parsers);
+        this.dispatcher = new SubcommandDispatcherParser<>(parsers, EditCommand.MESSAGE_USAGE);
     }
 
     /**
@@ -38,23 +34,8 @@ public class EditCommandParser implements Parser<EditCommand> {
      * and returns an EditCommand object for execution.
      * @throws ParseException if the user input does not conform the expected format
      */
+    @Override
     public EditCommand parse(String args) throws ParseException {
-        requireNonNull(args);
-
-        String trimmedArgs = args.trim();
-        if (trimmedArgs.isEmpty()) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
-        }
-
-        String[] parts = trimmedArgs.split("\\s+", 2);
-        String subCommand = parts[0];
-        String body = parts.length > 1 ? parts[1] : "";
-
-        Parser<? extends EditCommand> subCommandParser = subCommandParsers.get(subCommand);
-        if (subCommandParser == null) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
-        }
-
-        return subCommandParser.parse(body);
+        return dispatcher.parse(args);
     }
 }

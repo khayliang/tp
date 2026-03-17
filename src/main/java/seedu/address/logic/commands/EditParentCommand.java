@@ -2,9 +2,7 @@ package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PARENT_NAME;
-import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 
-import java.util.List;
 import java.util.Optional;
 
 import seedu.address.commons.core.index.Index;
@@ -31,7 +29,6 @@ public class EditParentCommand extends EditCommand {
 
     public static final String MESSAGE_EDIT_PARENT_SUCCESS = "Edited parent name of Person: %1$s";
 
-    private final Index index;
     private final ParentName parentName;
 
     /**
@@ -39,29 +36,20 @@ public class EditParentCommand extends EditCommand {
      * @param parentName the parent name to set
      */
     public EditParentCommand(Index index, ParentName parentName) {
-        requireNonNull(index);
+        super(index);
         requireNonNull(parentName);
 
-        this.index = index;
         this.parentName = parentName;
     }
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
-        requireNonNull(model);
-        List<Person> lastShownList = model.getFilteredPersonList();
-
-        if (index.getZeroBased() >= lastShownList.size()) {
-            throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
-        }
-
-        Person personToEdit = lastShownList.get(index.getZeroBased());
+        Person personToEdit = getTargetPerson(model);
         Person editedPerson = new PersonBuilder(personToEdit)
                 .withParentName(Optional.of(parentName))
                 .build();
 
-        model.setPerson(personToEdit, editedPerson);
-        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        replacePersonAndShowAll(model, personToEdit, editedPerson);
         return new CommandResult(String.format(MESSAGE_EDIT_PARENT_SUCCESS, Messages.format(editedPerson)));
     }
 

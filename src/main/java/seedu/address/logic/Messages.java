@@ -1,6 +1,7 @@
 package seedu.address.logic;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -47,7 +48,9 @@ public class Messages {
         person.getAppointmentStart().ifPresent(start -> builder.append("; Lesson start: ")
                 .append(start.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)));
         builder.append("; Tags: ");
-        person.getTags().forEach(builder::append);
+        person.getTags().stream()
+                .sorted(Comparator.comparing(tag -> tag.tagName))
+                .forEach(builder::append);
         person.getParentName().ifPresent(pn -> builder.append("; Parent: ").append(pn));
         return builder.toString();
     }

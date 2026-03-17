@@ -2,10 +2,8 @@ package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
-import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import seedu.address.commons.core.index.Index;
@@ -27,7 +25,7 @@ public class EditTagCommand extends EditCommand {
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Edits the tags of the person identified "
             + "by the index number used in the displayed person list. "
             + "Existing tags will be overwritten by the input values.\n"
-            + "Parameters: person INDEX (must be a positive integer) "
+            + "Parameters: " + SUB_COMMAND_WORD + " INDEX (must be a positive integer) "
             + "[" + PREFIX_TAG + "TAG]...\n"
             + "Example: " + COMMAND_WORD + " " + EditTagCommand.SUB_COMMAND_WORD + " 1 "
             + PREFIX_TAG + "JC " + PREFIX_TAG + "J1";
@@ -35,7 +33,6 @@ public class EditTagCommand extends EditCommand {
 
     public static final String MESSAGE_EDIT_TAG_SUCCESS = "Edited Tags for Person: %1$s";
 
-    private final Index index;
     private final Set<Tag> tags;
 
     /**
@@ -43,31 +40,21 @@ public class EditTagCommand extends EditCommand {
      * @param tags new tag set (empty set means clear all tags)
      */
     public EditTagCommand(Index index, Set<Tag> tags) {
-        requireNonNull(index);
+        super(index);
         requireNonNull(tags);
 
-        this.index = index;
         this.tags = new HashSet<>(tags);
     }
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
-        requireNonNull(model);
-
-        List<Person> lastShownList = model.getFilteredPersonList();
-
-        if (index.getZeroBased() >= lastShownList.size()) {
-            throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
-        }
-
-        Person personToEdit = lastShownList.get(index.getZeroBased());
+        Person personToEdit = getTargetPerson(model);
 
         Person editedPerson = new PersonBuilder(personToEdit)
                 .withTags(tags)
                 .build();
 
-        model.setPerson(personToEdit, editedPerson);
-        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        replacePersonAndShowAll(model, personToEdit, editedPerson);
 
         return new CommandResult(
                 String.format(MESSAGE_EDIT_TAG_SUCCESS, Messages.format(editedPerson)));

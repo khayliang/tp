@@ -2,16 +2,13 @@ package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_APPOINTMENT_START;
-import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Optional;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.ToStringBuilder;
-import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.person.Person;
@@ -34,7 +31,6 @@ public class EditApptCommand extends EditCommand {
 
     public static final String MESSAGE_EDIT_APPT_SUCCESS = "Recorded lesson start date for %1$s: %2$s";
 
-    private final Index index;
     private final LocalDateTime appointmentStart;
 
     /**
@@ -42,28 +38,19 @@ public class EditApptCommand extends EditCommand {
      * @param appointmentStart appointment start date-time to set
      */
     public EditApptCommand(Index index, LocalDateTime appointmentStart) {
-        requireNonNull(index);
+        super(index);
         requireNonNull(appointmentStart);
-        this.index = index;
         this.appointmentStart = appointmentStart;
     }
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
-        requireNonNull(model);
-        List<Person> lastShownList = model.getFilteredPersonList();
-
-        if (index.getZeroBased() >= lastShownList.size()) {
-            throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
-        }
-
-        Person personToEdit = lastShownList.get(index.getZeroBased());
+        Person personToEdit = getTargetPerson(model);
         Person editedPerson = new PersonBuilder(personToEdit)
                 .withAppointmentStart(Optional.of(appointmentStart))
                 .build();
 
-        model.setPerson(personToEdit, editedPerson);
-        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        replacePersonAndShowAll(model, personToEdit, editedPerson);
         String formattedStart = appointmentStart.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         return new CommandResult(String.format(MESSAGE_EDIT_APPT_SUCCESS,
                 editedPerson.getName().fullName, formattedStart));
