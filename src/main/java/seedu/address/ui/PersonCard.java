@@ -64,7 +64,7 @@ public class PersonCard extends UiPart<Region> {
                 .orElse("-");
         appointmentStart.setText("Start: " + appointmentStartValue);
         String paymentDateValue = person.getPaymentDate()
-                .map(value -> value.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                .map(value -> value.format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .orElse("-");
         paymentDate.setText("Payment made on: " + paymentDateValue);
         person.getTags().stream()

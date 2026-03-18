@@ -94,7 +94,7 @@ public class PersonTest {
         assertFalse(ALICE.equals(editedAlice));
 
         // different payment date -> returns false
-        editedAlice = new PersonBuilder(ALICE).withPaymentDate("2026-01-13T08:00:00").build();
+        editedAlice = new PersonBuilder(ALICE).withPaymentDate("2026-01-13").build();
         assertFalse(ALICE.equals(editedAlice));
     }
 

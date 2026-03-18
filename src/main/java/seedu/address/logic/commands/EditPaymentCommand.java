@@ -3,7 +3,7 @@ package seedu.address.logic.commands;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_APPOINTMENT_START;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
@@ -15,7 +15,7 @@ import seedu.address.model.person.Person;
 import seedu.address.model.person.PersonBuilder;
 
 /**
- * Edits the appointment start date-time of an existing person in the address book.
+ * Edits the date tuition fees were paid by an existing person in the address book.
  */
 public class EditPaymentCommand extends EditCommand {
 
@@ -25,19 +25,19 @@ public class EditPaymentCommand extends EditCommand {
         + ": Records the day tuition fees was paid by the person identified "
         + "by the index number used in the displayed person list.\n"
         + "Parameters: payment INDEX (must be a positive integer) "
-        + PREFIX_APPOINTMENT_START + "DATETIME\n"
+        + PREFIX_APPOINTMENT_START + "DATE\n"
         + "Example: " + COMMAND_WORD + " " + SUB_COMMAND_WORD + " 1 "
-        + PREFIX_APPOINTMENT_START + "2026-01-13T08:00:00";
+        + PREFIX_APPOINTMENT_START + "2026-01-13";
 
     public static final String MESSAGE_EDIT_PAYMENT_SUCCESS = "Recorded date tuition fees paid by %1$s: %2$s";
 
-    private final LocalDateTime paymentDate;
+    private final LocalDate paymentDate;
 
     /**
      * @param index of the person in the filtered person list to edit
      * @param appointmentStart appointment start date-time to set
      */
-    public EditPaymentCommand(Index index, LocalDateTime paymentDate) {
+    public EditPaymentCommand(Index index, LocalDate paymentDate) {
         super(index);
         requireNonNull(paymentDate);
         this.paymentDate = paymentDate;
@@ -51,7 +51,7 @@ public class EditPaymentCommand extends EditCommand {
                 .build();
 
         replacePerson(model, personToEdit, editedPerson);
-        String formattedDate = paymentDate.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        String formattedDate = paymentDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
         return new CommandResult(String.format(MESSAGE_EDIT_PAYMENT_SUCCESS,
                 editedPerson.getName().fullName, formattedDate));
     }

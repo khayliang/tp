@@ -3,7 +3,7 @@ package seedu.address.logic.parser;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_APPOINTMENT_START;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.EditCommand;
@@ -32,8 +32,8 @@ public class EditPaymentCommandParser implements Parser<EditPaymentCommand> {
             throw new ParseException(EditCommand.MESSAGE_NOT_EDITED);
         }
 
-        LocalDateTime paymentDate =
-                ParserUtil.parseIsoDateTime(argMultimap.getValue(PREFIX_APPOINTMENT_START).get());
+        LocalDate paymentDate =
+                ParserUtil.parseIsoDate(argMultimap.getValue(PREFIX_APPOINTMENT_START).get());
 
         return new EditPaymentCommand(index, paymentDate);
     }

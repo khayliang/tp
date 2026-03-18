@@ -1,5 +1,6 @@
 package seedu.address.testutil;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Optional;
@@ -31,7 +32,7 @@ public class PersonBuilder {
     private Set<Tag> tags;
     private ParentName parentName;
     private LocalDateTime appointmentStart;
-    private LocalDateTime paymentDate;
+    private LocalDate paymentDate;
 
     /**
      * Creates a {@code PersonBuilder} with the default details.
@@ -121,7 +122,7 @@ public class PersonBuilder {
      * Sets the appointment start date-time of the {@code Person} that we are building.
      */
     public PersonBuilder withPaymentDate(String paymentDate) {
-        this.paymentDate = LocalDateTime.parse(paymentDate);
+        this.paymentDate = LocalDate.parse(paymentDate);
         return this;
     }
 

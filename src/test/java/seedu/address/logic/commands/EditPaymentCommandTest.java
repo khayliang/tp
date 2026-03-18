@@ -10,7 +10,7 @@ import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
@@ -34,14 +34,14 @@ public class EditPaymentCommandTest {
     @Test
     public void execute_validIndexUnfilteredList_success() {
         Person personToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        LocalDateTime paymentDate = LocalDateTime.parse(VALID_PAYMENT_DATE);
+        LocalDate paymentDate = LocalDate.parse(VALID_PAYMENT_DATE);
         EditPaymentCommand editCommand = new EditPaymentCommand(INDEX_FIRST_PERSON, paymentDate);
 
         Person editedPerson = new Person(personToEdit.getName(), personToEdit.getPhone(), personToEdit.getEmail(),
                 personToEdit.getAddress(), personToEdit.getTags(), personToEdit.getParentName(),
                 personToEdit.getAppointmentStart(), Optional.ofNullable(paymentDate));
         String expectedMessage = String.format(EditPaymentCommand.MESSAGE_EDIT_PAYMENT_SUCCESS,
-                editedPerson.getName().fullName, paymentDate.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                editedPerson.getName().fullName, paymentDate.format(DateTimeFormatter.ISO_LOCAL_DATE));
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setPerson(personToEdit, editedPerson);
@@ -52,7 +52,7 @@ public class EditPaymentCommandTest {
     @Test
     public void execute_invalidIndexUnfilteredList_failure() {
         Index outOfBoundIndex = Index.fromOneBased(model.getFilteredPersonList().size() + 1);
-        LocalDateTime paymentDate = LocalDateTime.parse(VALID_PAYMENT_DATE);
+        LocalDate paymentDate = LocalDate.parse(VALID_PAYMENT_DATE);
         EditPaymentCommand editCommand = new EditPaymentCommand(outOfBoundIndex, paymentDate);
 
         assertCommandFailure(editCommand, model, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
@@ -60,7 +60,7 @@ public class EditPaymentCommandTest {
 
     @Test
     public void equals() {
-        LocalDateTime paymentDate = LocalDateTime.parse(VALID_PAYMENT_DATE);
+        LocalDate paymentDate = LocalDate.parse(VALID_PAYMENT_DATE);
         EditPaymentCommand standardCommand = new EditPaymentCommand(INDEX_FIRST_PERSON, paymentDate);
 
         // same values -> returns true
@@ -80,14 +80,14 @@ public class EditPaymentCommandTest {
         assertFalse(standardCommand.equals(new EditPaymentCommand(INDEX_SECOND_PERSON, paymentDate)));
 
         // different appointment start -> returns false
-        LocalDateTime differentPaymentDate = LocalDateTime.parse("2026-02-01T10:00:00");
+        LocalDate differentPaymentDate = LocalDate.parse("2026-02-01");
         assertFalse(standardCommand.equals(new EditPaymentCommand(INDEX_FIRST_PERSON, differentPaymentDate)));
     }
 
     @Test
     public void toStringMethod() {
         Index index = Index.fromOneBased(1);
-        LocalDateTime paymentDate = LocalDateTime.parse(VALID_PAYMENT_DATE);
+        LocalDate paymentDate = LocalDate.parse(VALID_PAYMENT_DATE);
         EditPaymentCommand editCommand = new EditPaymentCommand(index, paymentDate);
         String expected = EditPaymentCommand.class.getCanonicalName()
                 + "{index=" + index + ", paymentDate=" + paymentDate + "}";

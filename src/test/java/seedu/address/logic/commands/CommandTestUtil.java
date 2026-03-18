@@ -43,7 +43,7 @@ public class CommandTestUtil {
     public static final String VALID_TAG_JC = "JC";
     public static final String VALID_TAG_GROUP1 = "Group1";
     public static final String VALID_APPOINTMENT_START = "2026-01-13T08:00:00";
-    public static final String VALID_PAYMENT_DATE = "2026-02-03T10:00:00";
+    public static final String VALID_PAYMENT_DATE = "2026-02-03";
 
     public static final String NAME_DESC_AMY = " " + PREFIX_NAME + VALID_NAME_AMY;
     public static final String NAME_DESC_BOB = " " + PREFIX_NAME + VALID_NAME_BOB;
