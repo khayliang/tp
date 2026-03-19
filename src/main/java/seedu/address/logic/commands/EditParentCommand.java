@@ -12,11 +12,11 @@ import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.person.ParentEmail;
-import seedu.address.model.person.ParentName;
-import seedu.address.model.person.ParentPhone;
+import seedu.address.model.person.Email;
+import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.PersonBuilder;
+import seedu.address.model.person.Phone;
 
 /**
  * Edits parent details of an existing person in the address book.
@@ -37,9 +37,9 @@ public class EditParentCommand extends EditCommand {
     public static final String MESSAGE_NO_FIELD_PROVIDED = "At least one parent field (pn/, pp/, pe/) "
             + "must be provided.";
 
-    private final Optional<ParentName> parentName;
-    private final Optional<ParentPhone> parentPhone;
-    private final Optional<ParentEmail> parentEmail;
+    private final Optional<Name> parentName;
+    private final Optional<Phone> parentPhone;
+    private final Optional<Email> parentEmail;
 
     /**
      * @param index of the person in the filtered person list whose parent details will be set
@@ -47,8 +47,8 @@ public class EditParentCommand extends EditCommand {
      * @param parentPhone the optional parent phone to set
      * @param parentEmail the optional parent email to set
      */
-    public EditParentCommand(Index index, Optional<ParentName> parentName, Optional<ParentPhone> parentPhone,
-            Optional<ParentEmail> parentEmail) {
+    public EditParentCommand(Index index, Optional<Name> parentName, Optional<Phone> parentPhone,
+            Optional<Email> parentEmail) {
         super(index);
         requireNonNull(parentName);
         requireNonNull(parentPhone);

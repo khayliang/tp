@@ -27,10 +27,10 @@ public class Person {
     // Data fields
     private final Address address;
     private final Set<Tag> tags = new HashSet<>();
+    private final Optional<Name> parentName;
+    private final Optional<Phone> parentPhone;
+    private final Optional<Email> parentEmail;
     private final Optional<LocalDateTime> appointmentStart;
-    private final Optional<ParentName> parentName;
-    private final Optional<ParentPhone> parentPhone;
-    private final Optional<ParentEmail> parentEmail;
     private final Optional<LocalDate> paymentDate;
 
     /**
@@ -44,7 +44,7 @@ public class Person {
     /**
      * Every field must be present and not null.
      */
-    public Person(Name name, Phone phone, Email email, Address address, Set<Tag> tags, Optional<ParentName> parentName,
+    public Person(Name name, Phone phone, Email email, Address address, Set<Tag> tags, Optional<Name> parentName,
             Optional<LocalDateTime> appointmentStart, Optional<LocalDate> paymentDate) {
         this(name, phone, email, address, tags, parentName, Optional.empty(), Optional.empty(), appointmentStart,
                 paymentDate);
@@ -53,8 +53,8 @@ public class Person {
     /**
      * Every field must be present and not null.
      */
-    public Person(Name name, Phone phone, Email email, Address address, Set<Tag> tags, Optional<ParentName> parentName,
-            Optional<ParentPhone> parentPhone, Optional<ParentEmail> parentEmail,
+    public Person(Name name, Phone phone, Email email, Address address, Set<Tag> tags,
+            Optional<Name> parentName, Optional<Phone> parentPhone, Optional<Email> parentEmail,
             Optional<LocalDateTime> appointmentStart, Optional<LocalDate> paymentDate) {
         requireAllNonNull(name, phone, email, address, tags, parentName, parentPhone, parentEmail, appointmentStart,
                 paymentDate);
@@ -86,41 +86,31 @@ public class Person {
         return address;
     }
 
+    /**
+     * Returns an immutable tag set, which throws {@code UnsupportedOperationException} if modification is attempted.
+     */
+    public Set<Tag> getTags() {
+        return Collections.unmodifiableSet(tags);
+    }
+
+    public Optional<Name> getParentName() {
+        return parentName;
+    }
+
+    public Optional<Phone> getParentPhone() {
+        return parentPhone;
+    }
+
+    public Optional<Email> getParentEmail() {
+        return parentEmail;
+    }
+
     public Optional<LocalDateTime> getAppointmentStart() {
         return appointmentStart;
     }
 
     public Optional<LocalDate> getPaymentDate() {
         return paymentDate;
-    }
-
-    /**
-     * Returns an immutable tag set, which throws
-     * {@code UnsupportedOperationException} if modification is attempted.
-     */
-    public Set<Tag> getTags() {
-        return Collections.unmodifiableSet(tags);
-    }
-
-    /**
-     * Returns the parent name wrapped in an Optional, or empty if not set.
-     */
-    public Optional<ParentName> getParentName() {
-        return parentName;
-    }
-
-    /**
-     * Returns the parent phone wrapped in an Optional, or empty if not set.
-     */
-    public Optional<ParentPhone> getParentPhone() {
-        return parentPhone;
-    }
-
-    /**
-     * Returns the parent email wrapped in an Optional, or empty if not set.
-     */
-    public Optional<ParentEmail> getParentEmail() {
-        return parentEmail;
     }
 
     /**

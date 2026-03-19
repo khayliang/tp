@@ -11,9 +11,9 @@ import java.util.Optional;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.EditParentCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.person.ParentEmail;
-import seedu.address.model.person.ParentName;
-import seedu.address.model.person.ParentPhone;
+import seedu.address.model.person.Email;
+import seedu.address.model.person.Name;
+import seedu.address.model.person.Phone;
 
 /**
  * Parses input arguments and creates a new {@code EditParentCommand} object.
@@ -44,15 +44,15 @@ public class EditParentCommandParser implements Parser<EditParentCommand> {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditParentCommand.MESSAGE_USAGE));
         }
 
-        Optional<ParentName> parentName = hasName
+        Optional<Name> parentName = hasName
                 ? Optional.of(ParserUtil.parseParentName(argMultimap.getValue(PREFIX_PARENT_NAME).get()))
                 : Optional.empty();
 
-        Optional<ParentPhone> parentPhone = hasPhone
+        Optional<Phone> parentPhone = hasPhone
                 ? Optional.of(ParserUtil.parseParentPhone(argMultimap.getValue(PREFIX_PARENT_PHONE).get()))
                 : Optional.empty();
 
-        Optional<ParentEmail> parentEmail = hasEmail
+        Optional<Email> parentEmail = hasEmail
                 ? Optional.of(ParserUtil.parseParentEmail(argMultimap.getValue(PREFIX_PARENT_EMAIL).get()))
                 : Optional.empty();
 

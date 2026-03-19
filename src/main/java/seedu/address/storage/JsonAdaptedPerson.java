@@ -19,9 +19,6 @@ import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
-import seedu.address.model.person.ParentEmail;
-import seedu.address.model.person.ParentName;
-import seedu.address.model.person.ParentPhone;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
 import seedu.address.model.tag.Tag;
@@ -147,28 +144,28 @@ class JsonAdaptedPerson {
 
         final Set<Tag> modelTags = new HashSet<>(personTags);
 
-        ParentName modelParentName = null;
+        Name modelParentName = null;
         if (parentName != null) {
             if (!Name.isValidName(parentName)) {
                 throw new IllegalValueException(Name.MESSAGE_CONSTRAINTS);
             }
-            modelParentName = new ParentName(parentName);
+            modelParentName = new Name(parentName);
         }
 
-        ParentPhone modelParentPhone = null;
+        Phone modelParentPhone = null;
         if (parentPhone != null) {
             if (!Phone.isValidPhone(parentPhone)) {
                 throw new IllegalValueException(Phone.MESSAGE_CONSTRAINTS);
             }
-            modelParentPhone = new ParentPhone(parentPhone);
+            modelParentPhone = new Phone(parentPhone);
         }
 
-        ParentEmail modelParentEmail = null;
+        Email modelParentEmail = null;
         if (parentEmail != null) {
             if (!Email.isValidEmail(parentEmail)) {
                 throw new IllegalValueException(Email.MESSAGE_CONSTRAINTS);
             }
-            modelParentEmail = new ParentEmail(parentEmail);
+            modelParentEmail = new Email(parentEmail);
         }
 
         LocalDate modelPaymentDate = null;

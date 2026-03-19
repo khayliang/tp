@@ -18,9 +18,9 @@ public class PersonBuilder {
     private Email email;
     private Address address;
     private Set<Tag> tags;
-    private Optional<ParentName> parentName;
-    private Optional<ParentPhone> parentPhone;
-    private Optional<ParentEmail> parentEmail;
+    private Optional<Name> parentName;
+    private Optional<Phone> parentPhone;
+    private Optional<Email> parentEmail;
     private Optional<LocalDateTime> appointmentStart;
     private Optional<LocalDate> paymentDate;
 
@@ -97,34 +97,34 @@ public class PersonBuilder {
     }
 
     /**
-     * Sets the {@code ParentName} of the {@code Person} being built.
+     * Sets the parent's {@code Name} of the {@code Person} being built.
      *
      * @param parentName the optional parent name
      * @return this {@code PersonBuilder} instance for method chaining
      */
-    public PersonBuilder withParentName(Optional<ParentName> parentName) {
+    public PersonBuilder withParentName(Optional<Name> parentName) {
         this.parentName = parentName;
         return this;
     }
 
     /**
-     * Sets the {@code ParentPhone} of the {@code Person} being built.
+     * Sets the parent's {@code Phone} of the {@code Person} being built.
      *
      * @param parentPhone the optional parent phone
      * @return this {@code PersonBuilder} instance for method chaining
      */
-    public PersonBuilder withParentPhone(Optional<ParentPhone> parentPhone) {
+    public PersonBuilder withParentPhone(Optional<Phone> parentPhone) {
         this.parentPhone = parentPhone;
         return this;
     }
 
     /**
-     * Sets the {@code ParentEmail} of the {@code Person} being built.
+     * Sets the parent's {@code Email} of the {@code Person} being built.
      *
      * @param parentEmail the optional parent email
      * @return this {@code PersonBuilder} instance for method chaining
      */
-    public PersonBuilder withParentEmail(Optional<ParentEmail> parentEmail) {
+    public PersonBuilder withParentEmail(Optional<Email> parentEmail) {
         this.parentEmail = parentEmail;
         return this;
     }

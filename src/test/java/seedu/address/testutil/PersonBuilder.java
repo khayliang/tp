@@ -9,9 +9,6 @@ import java.util.Set;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
-import seedu.address.model.person.ParentEmail;
-import seedu.address.model.person.ParentName;
-import seedu.address.model.person.ParentPhone;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
 import seedu.address.model.tag.Tag;
@@ -32,9 +29,9 @@ public class PersonBuilder {
     private Email email;
     private Address address;
     private Set<Tag> tags;
-    private ParentName parentName;
-    private ParentPhone parentPhone;
-    private ParentEmail parentEmail;
+    private Name parentName;
+    private Phone parentPhone;
+    private Email parentEmail;
     private LocalDateTime appointmentStart;
     private LocalDate paymentDate;
 
@@ -112,26 +109,26 @@ public class PersonBuilder {
     }
 
     /**
-     * Sets the {@code ParentName} of the {@code Person} that we are building.
+     * Sets the parent's {@code Name} of the {@code Person} that we are building.
      */
     public PersonBuilder withParentName(String name) {
-        this.parentName = new ParentName(name);
+        this.parentName = new Name(name);
         return this;
     }
 
     /**
-     * Sets the {@code ParentPhone} of the {@code Person} that we are building.
+     * Sets the parent's {@code Phone} of the {@code Person} that we are building.
      */
     public PersonBuilder withParentPhone(String phone) {
-        this.parentPhone = new ParentPhone(phone);
+        this.parentPhone = new Phone(phone);
         return this;
     }
 
     /**
-     * Sets the {@code ParentEmail} of the {@code Person} that we are building.
+     * Sets the parent's {@code Email} of the {@code Person} that we are building.
      */
     public PersonBuilder withParentEmail(String email) {
-        this.parentEmail = new ParentEmail(email);
+        this.parentEmail = new Email(email);
         return this;
     }
 
