@@ -49,6 +49,10 @@ public class PersonCard extends UiPart<Region> {
     private FlowPane tags;
     @FXML
     private Label parentName;
+    @FXML
+    private Label parentPhone;
+    @FXML
+    private Label parentEmail;
 
     /**
      * Creates a {@code PersonCode} with the given {@code Person} and index to display.
@@ -80,6 +84,16 @@ public class PersonCard extends UiPart<Region> {
             parentName.setText("Parent: " + person.getParentName().get().fullName);
         } else {
             parentName.setVisible(false);
+        }
+        if (person.getParentPhone().isPresent()) {
+            parentPhone.setText("Parent Phone: " + person.getParentPhone().get().value);
+        } else {
+            parentPhone.setVisible(false);
+        }
+        if (person.getParentEmail().isPresent()) {
+            parentEmail.setText("Parent Email: " + person.getParentEmail().get().value);
+        } else {
+            parentEmail.setVisible(false);
         }
     }
 }

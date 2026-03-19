@@ -29,7 +29,9 @@ public class Person {
     private final Set<Tag> tags = new HashSet<>();
     private final Optional<LocalDateTime> appointmentStart;
     private final Optional<LocalDateTime> lastAttendance;
-    private final Optional<ParentName> parentName;
+    private final Optional<Name> parentName;
+    private final Optional<Phone> parentPhone;
+    private final Optional<Email> parentEmail;
     private final Optional<LocalDate> paymentDate;
 
     /**
@@ -38,26 +40,49 @@ public class Person {
      * are optional and can be empty.
      */
     public Person(Name name, Phone phone, Email email, Address address, Set<Tag> tags) {
-        this(name, phone, email, address, tags, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+        this(name, phone, email, address, tags, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
+                Optional.empty(), Optional.empty());
+    }
+
+    /**
+     * Every field must be present and not null.
+     */
+    public Person(Name name, Phone phone, Email email, Address address, Set<Tag> tags, Optional<Name> parentName,
+            Optional<LocalDateTime> appointmentStart, Optional<LocalDate> paymentDate) {
+        this(name, phone, email, address, tags, parentName, Optional.empty(), Optional.empty(), appointmentStart,
+                paymentDate, Optional.empty());
     }
 
     /**
      * Every field must be present and not null.
      */
     public Person(Name name, Phone phone, Email email, Address address, Set<Tag> tags,
-        Optional<ParentName> parentName, Optional<LocalDateTime> appointmentStart,
-        Optional<LocalDate> paymentDate, Optional<LocalDateTime> lastAttendance) {
+            Optional<Name> parentName, Optional<Phone> parentPhone, Optional<Email> parentEmail,
+            Optional<LocalDateTime> appointmentStart, Optional<LocalDate> paymentDate) {
+        this(name, phone, email, address, tags, parentName, parentPhone, parentEmail, appointmentStart, paymentDate,
+                Optional.empty());
+    }
+
+    /**
+     * Every field must be present and not null.
+     */
+    public Person(Name name, Phone phone, Email email, Address address, Set<Tag> tags,
+            Optional<Name> parentName, Optional<Phone> parentPhone, Optional<Email> parentEmail,
+            Optional<LocalDateTime> appointmentStart, Optional<LocalDate> paymentDate,
+            Optional<LocalDateTime> lastAttendance) {
         requireAllNonNull(name, phone, email, address, tags,
-            parentName, appointmentStart, paymentDate, lastAttendance);
+                parentName, parentPhone, parentEmail, appointmentStart, paymentDate, lastAttendance);
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.address = address;
         this.tags.addAll(tags);
-        this.parentName = parentName;
         this.appointmentStart = appointmentStart;
-        this.paymentDate = paymentDate;
         this.lastAttendance = lastAttendance;
+        this.parentName = parentName;
+        this.parentPhone = parentPhone;
+        this.parentEmail = parentEmail;
+        this.paymentDate = paymentDate;
     }
 
     public Name getName() {
@@ -99,8 +124,22 @@ public class Person {
     /**
      * Returns the parent name wrapped in an Optional, or empty if not set.
      */
-    public Optional<ParentName> getParentName() {
+    public Optional<Name> getParentName() {
         return parentName;
+    }
+
+    /**
+     * Returns the parent phone wrapped in an Optional, or empty if not set.
+     */
+    public Optional<Phone> getParentPhone() {
+        return parentPhone;
+    }
+
+    /**
+     * Returns the parent email wrapped in an Optional, or empty if not set.
+     */
+    public Optional<Email> getParentEmail() {
+        return parentEmail;
     }
 
     /**
@@ -112,8 +151,7 @@ public class Person {
             return true;
         }
 
-        return otherPerson != null
-                && otherPerson.getName().equals(getName());
+        return otherPerson != null && otherPerson.getName().equals(getName());
     }
 
     /**
@@ -132,12 +170,11 @@ public class Person {
         }
 
         Person otherPerson = (Person) other;
-        return name.equals(otherPerson.name)
-                && phone.equals(otherPerson.phone)
-                && email.equals(otherPerson.email)
-                && address.equals(otherPerson.address)
-                && tags.equals(otherPerson.tags)
+        return name.equals(otherPerson.name) && phone.equals(otherPerson.phone) && email.equals(otherPerson.email)
+                && address.equals(otherPerson.address) && tags.equals(otherPerson.tags)
                 && parentName.equals(otherPerson.parentName)
+                && parentPhone.equals(otherPerson.parentPhone)
+                && parentEmail.equals(otherPerson.parentEmail)
                 && appointmentStart.equals(otherPerson.appointmentStart)
                 && paymentDate.equals(otherPerson.paymentDate)
                 && lastAttendance.equals(otherPerson.lastAttendance);
@@ -146,20 +183,19 @@ public class Person {
 
     @Override
     public int hashCode() {
-        // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(name, phone, email, address, tags, parentName,
-                appointmentStart, paymentDate, lastAttendance);
+        // use this method for custom fields hashing instead of implementing
+        // your own
+        return Objects.hash(name, phone, email, address, tags, parentName, parentPhone, parentEmail, appointmentStart,
+                paymentDate, lastAttendance);
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .add("name", name)
-                .add("phone", phone)
-                .add("email", email)
-                .add("address", address)
-                .add("tags", tags)
+        return new ToStringBuilder(this).add("name", name).add("phone", phone).add("email", email)
+                .add("address", address).add("tags", tags)
                 .add("parentName", parentName.orElse(null))
+                .add("parentPhone", parentPhone.orElse(null))
+                .add("parentEmail", parentEmail.orElse(null))
                 .add("appointmentStart", appointmentStart)
                 .add("paymentDate", paymentDate)
                 .add("lastAttendance", lastAttendance)
