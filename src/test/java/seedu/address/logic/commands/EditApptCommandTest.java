@@ -38,8 +38,9 @@ public class EditApptCommandTest {
         EditApptCommand editCommand = new EditApptCommand(INDEX_FIRST_PERSON, appointmentStart);
 
         Person editedPerson = new Person(personToEdit.getName(), personToEdit.getPhone(), personToEdit.getEmail(),
-                personToEdit.getAddress(), personToEdit.getTags(), personToEdit.getParentName(),
-                Optional.of(appointmentStart), personToEdit.getPaymentDate());
+                personToEdit.getAddress(), personToEdit.getTags(), personToEdit.getSubjects(),
+                personToEdit.getParentName(), Optional.of(appointmentStart), personToEdit.getPaymentDate());
+
         String expectedMessage = String.format(EditApptCommand.MESSAGE_EDIT_APPT_SUCCESS,
                 editedPerson.getName().fullName, appointmentStart.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
 

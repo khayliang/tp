@@ -5,9 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_APPOINTMENT_START;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_LEVEL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PARENT_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_SUBJECT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 import static seedu.address.testutil.Assert.assertThrows;
 
@@ -42,6 +44,12 @@ public class CommandTestUtil {
     public static final String VALID_PARENT_NAME_BOB = "Sam Lim";
     public static final String VALID_TAG_JC = "JC";
     public static final String VALID_TAG_GROUP1 = "Group1";
+    public static final String VALID_SUBJECT_MATH = "Math";
+    public static final String VALID_SUBJECT_SCIENCE = "Science";
+    public static final String VALID_LEVEL_STRONG = "Strong";
+    public static final String VALID_LEVEL_BASIC = "Basic";
+    public static final String VALID_SUBJECT_MATH_STRONG = "Math:strong";
+    public static final String VALID_SUBJECT_SCIENCE_BASIC = "Science:basic";
     public static final String VALID_APPOINTMENT_START = "2026-01-13T08:00:00";
     public static final String VALID_PAYMENT_DATE = "2026-02-03";
 
@@ -59,6 +67,17 @@ public class CommandTestUtil {
     public static final String PARENT_NAME_DESC_BOB = " " + PREFIX_PARENT_NAME + VALID_PARENT_NAME_BOB;
     public static final String TAG_DESC_JC = " " + PREFIX_TAG + VALID_TAG_JC;
     public static final String TAG_DESC_GROUP1 = " " + PREFIX_TAG + VALID_TAG_GROUP1;
+    public static final String SUBJECT_DESC_MATH_STRONG =
+            " " + PREFIX_SUBJECT + VALID_SUBJECT_MATH
+                    + " " + PREFIX_LEVEL + VALID_LEVEL_STRONG;
+    public static final String SUBJECT_DESC_SCIENCE_BASIC =
+            " " + PREFIX_SUBJECT + VALID_SUBJECT_SCIENCE
+                    + " " + PREFIX_LEVEL + VALID_LEVEL_BASIC;
+    public static final String SUBJECT_DESC_MATH_STRONG_SCIENCE_BASIC =
+            " " + PREFIX_SUBJECT + VALID_SUBJECT_MATH
+                    + " " + PREFIX_LEVEL + VALID_LEVEL_STRONG
+                    + " " + PREFIX_SUBJECT + VALID_SUBJECT_SCIENCE
+                    + " " + PREFIX_LEVEL + VALID_LEVEL_BASIC;
     public static final String APPOINTMENT_START_DESC = " " + PREFIX_APPOINTMENT_START + VALID_APPOINTMENT_START;
 
     public static final String INVALID_NAME_DESC = " " + PREFIX_NAME + "James&"; // '&' not allowed in names
@@ -66,6 +85,16 @@ public class CommandTestUtil {
     public static final String INVALID_EMAIL_DESC = " " + PREFIX_EMAIL + "bob!yahoo"; // missing '@' symbol
     public static final String INVALID_ADDRESS_DESC = " " + PREFIX_ADDRESS; // empty string not allowed for addresses
     public static final String INVALID_TAG_DESC = " " + PREFIX_TAG + "@Group2"; // '@' not allowed in tags
+    public static final String INVALID_LEVEL_WITHOUT_SUBJECT =
+            " " + PREFIX_LEVEL + VALID_LEVEL_STRONG;
+    public static final String INVALID_LEVEL_BEFORE_SUBJECT =
+            " " + PREFIX_LEVEL + VALID_LEVEL_STRONG
+                    + " " + PREFIX_SUBJECT + VALID_SUBJECT_MATH;
+    public static final String INVALID_DUPLICATE_LEVEL =
+            " " + PREFIX_SUBJECT + VALID_SUBJECT_MATH
+                    + " " + PREFIX_LEVEL + VALID_LEVEL_STRONG
+                    + " " + PREFIX_LEVEL + VALID_LEVEL_BASIC;
+    public static final String INVALID_SUBJECT_DESC = " s/@@@";
     public static final String INVALID_APPOINTMENT_START_DESC = " " + PREFIX_APPOINTMENT_START + "not-a-date";
 
     public static final String PREAMBLE_WHITESPACE = "\t  \r  \n";

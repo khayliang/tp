@@ -22,6 +22,7 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.ParentName;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
+import seedu.address.model.subject.Subject;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -47,6 +48,7 @@ class JsonAdaptedPerson {
     private final String parentName; // optional, may be null
     private final String paymentDate;
     private final List<JsonAdaptedTag> tags = new ArrayList<>();
+    private final List<JsonAdaptedSubject> subjects = new ArrayList<>();
 
     /**
      * Constructs a {@code JsonAdaptedPerson} with the given person details.
@@ -56,6 +58,7 @@ class JsonAdaptedPerson {
             @JsonProperty("email") String email, @JsonProperty("address") String address,
             @JsonProperty("parentName") String parentName,
             @JsonProperty("tags") List<JsonAdaptedTag> tags,
+            @JsonProperty("subjects") List<JsonAdaptedSubject> subjects,
             @JsonProperty("appointmentStart") String appointmentStart,
             @JsonProperty("paymentDate") String paymentDate) {
         this.name = name;
@@ -67,6 +70,9 @@ class JsonAdaptedPerson {
         this.paymentDate = paymentDate;
         if (tags != null) {
             this.tags.addAll(tags);
+        }
+        if (subjects != null) {
+            this.subjects.addAll(subjects);
         }
     }
 
@@ -84,6 +90,9 @@ class JsonAdaptedPerson {
         tags.addAll(source.getTags().stream()
                 .map(JsonAdaptedTag::new)
                 .collect(Collectors.toList()));
+        subjects.addAll(source.getSubjects().stream()
+                .map(JsonAdaptedSubject::new)
+                .collect(Collectors.toList()));
         parentName = source.getParentName().map(pn -> pn.fullName).orElse(null);
         paymentDate = source.getPaymentDate()
             .map(value -> value.format(DateTimeFormatter.ISO_LOCAL_DATE))
@@ -96,13 +105,11 @@ class JsonAdaptedPerson {
      * @throws IllegalValueException if there were any data constraints violated in the adapted person.
      */
     public Person toModelType() throws IllegalValueException {
-        final List<Tag> personTags = new ArrayList<>();
-        for (JsonAdaptedTag tag : tags) {
-            personTags.add(tag.toModelType());
-        }
 
+        // ---------- Validate core fields ----------
         if (name == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Name.class.getSimpleName()));
+            throw new IllegalValueException(
+                    String.format(MISSING_FIELD_MESSAGE_FORMAT, Name.class.getSimpleName()));
         }
         if (!Name.isValidName(name)) {
             throw new IllegalValueException(Name.MESSAGE_CONSTRAINTS);
@@ -110,7 +117,8 @@ class JsonAdaptedPerson {
         final Name modelName = new Name(name);
 
         if (phone == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Phone.class.getSimpleName()));
+            throw new IllegalValueException(
+                    String.format(MISSING_FIELD_MESSAGE_FORMAT, Phone.class.getSimpleName()));
         }
         if (!Phone.isValidPhone(phone)) {
             throw new IllegalValueException(Phone.MESSAGE_CONSTRAINTS);
@@ -118,7 +126,8 @@ class JsonAdaptedPerson {
         final Phone modelPhone = new Phone(phone);
 
         if (email == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Email.class.getSimpleName()));
+            throw new IllegalValueException(
+                    String.format(MISSING_FIELD_MESSAGE_FORMAT, Email.class.getSimpleName()));
         }
         if (!Email.isValidEmail(email)) {
             throw new IllegalValueException(Email.MESSAGE_CONSTRAINTS);
@@ -126,24 +135,33 @@ class JsonAdaptedPerson {
         final Email modelEmail = new Email(email);
 
         if (address == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Address.class.getSimpleName()));
+            throw new IllegalValueException(
+                    String.format(MISSING_FIELD_MESSAGE_FORMAT, Address.class.getSimpleName()));
         }
         if (!Address.isValidAddress(address)) {
             throw new IllegalValueException(Address.MESSAGE_CONSTRAINTS);
         }
         final Address modelAddress = new Address(address);
 
-        LocalDateTime modelAppointmentStart = null;
-        if (appointmentStart != null) {
-            try {
-                modelAppointmentStart = LocalDateTime.parse(appointmentStart, APPOINTMENT_START_FORMATTER);
-            } catch (DateTimeParseException e) {
-                throw new IllegalValueException(APPOINTMENT_START_MESSAGE_CONSTRAINTS);
+        // ---------- Tags ----------
+        final List<Tag> personTags = new ArrayList<>();
+        if (tags != null) {
+            for (JsonAdaptedTag tag : tags) {
+                personTags.add(tag.toModelType());
             }
         }
-
         final Set<Tag> modelTags = new HashSet<>(personTags);
 
+        // ---------- Subjects (optional level supported) ----------
+        final List<Subject> personSubjects = new ArrayList<>();
+        if (subjects != null) {
+            for (JsonAdaptedSubject subject : subjects) {
+                personSubjects.add(subject.toModelType());
+            }
+        }
+        final Set<Subject> modelSubjects = new HashSet<>(personSubjects);
+
+        // ---------- Parent ----------
         ParentName modelParentName = null;
         if (parentName != null) {
             if (!Name.isValidName(parentName)) {
@@ -152,6 +170,18 @@ class JsonAdaptedPerson {
             modelParentName = new ParentName(parentName);
         }
 
+        // ---------- Appointment ----------
+        LocalDateTime modelAppointmentStart = null;
+        if (appointmentStart != null) {
+            try {
+                modelAppointmentStart = LocalDateTime.parse(
+                        appointmentStart, APPOINTMENT_START_FORMATTER);
+            } catch (DateTimeParseException e) {
+                throw new IllegalValueException(APPOINTMENT_START_MESSAGE_CONSTRAINTS);
+            }
+        }
+
+        // ---------- Payment ----------
         LocalDate modelPaymentDate = null;
         if (paymentDate != null) {
             try {
@@ -161,10 +191,17 @@ class JsonAdaptedPerson {
             }
         }
 
-        return new Person(modelName, modelPhone, modelEmail, modelAddress, modelTags,
+        // ---------- Build ----------
+        return new Person(
+                modelName,
+                modelPhone,
+                modelEmail,
+                modelAddress,
+                modelTags,
+                modelSubjects,
                 Optional.ofNullable(modelParentName),
                 Optional.ofNullable(modelAppointmentStart),
-                Optional.ofNullable(modelPaymentDate));
+                Optional.ofNullable(modelPaymentDate)
+        );
     }
-
 }

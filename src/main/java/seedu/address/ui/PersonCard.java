@@ -9,6 +9,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import seedu.address.model.person.Person;
+import seedu.address.model.subject.Subject;
 
 /**
  * An UI component that displays information of a {@code Person}.
@@ -46,6 +47,8 @@ public class PersonCard extends UiPart<Region> {
     @FXML
     private FlowPane tags;
     @FXML
+    private FlowPane subjects;
+    @FXML
     private Label parentName;
 
     /**
@@ -70,6 +73,13 @@ public class PersonCard extends UiPart<Region> {
         person.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
                 .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
+        person.getSubjects().stream()
+                .sorted(Comparator.comparing(Subject::getName))
+                .forEach(subject -> {
+                    Label subjectLabel = new Label(subject.toString());
+                    subjectLabel.getStyleClass().add("tag");
+                    subjects.getChildren().add(subjectLabel);
+                });
         if (person.getParentName().isPresent()) {
             parentName.setText("Parent: " + person.getParentName().get().fullName);
         } else {

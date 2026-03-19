@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import seedu.address.commons.util.ToStringBuilder;
+import seedu.address.model.subject.Subject;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -27,28 +28,38 @@ public class Person {
     // Data fields
     private final Address address;
     private final Set<Tag> tags = new HashSet<>();
+    private final Set<Subject> subjects = new HashSet<>();
     private final Optional<LocalDateTime> appointmentStart;
     private final Optional<ParentName> parentName;
     private final Optional<LocalDate> paymentDate;
 
     /**
-     * Every field must be present and not null. parentName defaults to empty.
+     * Creates a {@code Person} with the given core fields and tags.
+     * Subjects, parent name, appointment start, and payment date are initialized as empty.
      */
     public Person(Name name, Phone phone, Email email, Address address, Set<Tag> tags) {
-        this(name, phone, email, address, tags, Optional.empty(), Optional.empty(), Optional.empty());
+        this(name, phone, email, address, tags,
+                new HashSet<>(), Optional.empty(), Optional.empty(), Optional.empty());
     }
 
     /**
-     * Every field must be present and not null.
+     * Every field must be present and not null. parentName defaults to empty.
      */
-    public Person(Name name, Phone phone, Email email, Address address, Set<Tag> tags, Optional<ParentName> parentName,
-            Optional<LocalDateTime> appointmentStart, Optional<LocalDate> paymentDate) {
-        requireAllNonNull(name, phone, email, address, tags, parentName, appointmentStart, paymentDate);
+    public Person(Name name, Phone phone, Email email, Address address,
+                  Set<Tag> tags, Set<Subject> subjects,
+                  Optional<ParentName> parentName,
+                  Optional<LocalDateTime> appointmentStart,
+                  Optional<LocalDate> paymentDate) {
+
+        requireAllNonNull(name, phone, email, address, tags, subjects,
+                parentName, appointmentStart, paymentDate);
+
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.address = address;
         this.tags.addAll(tags);
+        this.subjects.addAll(subjects);
         this.parentName = parentName;
         this.appointmentStart = appointmentStart;
         this.paymentDate = paymentDate;
@@ -84,6 +95,14 @@ public class Person {
      */
     public Set<Tag> getTags() {
         return Collections.unmodifiableSet(tags);
+    }
+
+    /**
+     * Returns an immutable subject set, which throws {@code UnsupportedOperationException}
+     * if modification is attempted.
+     */
+    public Set<Subject> getSubjects() {
+        return Collections.unmodifiableSet(subjects);
     }
 
     /**
@@ -127,6 +146,7 @@ public class Person {
                 && email.equals(otherPerson.email)
                 && address.equals(otherPerson.address)
                 && tags.equals(otherPerson.tags)
+                && subjects.equals(otherPerson.subjects)
                 && parentName.equals(otherPerson.parentName)
                 && appointmentStart.equals(otherPerson.appointmentStart)
                 && paymentDate.equals(otherPerson.paymentDate);
@@ -136,8 +156,8 @@ public class Person {
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(name, phone, email, address, tags, parentName,
-                appointmentStart, paymentDate);
+        return Objects.hash(name, phone, email, address, tags, subjects,
+                parentName, appointmentStart, paymentDate);
     }
 
     @Override
@@ -148,6 +168,7 @@ public class Person {
                 .add("email", email)
                 .add("address", address)
                 .add("tags", tags)
+                .add("subjects", subjects)
                 .add("parentName", parentName.orElse(null))
                 .add("appointmentStart", appointmentStart)
                 .add("paymentDate", paymentDate)

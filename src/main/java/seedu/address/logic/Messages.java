@@ -51,6 +51,8 @@ public class Messages {
         person.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
                 .forEach(builder::append);
+        builder.append("; Subjects: ");
+        person.getSubjects().forEach(s -> builder.append("[").append(s).append("]"));
         person.getParentName().ifPresent(pn -> builder.append("; Parent: ").append(pn));
         return builder.toString();
     }

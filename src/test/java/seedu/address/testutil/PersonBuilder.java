@@ -12,6 +12,8 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.ParentName;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
+import seedu.address.model.subject.Level;
+import seedu.address.model.subject.Subject;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.util.SampleDataUtil;
 
@@ -30,6 +32,7 @@ public class PersonBuilder {
     private Email email;
     private Address address;
     private Set<Tag> tags;
+    private Set<Subject> subjects;
     private ParentName parentName;
     private LocalDateTime appointmentStart;
     private LocalDate paymentDate;
@@ -43,6 +46,7 @@ public class PersonBuilder {
         email = new Email(DEFAULT_EMAIL);
         address = new Address(DEFAULT_ADDRESS);
         tags = new HashSet<>();
+        subjects = new HashSet<>();
         parentName = null;
         appointmentStart = null;
         paymentDate = null;
@@ -57,6 +61,7 @@ public class PersonBuilder {
         email = personToCopy.getEmail();
         address = personToCopy.getAddress();
         tags = new HashSet<>(personToCopy.getTags());
+        subjects = new HashSet<>(personToCopy.getSubjects());
         parentName = personToCopy.getParentName().orElse(null);
         appointmentStart = personToCopy.getAppointmentStart().orElse(null);
         paymentDate = personToCopy.getPaymentDate().orElse(null);
@@ -75,6 +80,27 @@ public class PersonBuilder {
      */
     public PersonBuilder withTags(String ... tags) {
         this.tags = SampleDataUtil.getTagSet(tags);
+        return this;
+    }
+
+    /**
+     * Parses the {@code tags} into a {@code Set<Subject>} and set it to the {@code Person} that we are building.
+     */
+    public PersonBuilder withSubjects(String... subjects) {
+        this.subjects = new HashSet<>();
+
+        for (String subjectStr : subjects) {
+            String[] parts = subjectStr.split(":");
+
+            if (parts.length != 2) {
+                throw new IllegalArgumentException(
+                        "Subject must be in format 'Name:Level', e.g. Math:Strong"
+                );
+            }
+
+            this.subjects.add(new Subject(parts[0], Level.fromString(parts[1])));
+        }
+
         return this;
     }
 
@@ -130,7 +156,7 @@ public class PersonBuilder {
      * Builds a {@code Person} with the current builder state.
      */
     public Person build() {
-        return new Person(name, phone, email, address, tags,
+        return new Person(name, phone, email, address, tags, subjects,
                 Optional.ofNullable(parentName),
                 Optional.ofNullable(appointmentStart),
                 Optional.ofNullable(paymentDate));

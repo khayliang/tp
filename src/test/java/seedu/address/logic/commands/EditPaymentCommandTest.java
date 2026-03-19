@@ -38,8 +38,8 @@ public class EditPaymentCommandTest {
         EditPaymentCommand editCommand = new EditPaymentCommand(INDEX_FIRST_PERSON, paymentDate);
 
         Person editedPerson = new Person(personToEdit.getName(), personToEdit.getPhone(), personToEdit.getEmail(),
-                personToEdit.getAddress(), personToEdit.getTags(), personToEdit.getParentName(),
-                personToEdit.getAppointmentStart(), Optional.ofNullable(paymentDate));
+                personToEdit.getAddress(), personToEdit.getTags(), personToEdit.getSubjects(),
+                personToEdit.getParentName(), personToEdit.getAppointmentStart(), Optional.ofNullable(paymentDate));
         String expectedMessage = String.format(EditPaymentCommand.MESSAGE_EDIT_PAYMENT_SUCCESS,
                 editedPerson.getName().fullName, paymentDate.format(DateTimeFormatter.ISO_LOCAL_DATE));
 
