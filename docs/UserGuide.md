@@ -146,6 +146,19 @@ Examples:
 * `find person alex david` returns `Alex Yeoh`, `David Li`<br>
   ![result for 'find person alex david'](images/findAlexDavidResult.png)
 
+### Viewing appointments for a week: `viewAppt`
+
+Shows all appointments in the Monday-Sunday week containing the given date.
+
+Format: `viewAppt [d/DATE]`
+
+* If `d/DATE` is omitted, the current date is used.
+* `DATE` must be in ISO format (`YYYY-MM-DD`).
+
+Examples:
+* `viewAppt`
+* `viewAppt d/2026-02-13`
+
 ### Deleting a person : `delete`
 
 Deletes the specified person from the address book.
@@ -215,5 +228,6 @@ Action | Format, Examples
 **Edit** | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
 **Edit Attendance** | `edit attd INDEX [d/ISO8601_DATETIME]`<br> e.g., `edit attd 1 d/2026-01-29T08:00:00`, `edit attd 1`
 **Find** | `find person KEYWORD [MORE_KEYWORDS]`<br> e.g., `find person James Jake`
+**View Appointments** | `viewAppt [d/DATE]`<br> e.g., `viewAppt d/2026-02-13`
 **List** | `list`
 **Help** | `help`

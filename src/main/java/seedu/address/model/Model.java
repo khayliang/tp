@@ -84,4 +84,14 @@ public interface Model {
      * @throws NullPointerException if {@code predicate} is null.
      */
     void updateFilteredPersonList(Predicate<Person> predicate);
+
+    /**
+     * Returns the current list display mode.
+     */
+    ListDisplayMode getListDisplayMode();
+
+    /**
+     * Sets the current list display mode.
+     */
+    void setListDisplayMode(ListDisplayMode listDisplayMode);
 }
