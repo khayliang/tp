@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="12" styleClass="detail-panel" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+  <padding>
+    <Insets top="12" right="12" bottom="12" left="12" />
+  </padding>
+
+  <Label text="Student Details" styleClass="detail-panel-title" />
+  <Label fx:id="emptyStateLabel" text="Select a student to view details." styleClass="detail-empty-state" wrapText="true" />
+
+  <VBox fx:id="contentContainer" spacing="10" visible="false" managed="false">
+    <Label fx:id="nameLabel" styleClass="detail-name" text="-" />
+
+    <VBox spacing="4">
+      <HBox spacing="10">
+        <Label text="Phone" styleClass="detail-field-label" />
+        <Label fx:id="phoneLabel" styleClass="detail-field-value" text="-" />
+      </HBox>
+      <HBox spacing="10">
+        <Label text="Email" styleClass="detail-field-label" />
+        <Label fx:id="emailLabel" styleClass="detail-field-value" text="-" wrapText="true" HBox.hgrow="ALWAYS" />
+      </HBox>
+      <HBox spacing="10">
+        <Label text="Address" styleClass="detail-field-label" />
+        <Label fx:id="addressLabel" styleClass="detail-field-value" text="-" wrapText="true" HBox.hgrow="ALWAYS" />
+      </HBox>
+      <HBox spacing="10">
+        <Label text="Parent" styleClass="detail-field-label" />
+        <Label fx:id="parentNameLabel" styleClass="detail-field-value" text="-" wrapText="true" HBox.hgrow="ALWAYS" />
+      </HBox>
+    </VBox>
+
+    <VBox spacing="4">
+      <HBox spacing="10">
+        <Label text="Lesson Start" styleClass="detail-field-label" />
+        <Label fx:id="lessonStartLabel" styleClass="detail-field-value" text="-" />
+      </HBox>
+      <HBox spacing="10">
+        <Label text="Payment Date" styleClass="detail-field-label" />
+        <Label fx:id="paymentDateLabel" styleClass="detail-field-value" text="-" />
+      </HBox>
+    </VBox>
+
+    <VBox spacing="6">
+      <Label text="Tags" styleClass="detail-section-title" />
+      <FlowPane fx:id="tagsFlowPane" hgap="6" vgap="6" prefWrapLength="320" />
+    </VBox>
+  </VBox>
+</VBox>
