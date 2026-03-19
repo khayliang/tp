@@ -20,8 +20,9 @@ public class PersonTest {
 
     @Test
     public void asObservableList_modifyList_throwsUnsupportedOperationException() {
-        Person person = new PersonBuilder().build();
-        assertThrows(UnsupportedOperationException.class, () -> person.getTags().remove(0));
+        Person person = new PersonBuilder().withTags("friend").build();
+        assertThrows(UnsupportedOperationException.class, () ->
+                person.getTags().stream().findAny().ifPresent(person.getTags()::remove));
     }
 
     @Test
@@ -96,6 +97,10 @@ public class PersonTest {
         // different payment date -> returns false
         editedAlice = new PersonBuilder(ALICE).withPaymentDate("2026-01-13").build();
         assertFalse(ALICE.equals(editedAlice));
+
+        // different last attendance -> returns false
+        editedAlice = new PersonBuilder(ALICE).withLastAttendance("2026-01-29T08:00:00").build();
+        assertFalse(ALICE.equals(editedAlice));
     }
 
     @Test
@@ -104,7 +109,8 @@ public class PersonTest {
                 + ", email=" + ALICE.getEmail() + ", address=" + ALICE.getAddress() + ", tags=" + ALICE.getTags()
                 + ", parentName=" + ALICE.getParentName().orElse(null) + ", parentPhone="
                 + ALICE.getParentPhone().orElse(null) + ", parentEmail=" + ALICE.getParentEmail().orElse(null)
-                + ", appointmentStart=" + ALICE.getAppointmentStart() + ", paymentDate=" + ALICE.getPaymentDate() + "}";
+                + ", appointmentStart=" + ALICE.getAppointmentStart() + ", paymentDate=" + ALICE.getPaymentDate()
+                + ", lastAttendance=" + ALICE.getLastAttendance() + "}";
         assertEquals(expected, ALICE.toString());
     }
 }

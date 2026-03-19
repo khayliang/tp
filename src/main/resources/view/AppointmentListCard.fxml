@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
@@ -21,22 +20,15 @@
       <HBox spacing="0.5" alignment="CENTER_LEFT">
         <Label fx:id="id" styleClass="cell_big_label">
           <minWidth>
-            <!-- Ensures that the label text is never truncated -->
             <Region fx:constant="USE_PREF_SIZE" />
           </minWidth>
         </Label>
-        <Label fx:id="name" text="\$first" styleClass="cell_big_label" />
+        <Label fx:id="appointmentStart" text="$appointmentStart" styleClass="cell_big_label" />
       </HBox>
-      <FlowPane fx:id="tags" />
-      <Label fx:id="phone" styleClass="cell_small_label" text="\$phone" />
-      <Label fx:id="address" styleClass="cell_small_label" text="\$address" />
-      <Label fx:id="email" styleClass="cell_small_label" text="\$email" />
-      <Label fx:id="parentName" styleClass="cell_small_label" text="\$parentName" />
-      <Label fx:id="parentPhone" styleClass="cell_small_label" text="\$parentPhone" />
-      <Label fx:id="parentEmail" styleClass="cell_small_label" text="\$parentEmail" />
-      <Label fx:id="appointmentStart" styleClass="cell_small_label" text="\$appointmentStart" />
-      <Label fx:id="paymentDate" styleClass="cell_small_label" text="\$paymentDate" />
-      <Label fx:id="lastAttendance" styleClass="cell_small_label" text="\$lastAttendance" />
+      <Label fx:id="studentName" styleClass="cell_small_label" text="$studentName" />
+      <Label fx:id="parentName" styleClass="cell_small_label" text="$parentName" />
+      <Label fx:id="phone" styleClass="cell_small_label" text="$phone" />
+      <Label fx:id="email" styleClass="cell_small_label" text="$email" />
     </VBox>
   </GridPane>
 </HBox>

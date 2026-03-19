@@ -12,7 +12,6 @@ import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
@@ -23,6 +22,7 @@ import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.person.Person;
+import seedu.address.testutil.PersonBuilder;
 
 /**
  * Contains integration tests (interaction with the Model) and unit tests for EditApptCommand.
@@ -37,9 +37,9 @@ public class EditPaymentCommandTest {
         LocalDate paymentDate = LocalDate.parse(VALID_PAYMENT_DATE);
         EditPaymentCommand editCommand = new EditPaymentCommand(INDEX_FIRST_PERSON, paymentDate);
 
-        Person editedPerson = new Person(personToEdit.getName(), personToEdit.getPhone(), personToEdit.getEmail(),
-                personToEdit.getAddress(), personToEdit.getTags(), personToEdit.getParentName(),
-                personToEdit.getAppointmentStart(), Optional.ofNullable(paymentDate));
+        Person editedPerson = new PersonBuilder(personToEdit)
+                .withPaymentDate(VALID_PAYMENT_DATE)
+                .build();
         String expectedMessage = String.format(EditPaymentCommand.MESSAGE_EDIT_PAYMENT_SUCCESS,
                 editedPerson.getName().fullName, paymentDate.format(DateTimeFormatter.ISO_LOCAL_DATE));
 

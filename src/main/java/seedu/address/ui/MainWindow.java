@@ -16,6 +16,7 @@ import seedu.address.logic.Logic;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.ListDisplayMode;
 
 /**
  * The Main Window. Provides the basic application layout containing
@@ -32,8 +33,10 @@ public class MainWindow extends UiPart<Stage> {
 
     // Independent Ui parts residing in this Ui container
     private PersonListPanel personListPanel;
+    private AppointmentListPanel appointmentListPanel;
     private ResultDisplay resultDisplay;
     private HelpWindow helpWindow;
+    private boolean isAppointmentPanelVisible;
 
     @FXML
     private StackPane commandBoxPlaceholder;
@@ -42,7 +45,7 @@ public class MainWindow extends UiPart<Stage> {
     private MenuItem helpMenuItem;
 
     @FXML
-    private StackPane personListPanelPlaceholder;
+    private StackPane listPanelPlaceholder;
 
     @FXML
     private StackPane resultDisplayPlaceholder;
@@ -111,7 +114,9 @@ public class MainWindow extends UiPart<Stage> {
      */
     void fillInnerParts() {
         personListPanel = new PersonListPanel(logic.getFilteredPersonList());
-        personListPanelPlaceholder.getChildren().add(personListPanel.getRoot());
+        appointmentListPanel = new AppointmentListPanel(logic.getFilteredPersonList());
+        listPanelPlaceholder.getChildren().add(personListPanel.getRoot());
+        isAppointmentPanelVisible = false;
 
         resultDisplay = new ResultDisplay();
         resultDisplayPlaceholder.getChildren().add(resultDisplay.getRoot());
@@ -168,6 +173,23 @@ public class MainWindow extends UiPart<Stage> {
     }
 
     /**
+     * Switches between person and appointment list panels.
+     */
+    private void showAppointmentPanel(boolean shouldShowAppointmentPanel) {
+        if (isAppointmentPanelVisible == shouldShowAppointmentPanel) {
+            return;
+        }
+
+        listPanelPlaceholder.getChildren().clear();
+        if (shouldShowAppointmentPanel) {
+            listPanelPlaceholder.getChildren().add(appointmentListPanel.getRoot());
+        } else {
+            listPanelPlaceholder.getChildren().add(personListPanel.getRoot());
+        }
+        isAppointmentPanelVisible = shouldShowAppointmentPanel;
+    }
+
+    /**
      * Executes the command and returns the result.
      *
      * @see seedu.address.logic.Logic#execute(String)
@@ -177,6 +199,7 @@ public class MainWindow extends UiPart<Stage> {
             CommandResult commandResult = logic.execute(commandText);
             logger.info("Result: " + commandResult.getFeedbackToUser());
             resultDisplay.setFeedbackToUser(commandResult.getFeedbackToUser());
+            showAppointmentPanel(logic.getListDisplayMode() == ListDisplayMode.APPOINTMENT);
 
             if (commandResult.isShowHelp()) {
                 handleHelp();

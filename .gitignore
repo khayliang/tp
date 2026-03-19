@@ -24,3 +24,6 @@ docs/_site/
 
 # VSCode workspace settings
 .vscode/
+
+# bin files
+/bin/

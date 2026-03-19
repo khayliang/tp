@@ -6,6 +6,7 @@ import static seedu.address.logic.parser.ParserUtil.MESSAGE_INVALID_INDEX;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,13 +28,16 @@ public class ParserUtilTest {
     private static final String INVALID_ADDRESS = " ";
     private static final String INVALID_EMAIL = "example.com";
     private static final String INVALID_TAG = "#friend";
+    private static final String INVALID_DATE = "2026-13-40";
     private static final String INVALID_APPOINTMENT_START = "2026-13-40T25:00:00";
 
     private static final String VALID_NAME = "Rachel Walker";
     private static final String VALID_PHONE = "123456";
     private static final String VALID_ADDRESS = "123 Main Street #0505";
     private static final String VALID_EMAIL = "rachel@example.com";
+    private static final String VALID_DATE = "2026-01-13";
     private static final String VALID_APPOINTMENT_START = "2026-01-13T08:00:00";
+    private static final String VALID_APPOINTMENT_START_NO_SECONDS = "2026-01-13T08:00";
     private static final String VALID_TAG_1 = "friend";
     private static final String VALID_TAG_2 = "neighbour";
 
@@ -189,6 +193,29 @@ public class ParserUtilTest {
         String valueWithWhitespace = WHITESPACE + VALID_APPOINTMENT_START + WHITESPACE;
         LocalDateTime expectedAppointmentStart = LocalDateTime.parse(VALID_APPOINTMENT_START);
         assertEquals(expectedAppointmentStart, ParserUtil.parseIsoDateTime(valueWithWhitespace));
+    }
+
+    @Test
+    public void parseIsoDateTime_validValueWithoutSeconds_returnsAppointmentStart() throws Exception {
+        LocalDateTime expectedAppointmentStart = LocalDateTime.parse(VALID_APPOINTMENT_START);
+        assertEquals(expectedAppointmentStart, ParserUtil.parseIsoDateTime(VALID_APPOINTMENT_START_NO_SECONDS));
+    }
+
+    @Test
+    public void parseIsoDate_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseIsoDate(null));
+    }
+
+    @Test
+    public void parseIsoDate_invalidValue_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseIsoDate(INVALID_DATE));
+    }
+
+    @Test
+    public void parseIsoDate_validValueWithWhitespace_returnsDate() throws Exception {
+        String valueWithWhitespace = WHITESPACE + VALID_DATE + WHITESPACE;
+        LocalDate expectedDate = LocalDate.parse(VALID_DATE);
+        assertEquals(expectedDate, ParserUtil.parseIsoDate(valueWithWhitespace));
     }
 
     @Test

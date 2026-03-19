@@ -9,14 +9,17 @@ import static seedu.address.logic.commands.CommandTestUtil.EMAIL_DESC_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_ADDRESS_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_APPOINTMENT_START_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_EMAIL_DESC;
+import static seedu.address.logic.commands.CommandTestUtil.INVALID_LAST_ATTENDANCE_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_NAME_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_PHONE_DESC;
+import static seedu.address.logic.commands.CommandTestUtil.LAST_ATTENDANCE_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.NAME_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.PHONE_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.PHONE_DESC_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_ADDRESS_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_APPOINTMENT_START;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_AMY;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_LAST_ATTENDANCE;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_BOB;
@@ -31,12 +34,14 @@ import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_THIRD_PERSON;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.EditApptCommand;
+import seedu.address.logic.commands.EditAttdCommand;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditPersonCommand;
 import seedu.address.logic.commands.EditPersonCommand.EditPersonDescriptor;
@@ -55,6 +60,8 @@ public class EditCommandParserTest {
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditPersonCommand.MESSAGE_USAGE);
     private static final String MESSAGE_INVALID_APPT_FORMAT =
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditApptCommand.MESSAGE_USAGE);
+    private static final String MESSAGE_INVALID_ATTD_FORMAT =
+            String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditAttdCommand.MESSAGE_USAGE);
 
     private EditCommandParser parser = new EditCommandParser();
 
@@ -92,6 +99,9 @@ public class EditCommandParserTest {
 
         // invalid prefix being parsed as preamble for appt
         assertParseFailure(parser, "appt 1 i/ string", MESSAGE_INVALID_APPT_FORMAT);
+
+        // invalid prefix being parsed as preamble for attd
+        assertParseFailure(parser, "attd 1 i/ string", MESSAGE_INVALID_ATTD_FORMAT);
     }
 
     @Test
@@ -111,6 +121,10 @@ public class EditCommandParserTest {
 
         // invalid appointment start
         assertParseFailure(parser, "appt 1" + INVALID_APPOINTMENT_START_DESC,
+                ParserUtil.MESSAGE_INVALID_DATE_TIME);
+
+        // invalid attendance date-time
+        assertParseFailure(parser, "attd 1" + INVALID_LAST_ATTENDANCE_DESC,
                 ParserUtil.MESSAGE_INVALID_DATE_TIME);
     }
 
@@ -172,6 +186,17 @@ public class EditCommandParserTest {
         EditApptCommand expectedApptCommand = new EditApptCommand(targetIndex,
                 LocalDateTime.parse(VALID_APPOINTMENT_START));
         assertParseSuccess(parser, userInput, expectedApptCommand);
+
+        // attendance with explicit date-time
+        userInput = "attd " + targetIndex.getOneBased() + LAST_ATTENDANCE_DESC;
+        EditAttdCommand expectedAttdCommand = new EditAttdCommand(targetIndex,
+                Optional.of(LocalDateTime.parse(VALID_LAST_ATTENDANCE)));
+        assertParseSuccess(parser, userInput, expectedAttdCommand);
+
+        // attendance with no date-time defaults during execution
+        userInput = "attd " + targetIndex.getOneBased();
+        expectedAttdCommand = new EditAttdCommand(targetIndex, Optional.empty());
+        assertParseSuccess(parser, userInput, expectedAttdCommand);
     }
 
     @Test
@@ -208,6 +233,11 @@ public class EditCommandParserTest {
 
         // duplicate appointment start
         userInput = "appt " + targetIndex.getOneBased() + APPOINTMENT_START_DESC + APPOINTMENT_START_DESC;
+        assertParseFailure(parser, userInput,
+                Messages.getErrorMessageForDuplicatePrefixes(PREFIX_APPOINTMENT_START));
+
+        // duplicate attendance date-time
+        userInput = "attd " + targetIndex.getOneBased() + LAST_ATTENDANCE_DESC + LAST_ATTENDANCE_DESC;
         assertParseFailure(parser, userInput,
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_APPOINTMENT_START));
     }

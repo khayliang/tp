@@ -110,6 +110,24 @@ Examples:
 *  `edit 1 p/91234567 e/johndoe@example.com` Edits the phone number and email address of the 1st person to be `91234567` and `johndoe@example.com` respectively.
 *  `edit 2 n/Betsy Crower t/` Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
 
+### Recording last attendance : `edit attd`
+
+Records the last attendance date-time for an existing student contact.
+
+Format: `edit attd INDEX [d/DATETIME]`
+
+* Records attendance for the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, ...
+* If `d/` is omitted, the current local date-time is used.
+* `d/` accepts ISO 8601 local date-time.
+* Reduced precision without seconds is accepted (e.g., `2026-01-29T08:00`) and will be interpreted as seconds `:00`.
+* Leading and trailing whitespaces around the date-time value are ignored.
+* Invalid date-time values are rejected with an error asking for a valid date-time.
+* The recorded attendance is shown in the GUI for each student as `Attendance: ...`.
+
+Examples:
+* `edit attd 1 d/2026-01-29T08:00:00`
+* `edit attd 1`
+
 ### Locating persons by name: `find person`
 
 Finds persons whose names contain any of the given keywords.
@@ -127,6 +145,19 @@ Examples:
 * `find person John` returns `john` and `John Doe`
 * `find person alex david` returns `Alex Yeoh`, `David Li`<br>
   ![result for 'find person alex david'](images/findAlexDavidResult.png)
+
+### Viewing appointments for a week: `viewAppt`
+
+Shows all appointments in the Monday-Sunday week containing the given date.
+
+Format: `viewAppt [d/DATE]`
+
+* If `d/DATE` is omitted, the current date is used.
+* `DATE` must be in ISO format (`YYYY-MM-DD`).
+
+Examples:
+* `viewAppt`
+* `viewAppt d/2026-02-13`
 
 ### Deleting a person : `delete`
 
@@ -195,6 +226,8 @@ Action | Format, Examples
 **Clear** | `clear`
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
 **Edit** | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
+**Edit Attendance** | `edit attd INDEX [d/ISO8601_DATETIME]`<br> e.g., `edit attd 1 d/2026-01-29T08:00:00`, `edit attd 1`
 **Find** | `find person KEYWORD [MORE_KEYWORDS]`<br> e.g., `find person James Jake`
+**View Appointments** | `viewAppt [d/DATE]`<br> e.g., `viewAppt d/2026-02-13`
 **List** | `list`
 **Help** | `help`

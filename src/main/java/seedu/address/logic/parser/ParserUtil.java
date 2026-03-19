@@ -28,14 +28,13 @@ public class ParserUtil {
 
     public static final String MESSAGE_INVALID_INDEX = "Index is not a non-zero unsigned integer.";
     public static final String MESSAGE_INVALID_DATE =
-            "Date must be in ISO 8601 local format, e.g. 2026-01-13";
+            "Date must be in ISO 8601 local date format, e.g. 2026-01-13";
     public static final String MESSAGE_INVALID_DATE_TIME =
             "Date-time must be in ISO 8601 local format, e.g. 2026-01-13T08:00:00";
     private static final DateTimeFormatter ISO_LOCAL_DATE_FORMATTER =
             DateTimeFormatter.ISO_LOCAL_DATE.withResolverStyle(ResolverStyle.STRICT);
     private static final DateTimeFormatter ISO_LOCAL_DATE_TIME_FORMATTER =
             DateTimeFormatter.ISO_LOCAL_DATE_TIME.withResolverStyle(ResolverStyle.STRICT);
-
     /**
      * Parses {@code oneBasedIndex} into an {@code Index} and returns it. Leading and trailing whitespaces will be
      * trimmed.
