@@ -72,6 +72,9 @@ public class EditCommandParserTest {
         // valid subcommand but no index specified
         assertParseFailure(parser, "person " + VALID_NAME_AMY, MESSAGE_INVALID_PERSON_FORMAT);
 
+        // attd subcommand with no index
+        assertParseFailure(parser, "attd" + LAST_ATTENDANCE_DESC, MESSAGE_INVALID_ATTD_FORMAT);
+
         // valid subcommand but no field specified
         assertParseFailure(parser, "person 1", EditCommand.MESSAGE_NOT_EDITED);
 
@@ -101,6 +104,12 @@ public class EditCommandParserTest {
 
         // invalid prefix being parsed as preamble for attd
         assertParseFailure(parser, "attd 1 i/ string", MESSAGE_INVALID_ATTD_FORMAT);
+
+        // zero index for attd
+        assertParseFailure(parser, "attd 0" + LAST_ATTENDANCE_DESC, MESSAGE_INVALID_ATTD_FORMAT);
+
+        // negative index for attd
+        assertParseFailure(parser, "attd -1" + LAST_ATTENDANCE_DESC, MESSAGE_INVALID_ATTD_FORMAT);
     }
 
     @Test
