@@ -19,13 +19,25 @@ public class CommandResult {
     /** The application should exit. */
     private final boolean exit;
 
+    /** The application should view a person. */
+    private final Integer viewIndex;
+
     /**
      * Constructs a {@code CommandResult} with the specified fields.
      */
     public CommandResult(String feedbackToUser, boolean showHelp, boolean exit) {
+        this(feedbackToUser, showHelp, exit, null);
+    }
+
+    /**
+     * Constructs a {@code CommandResult} with the specified {@code feedbackToUser},
+     * {@code showHelp}, {@code exit}, and {@code viewIndex}.
+     */
+    public CommandResult(String feedbackToUser, boolean showHelp, boolean exit, Integer viewIndex) {
         this.feedbackToUser = requireNonNull(feedbackToUser);
         this.showHelp = showHelp;
         this.exit = exit;
+        this.viewIndex = viewIndex;
     }
 
     /**
@@ -48,6 +60,10 @@ public class CommandResult {
         return exit;
     }
 
+    public Integer getViewIndex() {
+        return viewIndex;
+    }
+
     @Override
     public boolean equals(Object other) {
         if (other == this) {
@@ -62,12 +78,13 @@ public class CommandResult {
         CommandResult otherCommandResult = (CommandResult) other;
         return feedbackToUser.equals(otherCommandResult.feedbackToUser)
                 && showHelp == otherCommandResult.showHelp
-                && exit == otherCommandResult.exit;
+                && exit == otherCommandResult.exit
+                && Objects.equals(viewIndex, otherCommandResult.viewIndex);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(feedbackToUser, showHelp, exit);
+        return Objects.hash(feedbackToUser, showHelp, exit, viewIndex);
     }
 
     @Override
@@ -76,6 +93,7 @@ public class CommandResult {
                 .add("feedbackToUser", feedbackToUser)
                 .add("showHelp", showHelp)
                 .add("exit", exit)
+                .add("viewIndex", viewIndex)
                 .toString();
     }
 

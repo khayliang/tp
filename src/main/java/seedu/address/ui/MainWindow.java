@@ -212,6 +212,10 @@ public class MainWindow extends UiPart<Stage> {
             resultDisplay.setFeedbackToUser(commandResult.getFeedbackToUser());
             showAppointmentPanel(logic.getListDisplayMode() == ListDisplayMode.APPOINTMENT);
 
+            if (commandResult.getViewIndex() != null) {
+                personListPanel.selectIndex(commandResult.getViewIndex());
+            }
+
             if (commandResult.isShowHelp()) {
                 handleHelp();
             }
