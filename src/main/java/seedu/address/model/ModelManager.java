@@ -110,6 +110,14 @@ public class ModelManager implements Model {
     public void setPerson(Person target, Person editedPerson) {
         requireAllNonNull(target, editedPerson);
 
+        // Add the edited person to the filtered list if there is a filter applied
+        // This is to ensure that the edited person is always visible in the filtered list
+        Predicate<? super Person> currentPredicate = filteredPersons.getPredicate();
+        if (currentPredicate != null && currentPredicate != PREDICATE_SHOW_ALL_PERSONS) {
+            Predicate<Person> updatedPredicate = p -> currentPredicate.test(p) || p.equals(editedPerson);
+            filteredPersons.setPredicate(updatedPredicate);
+        }
+
         addressBook.setPerson(target, editedPerson);
     }
 

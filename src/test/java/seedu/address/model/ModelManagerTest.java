@@ -94,6 +94,23 @@ public class ModelManagerTest {
     }
 
     @Test
+    public void setPerson_personHasActiveFilter_retainsInFilteredList() {
+        modelManager.addPerson(ALICE);
+        modelManager.addPerson(BENSON);
+
+        String[] keywords = ALICE.getName().fullName.split("\\s+");
+        modelManager.updateFilteredPersonList(new NameContainsKeywordsPredicate(Arrays.asList(keywords)));
+        assertEquals(1, modelManager.getFilteredPersonList().size());
+
+        seedu.address.model.person.Person editedAlice =
+                new seedu.address.testutil.PersonBuilder(ALICE).withName("Charlie").build();
+        modelManager.setPerson(ALICE, editedAlice);
+
+        assertEquals(1, modelManager.getFilteredPersonList().size());
+        assertEquals(editedAlice, modelManager.getFilteredPersonList().get(0));
+    }
+
+    @Test
     public void equals() {
         AddressBook addressBook = new AddressBookBuilder().withPerson(ALICE).withPerson(BENSON).build();
         AddressBook differentAddressBook = new AddressBook();
