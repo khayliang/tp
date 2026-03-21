@@ -60,7 +60,8 @@ public class EditSubjectCommand extends EditCommand {
         replacePerson(model, personToEdit, editedPerson);
 
         return new CommandResult(
-                String.format(MESSAGE_EDIT_SUBJECT_SUCCESS, Messages.format(editedPerson)));
+                String.format(MESSAGE_EDIT_SUBJECT_SUCCESS, Messages.format(editedPerson)),
+                editedPerson);
     }
 
     @Override

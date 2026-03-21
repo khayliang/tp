@@ -56,8 +56,7 @@ public class EditTagCommand extends EditCommand {
 
         replacePerson(model, personToEdit, editedPerson);
 
-        return new CommandResult(
-                String.format(MESSAGE_EDIT_TAG_SUCCESS, Messages.format(editedPerson)));
+        return new CommandResult(String.format(MESSAGE_EDIT_TAG_SUCCESS, Messages.format(editedPerson)), editedPerson);
     }
 
     @Override

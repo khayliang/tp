@@ -345,7 +345,7 @@ Use case ends.
 
 * 4a. The tutor enters invalid appointment details.
     * 4a1. TutorFlow requests for correct data.
-    * 4a2. Step 4-4a2 are repeated until the tutor enters valid appointment details.  
+    * 4a2. Step 4-4a2 are repeated until the tutor enters valid appointment details.
 * Use case resumes at step 5.
 
 ---
@@ -369,7 +369,7 @@ Use case ends.
    * 4a1. TutorFlow requests for the correct data.
    * 4a2. Tutor enters new data.
 * Steps 4a1-4a2 are repeated until the data entered are correct.
-* Use case resumes from step 5. 
+* Use case resumes from step 5.
 
 ---
 **Use case: View student attendance for the week**
@@ -392,7 +392,7 @@ Use case ends.
    * 4a1. TutorFlow requests for the correct data.
    * 4a2. Tutor enters new data.
 * Steps 4a1-4a2 are repeated until the data entered are correct.
-* Use case resumes from step 5. 
+* Use case resumes from step 5.
 
 ---
 
@@ -436,32 +436,32 @@ Use case ends.
   6. Tutorflow stores the new parent and student contact information.
   7. Tutor confirms that the parent and student contact has been added.
 
- 
+
   Use case ends.
 
   **Extensions**
 
   * 4a. Parent name is empty or invalid
-    
+
      * 4a1. Tutorflow detects an error in the entered data.
      * 4a2. Tutorflow requests the tutor to provide valid details.
 
    * Use case resumes from step 3.
 
   * 4b. Extremely long or invalid input detected
- 
+
      * 4b1. Tutorflow rejects the input and informs tutor that the input is invalid.
-   
+
   * Use case ends.
 
   * 5a. Student name is empty or invalid
- 
+
      * 5a1. Tutorflow informs the tutor that the parent-student pair already exists.
-       
+
   * Use case ends.
 
   * 5b. Duplicate field detected
- 
+
      * 5b1. Tutorflow detects duplicate fields in the entered data.
      * 5b2. Tutorflow requests the tutor to provide the details again.
 
@@ -476,10 +476,10 @@ Use case ends.
 
 1.  Application should work on any _mainstream OS_ as long as it has Java `17` or above installed.
 2.  Should be able to hold up to 1000 persons without a noticeable sluggishness in performance for typical usage.
-3.  A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse. 
-4.  Application should respond within one second. 
-5.  Expected to adhere to a schedule that delivers a feature set every one week. 
-6.  Not required to handle communication between Tutors and Students. 
+3.  A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
+4.  Application should respond within one second.
+5.  Expected to adhere to a schedule that delivers a feature set every one week.
+6.  Not required to handle communication between Tutors and Students.
 7.  Not required to handle payments between Tutors and Students.
 
 

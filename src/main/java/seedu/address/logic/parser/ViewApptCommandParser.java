@@ -17,7 +17,7 @@ public class ViewApptCommandParser implements Parser<ViewApptCommand> {
     public ViewApptCommand parse(String args) throws ParseException {
         String trimmedArgs = args.trim();
         if (trimmedArgs.isEmpty()) {
-            return new ViewApptCommand();
+            return new ViewApptCommand(LocalDate.now());
         }
 
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(" " + trimmedArgs, PREFIX_APPOINTMENT_START);

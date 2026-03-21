@@ -46,7 +46,8 @@ public class EditParentCommandTest {
         Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
         expectedModel.setPerson(personToEdit, editedPerson);
 
-        assertCommandSuccess(editParentCommand, model, expectedMessage, expectedModel);
+        CommandResult expectedCommandResult = new CommandResult(expectedMessage, editedPerson);
+        assertCommandSuccess(editParentCommand, model, expectedCommandResult, expectedModel);
     }
 
     @Test
@@ -75,7 +76,8 @@ public class EditParentCommandTest {
         showPersonAtIndex(expectedModel, INDEX_FIRST_PERSON);
         expectedModel.setPerson(personToEdit, editedPerson);
 
-        assertCommandSuccess(editParentCommand, model, expectedMessage, expectedModel);
+        CommandResult expectedCommandResult = new CommandResult(expectedMessage, editedPerson);
+        assertCommandSuccess(editParentCommand, model, expectedCommandResult, expectedModel);
     }
 
     @Test

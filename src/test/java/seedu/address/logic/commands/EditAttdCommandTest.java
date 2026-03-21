@@ -12,7 +12,6 @@ import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
@@ -37,41 +36,41 @@ public class EditAttdCommandTest {
     public void execute_validIndexUnfilteredListWithDatetime_success() {
         Person personToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         LocalDateTime lastAttendance = LocalDateTime.parse(VALID_LAST_ATTENDANCE);
-        EditAttdCommand editCommand = new EditAttdCommand(INDEX_FIRST_PERSON, Optional.of(lastAttendance));
+        EditAttdCommand editCommand = new EditAttdCommand(INDEX_FIRST_PERSON, lastAttendance);
 
         Person editedPerson = new PersonBuilder(personToEdit)
             .withLastAttendance(VALID_LAST_ATTENDANCE)
             .build();
         String expectedMessage = String.format(EditAttdCommand.MESSAGE_EDIT_ATTD_SUCCESS,
-                editedPerson.getName().fullName, lastAttendance.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                Messages.format(editedPerson), lastAttendance.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setPerson(personToEdit, editedPerson);
 
-        assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
+        CommandResult expectedCommandResult = new CommandResult(expectedMessage, editedPerson);
+        assertCommandSuccess(editCommand, model, expectedCommandResult, expectedModel);
     }
 
     @Test
-    public void execute_validIndexUnfilteredListWithoutDatetime_setsCurrentTime() throws CommandException {
+    public void execute_validIndexUnfilteredListWithExplicitDatetime_success() throws CommandException {
         Person personToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        EditAttdCommand editCommand = new EditAttdCommand(INDEX_FIRST_PERSON, Optional.empty());
+        LocalDateTime fixedTime = LocalDateTime.parse("2026-03-15T10:00:00");
+        EditAttdCommand editCommand = new EditAttdCommand(INDEX_FIRST_PERSON, fixedTime);
 
-        LocalDateTime beforeExecute = LocalDateTime.now().withNano(0);
         editCommand.execute(model);
-        LocalDateTime afterExecute = LocalDateTime.now().withNano(0);
 
         Person editedPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         LocalDateTime recordedAttendance = editedPerson.getLastAttendance().orElseThrow();
 
-        assertFalse(recordedAttendance.isBefore(beforeExecute));
-        assertFalse(recordedAttendance.isAfter(afterExecute));
+        assertEquals(fixedTime, recordedAttendance);
         assertEquals(personToEdit.getName(), editedPerson.getName());
     }
 
     @Test
     public void execute_invalidIndexUnfilteredList_failure() {
         Index outOfBoundIndex = Index.fromOneBased(model.getFilteredPersonList().size() + 1);
-        EditAttdCommand editCommand = new EditAttdCommand(outOfBoundIndex, Optional.empty());
+        LocalDateTime anyTime = LocalDateTime.parse(VALID_LAST_ATTENDANCE);
+        EditAttdCommand editCommand = new EditAttdCommand(outOfBoundIndex, anyTime);
 
         assertCommandFailure(editCommand, model, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
     }
@@ -79,10 +78,10 @@ public class EditAttdCommandTest {
     @Test
     public void equals() {
         LocalDateTime lastAttendance = LocalDateTime.parse(VALID_LAST_ATTENDANCE);
-        EditAttdCommand standardCommand = new EditAttdCommand(INDEX_FIRST_PERSON, Optional.of(lastAttendance));
+        EditAttdCommand standardCommand = new EditAttdCommand(INDEX_FIRST_PERSON, lastAttendance);
 
         // same values -> returns true
-        EditAttdCommand commandWithSameValues = new EditAttdCommand(INDEX_FIRST_PERSON, Optional.of(lastAttendance));
+        EditAttdCommand commandWithSameValues = new EditAttdCommand(INDEX_FIRST_PERSON, lastAttendance);
         assertTrue(standardCommand.equals(commandWithSameValues));
 
         // same object -> returns true
@@ -95,24 +94,21 @@ public class EditAttdCommandTest {
         assertFalse(standardCommand.equals(new ClearCommand()));
 
         // different index -> returns false
-        assertFalse(standardCommand.equals(new EditAttdCommand(INDEX_SECOND_PERSON, Optional.of(lastAttendance))));
+        assertFalse(standardCommand.equals(new EditAttdCommand(INDEX_SECOND_PERSON, lastAttendance)));
 
         // different attendance date-time -> returns false
         LocalDateTime differentLastAttendance = LocalDateTime.parse("2026-02-01T10:00:00");
         assertFalse(standardCommand.equals(new EditAttdCommand(INDEX_FIRST_PERSON,
-                Optional.of(differentLastAttendance))));
-
-        // one uses current time fallback while other has explicit value -> returns false
-        assertFalse(standardCommand.equals(new EditAttdCommand(INDEX_FIRST_PERSON, Optional.empty())));
+                differentLastAttendance)));
     }
 
     @Test
     public void toStringMethod() {
         Index index = Index.fromOneBased(1);
         LocalDateTime lastAttendance = LocalDateTime.parse(VALID_LAST_ATTENDANCE);
-        EditAttdCommand editCommand = new EditAttdCommand(index, Optional.of(lastAttendance));
+        EditAttdCommand editCommand = new EditAttdCommand(index, lastAttendance);
         String expected = EditAttdCommand.class.getCanonicalName()
-                + "{index=" + index + ", attendanceToSet=" + Optional.of(lastAttendance) + "}";
+                + "{index=" + index + ", attendanceToSet=" + lastAttendance + "}";
         assertEquals(expected, editCommand.toString());
     }
 }

@@ -33,10 +33,9 @@ public class MainWindow extends UiPart<Stage> {
 
     // Independent Ui parts residing in this Ui container
     private PersonListPanel personListPanel;
-    private AppointmentListPanel appointmentListPanel;
+    private PersonDetailPanel personDetailPanel;
     private ResultDisplay resultDisplay;
     private HelpWindow helpWindow;
-    private boolean isAppointmentPanelVisible;
 
     @FXML
     private StackPane commandBoxPlaceholder;
@@ -45,7 +44,10 @@ public class MainWindow extends UiPart<Stage> {
     private MenuItem helpMenuItem;
 
     @FXML
-    private StackPane listPanelPlaceholder;
+    private StackPane personListPanelPlaceholder;
+
+    @FXML
+    private StackPane personDetailPanelPlaceholder;
 
     @FXML
     private StackPane resultDisplayPlaceholder;
@@ -114,9 +116,10 @@ public class MainWindow extends UiPart<Stage> {
      */
     void fillInnerParts() {
         personListPanel = new PersonListPanel(logic.getFilteredPersonList());
-        appointmentListPanel = new AppointmentListPanel(logic.getFilteredPersonList());
-        listPanelPlaceholder.getChildren().add(personListPanel.getRoot());
-        isAppointmentPanelVisible = false;
+        personListPanelPlaceholder.getChildren().add(personListPanel.getRoot());
+
+        personDetailPanel = new PersonDetailPanel();
+        personDetailPanelPlaceholder.getChildren().add(personDetailPanel.getRoot());
 
         resultDisplay = new ResultDisplay();
         resultDisplayPlaceholder.getChildren().add(resultDisplay.getRoot());
@@ -126,6 +129,10 @@ public class MainWindow extends UiPart<Stage> {
 
         CommandBox commandBox = new CommandBox(this::executeCommand);
         commandBoxPlaceholder.getChildren().add(commandBox.getRoot());
+
+        personListPanel.selectedPersonProperty().addListener((observable, oldValue, newValue)
+                -> personDetailPanel.displayPerson(newValue));
+        personListPanel.selectFirstPerson();
     }
 
     /**
@@ -172,22 +179,6 @@ public class MainWindow extends UiPart<Stage> {
         return personListPanel;
     }
 
-    /**
-     * Switches between person and appointment list panels.
-     */
-    private void showAppointmentPanel(boolean shouldShowAppointmentPanel) {
-        if (isAppointmentPanelVisible == shouldShowAppointmentPanel) {
-            return;
-        }
-
-        listPanelPlaceholder.getChildren().clear();
-        if (shouldShowAppointmentPanel) {
-            listPanelPlaceholder.getChildren().add(appointmentListPanel.getRoot());
-        } else {
-            listPanelPlaceholder.getChildren().add(personListPanel.getRoot());
-        }
-        isAppointmentPanelVisible = shouldShowAppointmentPanel;
-    }
 
     /**
      * Executes the command and returns the result.
@@ -199,7 +190,18 @@ public class MainWindow extends UiPart<Stage> {
             CommandResult commandResult = logic.execute(commandText);
             logger.info("Result: " + commandResult.getFeedbackToUser());
             resultDisplay.setFeedbackToUser(commandResult.getFeedbackToUser());
-            showAppointmentPanel(logic.getListDisplayMode() == ListDisplayMode.APPOINTMENT);
+
+            boolean isApptMode = logic.getListDisplayMode() == ListDisplayMode.APPOINTMENT;
+            personListPanel.setShowAppointments(isApptMode);
+
+            if (commandResult.getViewIndex() != null) {
+                personListPanel.selectIndex(commandResult.getViewIndex().getZeroBased());
+            } else if (commandResult.getViewPerson() != null) {
+                int index = logic.getFilteredPersonList().indexOf(commandResult.getViewPerson());
+                if (index >= 0) {
+                    personListPanel.selectIndex(index);
+                }
+            }
 
             if (commandResult.isShowHelp()) {
                 handleHelp();

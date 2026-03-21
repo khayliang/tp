@@ -29,13 +29,6 @@ public class ViewApptCommand extends Command {
     private final AppointmentInWeekPredicate predicate;
 
     /**
-     * Creates a command that shows appointments for the current week.
-     */
-    public ViewApptCommand() {
-        this(LocalDate.now());
-    }
-
-    /**
      * Creates a command that shows appointments for the week containing {@code targetDate}.
      */
     public ViewApptCommand(LocalDate targetDate) {

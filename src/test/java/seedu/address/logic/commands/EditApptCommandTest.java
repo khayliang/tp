@@ -46,12 +46,13 @@ public class EditApptCommandTest {
                 .build();
 
         String expectedMessage = String.format(EditApptCommand.MESSAGE_EDIT_APPT_SUCCESS,
-                editedPerson.getName().fullName, appointmentStart.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                Messages.format(editedPerson), appointmentStart.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setPerson(personToEdit, editedPerson);
 
-        assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
+        CommandResult expectedCommandResult = new CommandResult(expectedMessage, editedPerson);
+        assertCommandSuccess(editCommand, model, expectedCommandResult, expectedModel);
     }
 
     @Test
@@ -86,13 +87,14 @@ public class EditApptCommandTest {
                 .withAppointmentStart(VALID_APPOINTMENT_START)
                 .build();
         String expectedMessage = String.format(EditApptCommand.MESSAGE_EDIT_APPT_SUCCESS,
-                editedPerson.getName().fullName, newAppointmentStart.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                Messages.format(editedPerson), newAppointmentStart.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
 
         Model expectedModel = new ModelManager(new AddressBook(addressBook), new UserPrefs());
         expectedModel.setListDisplayMode(ListDisplayMode.APPOINTMENT);
         expectedModel.setPerson(earlierAppointmentPerson, editedPerson);
 
-        assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
+        CommandResult expectedCommandResult = new CommandResult(expectedMessage, editedPerson);
+        assertCommandSuccess(editCommand, model, expectedCommandResult, expectedModel);
     }
 
     @Test
@@ -109,14 +111,15 @@ public class EditApptCommandTest {
                 .withAppointmentStart(VALID_APPOINTMENT_START)
                 .build();
         String expectedMessage = String.format(EditApptCommand.MESSAGE_EDIT_APPT_SUCCESS,
-                editedPerson.getName().fullName, appointmentStart.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                Messages.format(editedPerson), appointmentStart.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         showPersonAtIndex(expectedModel, INDEX_SECOND_PERSON);
         expectedModel.setListDisplayMode(ListDisplayMode.PERSON);
         expectedModel.setPerson(personToEdit, editedPerson);
 
-        assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
+        CommandResult expectedCommandResult = new CommandResult(expectedMessage, editedPerson);
+        assertCommandSuccess(editCommand, model, expectedCommandResult, expectedModel);
     }
 
     @Test
@@ -148,14 +151,15 @@ public class EditApptCommandTest {
                 .withAppointmentStart("2026-01-22T08:00:00")
                 .build();
         String expectedMessage = String.format(EditApptCommand.MESSAGE_EDIT_APPT_SUCCESS,
-                editedPerson.getName().fullName, newAppointmentStart.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                Messages.format(editedPerson), newAppointmentStart.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
 
         Model expectedModel = new ModelManager(new AddressBook(addressBook), new UserPrefs());
         expectedModel.updateFilteredPersonList(targetWeekPredicate);
         expectedModel.setListDisplayMode(ListDisplayMode.APPOINTMENT);
         expectedModel.setPerson(earlierAppointmentPerson, editedPerson);
 
-        assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
+        CommandResult expectedCommandResult = new CommandResult(expectedMessage, editedPerson);
+        assertCommandSuccess(editCommand, model, expectedCommandResult, expectedModel);
     }
 
     @Test

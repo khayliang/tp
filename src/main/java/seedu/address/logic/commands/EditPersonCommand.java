@@ -70,7 +70,9 @@ public class EditPersonCommand extends EditCommand {
         }
 
         replacePerson(model, personToEdit, editedPerson);
-        return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson)));
+        return new CommandResult(
+                String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson)),
+                editedPerson);
     }
 
     /**

@@ -15,7 +15,7 @@ public class ViewApptCommandParserTest {
 
     @Test
     public void parse_emptyArgs_returnsCommandWithCurrentDate() {
-        assertParseSuccess(parser, "   ", new ViewApptCommand());
+        assertParseSuccess(parser, "   ", new ViewApptCommand(LocalDate.now()));
     }
 
     @Test

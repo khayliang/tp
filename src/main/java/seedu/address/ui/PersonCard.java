@@ -41,45 +41,34 @@ public class PersonCard extends UiPart<Region> {
     @FXML
     private Label email;
     @FXML
-    private Label appointmentStart;
-    @FXML
-    private Label paymentDate;
-    @FXML
-    private Label lastAttendance;
-    @FXML
     private FlowPane tags;
     @FXML
     private FlowPane subjects;
     @FXML
-    private Label parentName;
-    @FXML
-    private Label parentPhone;
-    @FXML
-    private Label parentEmail;
+    private Label appointment;
 
     /**
      * Creates a {@code PersonCode} with the given {@code Person} and index to display.
      */
-    public PersonCard(Person person, int displayedIndex) {
+    public PersonCard(Person person, int displayedIndex, boolean showAppointments) {
         super(FXML);
         this.person = person;
         id.setText(displayedIndex + ". ");
         name.setText(person.getName().fullName);
+
+        // show appointments if showAppointments is true and person has an appointment
+        if (showAppointments && person.getAppointmentStart().isPresent()) {
+            String formattedTime = person.getAppointmentStart().get()
+                    .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            appointment.setText("Appt: " + formattedTime);
+        } else {
+            appointment.setVisible(false);
+            appointment.setManaged(false);
+        }
+
         phone.setText(person.getPhone().value);
         address.setText(person.getAddress().value);
         email.setText(person.getEmail().value);
-        String appointmentStartValue = person.getAppointmentStart()
-                .map(value -> value.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
-                .orElse("-");
-        appointmentStart.setText("Start: " + appointmentStartValue);
-        String paymentDateValue = person.getPaymentDate()
-                .map(value -> value.format(DateTimeFormatter.ISO_LOCAL_DATE))
-                .orElse("-");
-        paymentDate.setText("Payment made on: " + paymentDateValue);
-        String lastAttendanceValue = person.getLastAttendance()
-            .map(value -> value.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
-            .orElse("-");
-        lastAttendance.setText("Last Attendance: " + lastAttendanceValue);
         person.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
                 .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
@@ -90,20 +79,5 @@ public class PersonCard extends UiPart<Region> {
                     subjectLabel.getStyleClass().add("tag");
                     subjects.getChildren().add(subjectLabel);
                 });
-        if (person.getParentName().isPresent()) {
-            parentName.setText("Parent: " + person.getParentName().get().fullName);
-        } else {
-            parentName.setVisible(false);
-        }
-        if (person.getParentPhone().isPresent()) {
-            parentPhone.setText("Parent Phone: " + person.getParentPhone().get().value);
-        } else {
-            parentPhone.setVisible(false);
-        }
-        if (person.getParentEmail().isPresent()) {
-            parentEmail.setText("Parent Email: " + person.getParentEmail().get().value);
-        } else {
-            parentEmail.setVisible(false);
-        }
     }
 }

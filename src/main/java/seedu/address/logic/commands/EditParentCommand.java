@@ -69,7 +69,9 @@ public class EditParentCommand extends EditCommand {
         Person editedPerson = builder.build();
 
         replacePerson(model, personToEdit, editedPerson);
-        return new CommandResult(String.format(MESSAGE_EDIT_PARENT_SUCCESS, Messages.format(editedPerson)));
+        return new CommandResult(
+                String.format(MESSAGE_EDIT_PARENT_SUCCESS, Messages.format(editedPerson)),
+                editedPerson);
     }
 
     @Override

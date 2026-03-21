@@ -17,7 +17,7 @@ Ensure that Java 17 is installed on your system.
 ### Installation Steps
 
 1. Download the latest `.jar` release from [here](https://github.com/AY2526S2-CS2103T-T09-3/tp/releases).
-2. Move the downloaded `.jar` file into your desired folder. 
+2. Move the downloaded `.jar` file into your desired folder.
 3. From that folder, open a terminal or command prompt.
 4. Run the command `java -jar tutorflow.jar` to start the app.
 

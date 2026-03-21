@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToWidth="true" styleClass="detail-panel" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+  <VBox spacing="12">
+  <padding>
+    <Insets top="12" right="12" bottom="12" left="12" />
+  </padding>
+
+  <Label text="Student Details" styleClass="detail-panel-title" />
+  <Label fx:id="emptyStateLabel" text="Select a student to view details." styleClass="detail-empty-state" wrapText="true" />
+
+  <VBox fx:id="contentContainer" spacing="10" visible="false" managed="false">
+    <!-- Personal Details Section -->
+    <VBox spacing="4" styleClass="detail-section">
+      <Label fx:id="nameLabel" styleClass="detail-name" text="-" />
+      <HBox spacing="10">
+        <Label text="Phone" styleClass="detail-field-label" />
+        <Label fx:id="phoneLabel" styleClass="detail-field-value" text="-" />
+      </HBox>
+      <HBox spacing="10">
+        <Label text="Email" styleClass="detail-field-label" />
+        <Label fx:id="emailLabel" styleClass="detail-field-value" text="-" wrapText="true" HBox.hgrow="ALWAYS" />
+      </HBox>
+      <HBox spacing="10">
+        <Label text="Address" styleClass="detail-field-label" />
+        <Label fx:id="addressLabel" styleClass="detail-field-value" text="-" wrapText="true" HBox.hgrow="ALWAYS" />
+      </HBox>
+
+      <VBox spacing="6">
+        <VBox.margin>
+          <Insets top="4" />
+        </VBox.margin>
+        <Label text="Tags" styleClass="detail-section-title" />
+        <FlowPane fx:id="tagsFlowPane" hgap="6" vgap="6" prefWrapLength="320" />
+      </VBox>
+      <VBox spacing="6">
+        <VBox.margin>
+          <Insets top="4" />
+        </VBox.margin>
+        <Label text="Subjects" styleClass="detail-section-title" />
+        <FlowPane fx:id="subjectsFlowPane" hgap="6" vgap="6" prefWrapLength="320" />
+      </VBox>
+    </VBox>
+
+    <!-- Parent Details Section -->
+    <VBox spacing="4">
+      <Label text="Parent Details" styleClass="detail-group-title" />
+      <HBox spacing="10">
+        <Label text="Parent Name" styleClass="detail-field-label" />
+        <Label fx:id="parentNameLabel" styleClass="detail-field-value" text="-" wrapText="true" HBox.hgrow="ALWAYS" />
+      </HBox>
+      <HBox spacing="10">
+        <Label text="Parent Phone" styleClass="detail-field-label" />
+        <Label fx:id="parentPhoneLabel" styleClass="detail-field-value" text="-" wrapText="true" HBox.hgrow="ALWAYS" />
+      </HBox>
+      <HBox spacing="10">
+        <Label text="Parent Email" styleClass="detail-field-label" />
+        <Label fx:id="parentEmailLabel" styleClass="detail-field-value" text="-" wrapText="true" HBox.hgrow="ALWAYS" />
+      </HBox>
+    </VBox>
+
+    <!-- Appointment & Attendance Section -->
+    <VBox spacing="4">
+      <Label text="Appointments &amp; Attendance" styleClass="detail-group-title" />
+      <HBox spacing="10">
+        <Label text="Lesson Start" styleClass="detail-field-label" />
+        <Label fx:id="lessonStartLabel" styleClass="detail-field-value" text="-" />
+      </HBox>
+      <HBox spacing="10">
+        <Label text="Last Attendance" styleClass="detail-field-label" />
+        <Label fx:id="lastAttendanceLabel" styleClass="detail-field-value" text="-" />
+      </HBox>
+    </VBox>
+
+    <!-- Payments Section -->
+    <VBox spacing="4">
+      <Label text="Payments" styleClass="detail-group-title" />
+      <HBox spacing="10">
+        <Label text="Payment Date" styleClass="detail-field-label" />
+        <Label fx:id="paymentDateLabel" styleClass="detail-field-value" text="-" />
+      </HBox>
+    </VBox>
+    </VBox>
+  </VBox>
+</ScrollPane>

@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.ToStringBuilder;
+import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.person.Person;
@@ -22,19 +23,19 @@ public class EditAttdCommand extends EditCommand {
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + " " + SUB_COMMAND_WORD
             + ": Records the last attendance date-time for the person identified "
-            + "by the index number used in the displayed person list.\\n"
-            + "Parameters: attd INDEX (must be a positive integer) [d/DATETIME]\\n"
+            + "by the index number used in the displayed person list.\n"
+            + "Parameters: attd INDEX (must be a positive integer) [d/DATETIME]\n"
             + "Example: " + COMMAND_WORD + " " + SUB_COMMAND_WORD + " 1 d/2026-01-29T08:00:00";
 
     public static final String MESSAGE_EDIT_ATTD_SUCCESS = "Recorded last attendance for %1$s: %2$s";
 
-    private final Optional<LocalDateTime> attendanceToSet;
+    private final LocalDateTime attendanceToSet;
 
     /**
      * @param index of the person in the filtered person list to edit
-     * @param attendanceToSet optional last attendance date-time to set
+     * @param attendanceToSet last attendance date-time to set
      */
-    public EditAttdCommand(Index index, Optional<LocalDateTime> attendanceToSet) {
+    public EditAttdCommand(Index index, LocalDateTime attendanceToSet) {
         super(index);
         requireNonNull(attendanceToSet);
         this.attendanceToSet = attendanceToSet;
@@ -42,16 +43,15 @@ public class EditAttdCommand extends EditCommand {
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
-        LocalDateTime lastAttendance = attendanceToSet.orElseGet(() -> LocalDateTime.now().withNano(0));
         Person personToEdit = getTargetPerson(model);
         Person editedPerson = new PersonBuilder(personToEdit)
-                .withLastAttendance(Optional.of(lastAttendance))
+                .withLastAttendance(Optional.of(attendanceToSet))
                 .build();
 
         replacePerson(model, personToEdit, editedPerson);
-        String formattedAttendance = lastAttendance.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        String formattedAttendance = attendanceToSet.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         return new CommandResult(String.format(MESSAGE_EDIT_ATTD_SUCCESS,
-                editedPerson.getName().fullName, formattedAttendance));
+                Messages.format(editedPerson), formattedAttendance), editedPerson);
     }
 
     @Override
