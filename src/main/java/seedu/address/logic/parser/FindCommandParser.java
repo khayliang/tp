@@ -5,6 +5,7 @@ import java.util.Map;
 
 import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.commands.FindPersonCommand;
+import seedu.address.logic.commands.FindTagCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 
 /**
@@ -20,6 +21,7 @@ public class FindCommandParser implements Parser<FindCommand> {
     public FindCommandParser() {
         Map<String, Parser<? extends FindCommand>> parsers = new HashMap<>();
         parsers.put(FindPersonCommand.SUB_COMMAND_WORD, new FindPersonCommandParser());
+        parsers.put(FindTagCommand.SUB_COMMAND_WORD, new FindTagCommandParser());
         this.dispatcher = new SubcommandDispatcherParser<>(parsers, FindCommand.MESSAGE_USAGE);
     }
 
