@@ -2,7 +2,6 @@ package seedu.address.model.person;
 
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashSet;
@@ -48,23 +47,6 @@ public class Person {
         this(name, phone, email, address, tags, new HashSet<>(),
                 Optional.empty(), Optional.empty(), Optional.empty(),
                 Optional.empty(), Billing.defaultBilling(), Payment.EMPTY, Optional.empty());
-    }
-
-    /**
-     * Creates a Person using legacy paymentDate field as convenience for compatibility.
-     */
-    public Person(Name name, Phone phone, Email email, Address address,
-                  Set<Tag> tags, Set<Subject> subjects,
-                  Optional<Name> parentName, Optional<Phone> parentPhone, Optional<Email> parentEmail,
-                  Optional<LocalDateTime> appointmentStart,
-                  Optional<LocalDate> paymentDate,
-                  Optional<LocalDateTime> lastAttendance) {
-        this(name, phone, email, address, tags, subjects,
-                parentName, parentPhone, parentEmail,
-                appointmentStart,
-                Billing.defaultBilling(),
-                paymentDate.map(Payment::withInitialDate).orElse(Payment.EMPTY),
-                lastAttendance);
     }
 
     /**
