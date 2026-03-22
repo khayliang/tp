@@ -3,7 +3,7 @@ package seedu.address.logic.commands;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_APPOINTMENT_START;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_DATE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_LEVEL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
@@ -79,8 +79,8 @@ public class CommandTestUtil {
                     + " " + PREFIX_LEVEL + VALID_LEVEL_STRONG
                     + " " + PREFIX_SUBJECT + VALID_SUBJECT_SCIENCE
                     + " " + PREFIX_LEVEL + VALID_LEVEL_BASIC;
-    public static final String APPOINTMENT_START_DESC = " " + PREFIX_APPOINTMENT_START + VALID_APPOINTMENT_START;
-    public static final String LAST_ATTENDANCE_DESC = " " + PREFIX_APPOINTMENT_START + VALID_LAST_ATTENDANCE;
+    public static final String APPOINTMENT_START_DESC = " " + PREFIX_DATE + VALID_APPOINTMENT_START;
+    public static final String LAST_ATTENDANCE_DESC = " " + PREFIX_DATE + VALID_LAST_ATTENDANCE;
 
     public static final String INVALID_NAME_DESC = " " + PREFIX_NAME + "James&"; // '&' not allowed in names
     public static final String INVALID_PHONE_DESC = " " + PREFIX_PHONE + "911a"; // 'a' not allowed in phones
@@ -97,8 +97,8 @@ public class CommandTestUtil {
                     + " " + PREFIX_LEVEL + VALID_LEVEL_STRONG
                     + " " + PREFIX_LEVEL + VALID_LEVEL_BASIC;
     public static final String INVALID_SUBJECT_DESC = " s/@@@";
-    public static final String INVALID_APPOINTMENT_START_DESC = " " + PREFIX_APPOINTMENT_START + "not-a-date";
-    public static final String INVALID_LAST_ATTENDANCE_DESC = " " + PREFIX_APPOINTMENT_START + "invalid-attendance";
+    public static final String INVALID_APPOINTMENT_START_DESC = " " + PREFIX_DATE + "not-a-date";
+    public static final String INVALID_LAST_ATTENDANCE_DESC = " " + PREFIX_DATE + "invalid-attendance";
 
     public static final String PREAMBLE_WHITESPACE = "\t  \r  \n";
     public static final String PREAMBLE_NON_EMPTY = "NonEmptyPreamble";

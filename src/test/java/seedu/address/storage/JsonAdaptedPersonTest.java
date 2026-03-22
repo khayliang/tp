@@ -198,6 +198,39 @@ public class JsonAdaptedPersonTest {
     }
 
     @Test
+    public void toModelType_invalidParentName_throwsIllegalValueException() {
+        JsonAdaptedPerson person =
+                new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
+                        VALID_TAGS, VALID_SUBJECTS,
+                        INVALID_NAME, VALID_PARENT_PHONE, VALID_PARENT_EMAIL,
+                        VALID_APPOINTMENT_START, VALID_PAYMENT_DATE, VALID_LAST_ATTENDANCE);
+        String expectedMessage = Name.MESSAGE_CONSTRAINTS;
+        assertThrows(IllegalValueException.class, expectedMessage, person::toModelType);
+    }
+
+    @Test
+    public void toModelType_invalidParentPhone_throwsIllegalValueException() {
+        JsonAdaptedPerson person =
+                new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
+                        VALID_TAGS, VALID_SUBJECTS,
+                        VALID_PARENT_NAME, INVALID_PHONE, VALID_PARENT_EMAIL,
+                        VALID_APPOINTMENT_START, VALID_PAYMENT_DATE, VALID_LAST_ATTENDANCE);
+        String expectedMessage = Phone.MESSAGE_CONSTRAINTS;
+        assertThrows(IllegalValueException.class, expectedMessage, person::toModelType);
+    }
+
+    @Test
+    public void toModelType_invalidParentEmail_throwsIllegalValueException() {
+        JsonAdaptedPerson person =
+                new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
+                        VALID_TAGS, VALID_SUBJECTS,
+                        VALID_PARENT_NAME, VALID_PARENT_PHONE, INVALID_EMAIL,
+                        VALID_APPOINTMENT_START, VALID_PAYMENT_DATE, VALID_LAST_ATTENDANCE);
+        String expectedMessage = Email.MESSAGE_CONSTRAINTS;
+        assertThrows(IllegalValueException.class, expectedMessage, person::toModelType);
+    }
+
+    @Test
     public void toModelType_nullLevel_returnsSubject() throws Exception {
         JsonAdaptedSubject subject = new JsonAdaptedSubject("Math", null);
 

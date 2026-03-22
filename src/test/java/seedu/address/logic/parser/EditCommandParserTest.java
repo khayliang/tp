@@ -24,7 +24,7 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_BOB;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_APPOINTMENT_START;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_DATE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
@@ -254,11 +254,11 @@ public class EditCommandParserTest {
         // duplicate appointment start
         userInput = "appt " + targetIndex.getOneBased() + APPOINTMENT_START_DESC + APPOINTMENT_START_DESC;
         assertParseFailure(parser, userInput,
-                Messages.getErrorMessageForDuplicatePrefixes(PREFIX_APPOINTMENT_START));
+                Messages.getErrorMessageForDuplicatePrefixes(PREFIX_DATE));
 
         // duplicate attendance date-time
         userInput = "attd " + targetIndex.getOneBased() + LAST_ATTENDANCE_DESC + LAST_ATTENDANCE_DESC;
         assertParseFailure(parser, userInput,
-                Messages.getErrorMessageForDuplicatePrefixes(PREFIX_APPOINTMENT_START));
+                Messages.getErrorMessageForDuplicatePrefixes(PREFIX_DATE));
     }
 }

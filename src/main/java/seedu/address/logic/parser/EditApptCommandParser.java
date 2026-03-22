@@ -1,7 +1,7 @@
 package seedu.address.logic.parser;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_APPOINTMENT_START;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_DATE;
 
 import java.time.LocalDateTime;
 
@@ -22,18 +22,18 @@ public class EditApptCommandParser implements Parser<EditApptCommand> {
     @Override
     public EditApptCommand parse(String args) throws ParseException {
         requireNonNull(args);
-        ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_APPOINTMENT_START);
+        ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_DATE);
 
         Index index = ParserUtil.parseIndex(argMultimap.getPreamble(), EditApptCommand.MESSAGE_USAGE);
 
-        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_APPOINTMENT_START);
+        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_DATE);
 
-        if (argMultimap.getValue(PREFIX_APPOINTMENT_START).isEmpty()) {
+        if (argMultimap.getValue(PREFIX_DATE).isEmpty()) {
             throw new ParseException(EditCommand.MESSAGE_NOT_EDITED);
         }
 
         LocalDateTime appointmentStart =
-                ParserUtil.parseIsoDateTime(argMultimap.getValue(PREFIX_APPOINTMENT_START).get());
+                ParserUtil.parseIsoDateTime(argMultimap.getValue(PREFIX_DATE).get());
 
         return new EditApptCommand(index, appointmentStart);
     }

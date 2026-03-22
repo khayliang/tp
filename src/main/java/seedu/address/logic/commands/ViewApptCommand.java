@@ -1,7 +1,7 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_APPOINTMENT_START;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_DATE;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -20,8 +20,8 @@ public class ViewApptCommand extends Command {
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
             + ": Shows appointments for the week containing the given date.\n"
-            + "Parameters: [" + PREFIX_APPOINTMENT_START + "DATE]\n"
-            + "Example: " + COMMAND_WORD + " " + PREFIX_APPOINTMENT_START + "2026-02-13";
+            + "Parameters: [" + PREFIX_DATE + "DATE]\n"
+            + "Example: " + COMMAND_WORD + " " + PREFIX_DATE + "2026-02-13";
 
     public static final String MESSAGE_SUCCESS = "%1$d appointments listed for week %2$s to %3$s";
 
