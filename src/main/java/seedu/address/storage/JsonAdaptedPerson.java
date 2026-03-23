@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.billing.Billing;
-import seedu.address.model.billing.Payment;
+import seedu.address.model.billing.PaymentHistory;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
@@ -244,11 +244,11 @@ class JsonAdaptedPerson {
             }
         }
 
-        Payment modelPayment;
+        PaymentHistory modelPayment;
         if (!modelPaidDates.isEmpty()) {
-            modelPayment = new Payment(modelPaidDates.toArray(new LocalDate[0]));
+            modelPayment = new PaymentHistory(modelPaidDates.toArray(new LocalDate[0]));
         } else {
-            modelPayment = Payment.EMPTY;
+            modelPayment = PaymentHistory.EMPTY;
         }
 
         // ---------- Billing ----------

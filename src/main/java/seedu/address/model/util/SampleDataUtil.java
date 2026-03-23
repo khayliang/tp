@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import seedu.address.model.AddressBook;
 import seedu.address.model.ReadOnlyAddressBook;
-import seedu.address.model.billing.Payment;
+import seedu.address.model.billing.PaymentHistory;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
@@ -35,7 +35,7 @@ public class SampleDataUtil {
                     .withParentPhone(Optional.of(new Phone("98765432")))
                     .withParentEmail(Optional.of(new Email("janet@example.com")))
                     .withAppointmentStart(Optional.of(LocalDateTime.of(2026, 3, 21, 15, 30)))
-                    .withPayment(new Payment((LocalDate.of(2026, 3, 15))))
+                    .withPayment(new PaymentHistory((LocalDate.of(2026, 3, 15))))
                     .withLastAttendance(Optional.of(LocalDateTime.of(2026, 3, 18, 15, 30)))
                     .build(),
             new PersonBuilder(new Name("Bernice Yu"), new Phone("99272758"), new Email("berniceyu@example.com"),
@@ -47,7 +47,7 @@ public class SampleDataUtil {
                     .withParentPhone(Optional.of(new Phone("97654321")))
                     .withParentEmail(Optional.of(new Email("ming@example.com")))
                     .withAppointmentStart(Optional.of(LocalDateTime.of(2026, 3, 22, 16, 0)))
-                    .withPayment(new Payment(LocalDate.of(2026, 3, 10)))
+                    .withPayment(new PaymentHistory(LocalDate.of(2026, 3, 10)))
                     .withLastAttendance(Optional.of(LocalDateTime.of(2026, 3, 17, 16, 0)))
                     .build(),
             new PersonBuilder(new Name("Charlotte Oliveiro"), new Phone("93210283"),
@@ -59,7 +59,7 @@ public class SampleDataUtil {
                     .withParentPhone(Optional.of(new Phone("96543210")))
                     .withParentEmail(Optional.of(new Email("patricia@example.com")))
                     .withAppointmentStart(Optional.of(LocalDateTime.of(2026, 3, 23, 14, 30)))
-                    .withPayment(new Payment(LocalDate.of(2026, 3, 5)))
+                    .withPayment(new PaymentHistory(LocalDate.of(2026, 3, 5)))
                     .withLastAttendance(Optional.of(LocalDateTime.of(2026, 3, 16, 14, 30)))
                     .build(),
             new PersonBuilder(new Name("David Li"), new Phone("91031282"), new Email("lidavid@example.com"),
@@ -70,7 +70,7 @@ public class SampleDataUtil {
                     .withParentPhone(Optional.of(new Phone("95432109")))
                     .withParentEmail(Optional.of(new Email("mary@example.com")))
                     .withAppointmentStart(Optional.of(LocalDateTime.of(2026, 3, 24, 10, 0)))
-                    .withPayment(new Payment(LocalDate.of(2026, 3, 1)))
+                    .withPayment(new PaymentHistory(LocalDate.of(2026, 3, 1)))
                     .withLastAttendance(Optional.of(LocalDateTime.of(2026, 3, 19, 10, 0)))
                     .build(),
             new PersonBuilder(new Name("Irfan Ibrahim"), new Phone("92492021"), new Email("irfan@example.com"),
@@ -81,7 +81,7 @@ public class SampleDataUtil {
                     .withParentPhone(Optional.of(new Phone("94321098")))
                     .withParentEmail(Optional.of(new Email("zahra@example.com")))
                     .withAppointmentStart(Optional.of(LocalDateTime.of(2026, 3, 25, 11, 30)))
-                    .withPayment(new Payment(LocalDate.of(2026, 2, 28)))
+                    .withPayment(new PaymentHistory(LocalDate.of(2026, 2, 28)))
                     .withLastAttendance(Optional.of(LocalDateTime.of(2026, 3, 15, 11, 30)))
                     .build(),
             new PersonBuilder(new Name("Roy Balakrishnan"), new Phone("92624417"), new Email("royb@example.com"),
@@ -92,7 +92,7 @@ public class SampleDataUtil {
                     .withParentPhone(Optional.of(new Phone("93210987")))
                     .withParentEmail(Optional.of(new Email("priya@example.com")))
                     .withAppointmentStart(Optional.of(LocalDateTime.of(2026, 3, 26, 17, 0)))
-                    .withPayment(new Payment(LocalDate.of(2026, 2, 25)))
+                    .withPayment(new PaymentHistory(LocalDate.of(2026, 2, 25)))
                     .withLastAttendance(Optional.of(LocalDateTime.of(2026, 3, 20, 17, 0)))
                     .build()
         };

@@ -12,7 +12,7 @@ import java.util.Set;
 
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.billing.Billing;
-import seedu.address.model.billing.Payment;
+import seedu.address.model.billing.PaymentHistory;
 import seedu.address.model.subject.Subject;
 import seedu.address.model.tag.Tag;
 
@@ -37,7 +37,7 @@ public class Person {
     private final Optional<Phone> parentPhone;
     private final Optional<Email> parentEmail;
     private final Billing billing;
-    private final Payment payment;
+    private final PaymentHistory payment;
 
     /**
      * Creates a {@code Person} with the given core fields and tags.
@@ -47,7 +47,7 @@ public class Person {
     public Person(Name name, Phone phone, Email email, Address address, Set<Tag> tags) {
         this(name, phone, email, address, tags, new HashSet<>(),
                 Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Billing.defaultBilling(), Payment.EMPTY, Optional.empty());
+                Optional.empty(), Billing.defaultBilling(), PaymentHistory.EMPTY, Optional.empty());
     }
 
     /**
@@ -58,7 +58,7 @@ public class Person {
                   Optional<Name> parentName, Optional<Phone> parentPhone, Optional<Email> parentEmail,
                   Optional<LocalDateTime> appointmentStart,
                   Billing billing,
-                  Payment payment,
+                  PaymentHistory payment,
                   Optional<LocalDateTime> lastAttendance) {
 
         requireAllNonNull(name, phone, email, address, tags, subjects,
@@ -104,7 +104,7 @@ public class Person {
         return billing;
     }
 
-    public Payment getPayment() {
+    public PaymentHistory getPayment() {
         return payment;
     }
 
@@ -166,7 +166,7 @@ public class Person {
      * @param paymentDate A valid {@code LocalDate}
      * @return {@code Payment} object
      */
-    public Payment recordPaymentDate(LocalDate paymentDate) {
+    public PaymentHistory recordPaymentDate(LocalDate paymentDate) {
         return payment.recordPayment(paymentDate);
     }
 

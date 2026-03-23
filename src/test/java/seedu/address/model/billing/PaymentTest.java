@@ -19,35 +19,35 @@ public class PaymentTest {
 
     @Test
     public void constructor_validPaidDates_success() {
-        Payment payment = new Payment(DATE_1);
+        PaymentHistory payment = new PaymentHistory(DATE_1);
         assertEquals(1, payment.getPaidDates().size());
         assertTrue(payment.getPaidDates().contains(DATE_1));
     }
 
     @Test
     public void constructor_emptyPaidDates_success() {
-        Payment payment = new Payment();
+        PaymentHistory payment = new PaymentHistory();
         assertEquals(0, payment.getPaidDates().size());
     }
 
     @Test
     public void withInitialDate_validDate_returnsPaymentWithDate() {
-        Payment payment = new Payment(DATE_1);
+        PaymentHistory payment = new PaymentHistory(DATE_1);
         assertTrue(payment.getPaidDates().contains(DATE_1));
         assertEquals(1, payment.getPaidDates().size());
     }
 
     @Test
     public void recordPayment_validDate_returnsNewPaymentWithAddedDate() {
-        Payment original = Payment.EMPTY;
-        Payment updated = original.recordPayment(DATE_1);
+        PaymentHistory original = PaymentHistory.EMPTY;
+        PaymentHistory updated = original.recordPayment(DATE_1);
         assertTrue(updated.getPaidDates().contains(DATE_1));
         assertFalse(original.getPaidDates().contains(DATE_1)); // Original unchanged (immutable)
     }
 
     @Test
     public void recordPayment_addMultipleDates_returnsPaymentWithAllDates() {
-        Payment payment = Payment.EMPTY;
+        PaymentHistory payment = PaymentHistory.EMPTY;
         payment = payment.recordPayment(DATE_1);
         payment = payment.recordPayment(DATE_2);
         payment = payment.recordPayment(DATE_3);
@@ -59,98 +59,98 @@ public class PaymentTest {
 
     @Test
     public void recordPayment_nullDate_throwsNullPointerException() {
-        Payment payment = Payment.EMPTY;
+        PaymentHistory payment = PaymentHistory.EMPTY;
         assertThrows(NullPointerException.class, () -> payment.recordPayment(null));
     }
 
     @Test
     public void recordPayment_duplicateDate_ignoresDuplicate() {
-        Payment payment = new Payment(DATE_1);
-        Payment updated = payment.recordPayment(DATE_1);
+        PaymentHistory payment = new PaymentHistory(DATE_1);
+        PaymentHistory updated = payment.recordPayment(DATE_1);
         assertEquals(1, updated.getPaidDates().size());
     }
 
     @Test
     public void hasPaidOn_dateInHistory_returnsTrue() {
-        Payment payment = new Payment(DATE_1);
+        PaymentHistory payment = new PaymentHistory(DATE_1);
         assertTrue(payment.hasPaidOn(DATE_1));
     }
 
     @Test
     public void hasPaidOn_dateNotInHistory_returnsFalse() {
-        Payment payment = new Payment(DATE_1);
+        PaymentHistory payment = new PaymentHistory(DATE_1);
         assertFalse(payment.hasPaidOn(DATE_2));
     }
 
     @Test
     public void hasPaidOn_nullDate_throwsNullPointerException() {
-        Payment payment = Payment.EMPTY;
+        PaymentHistory payment = PaymentHistory.EMPTY;
         assertThrows(NullPointerException.class, () -> payment.hasPaidOn(null));
     }
 
     @Test
     public void equals_sameObject_returnsTrue() {
-        Payment payment = Payment.EMPTY;
+        PaymentHistory payment = PaymentHistory.EMPTY;
         assertTrue(payment.equals(payment));
     }
 
     @Test
     public void equals_emptyPayments_returnsTrue() {
-        Payment payment1 = Payment.EMPTY;
-        Payment payment2 = Payment.EMPTY;
+        PaymentHistory payment1 = PaymentHistory.EMPTY;
+        PaymentHistory payment2 = PaymentHistory.EMPTY;
         assertTrue(payment1.equals(payment2));
     }
 
     @Test
     public void equals_sameValues_returnsTrue() {
-        Payment payment1 = new Payment(DATE_1, DATE_2);
-        Payment payment2 = new Payment(DATE_1, DATE_2);
+        PaymentHistory payment1 = new PaymentHistory(DATE_1, DATE_2);
+        PaymentHistory payment2 = new PaymentHistory(DATE_1, DATE_2);
         assertTrue(payment1.equals(payment2));
     }
 
     @Test
     public void equals_differentDates_returnsFalse() {
-        Payment payment1 = new Payment(DATE_1);
-        Payment payment2 = new Payment(DATE_2);
+        PaymentHistory payment1 = new PaymentHistory(DATE_1);
+        PaymentHistory payment2 = new PaymentHistory(DATE_2);
         assertFalse(payment1.equals(payment2));
     }
 
     @Test
     public void equals_differentDateCount_returnsFalse() {
-        Payment payment1 = new Payment(DATE_1);
-        Payment payment2 = new Payment(DATE_1, DATE_2);
+        PaymentHistory payment1 = new PaymentHistory(DATE_1);
+        PaymentHistory payment2 = new PaymentHistory(DATE_1, DATE_2);
         assertFalse(payment1.equals(payment2));
     }
 
     @Test
     public void equals_null_returnsFalse() {
-        Payment payment = Payment.EMPTY;
+        PaymentHistory payment = PaymentHistory.EMPTY;
         assertFalse(payment.equals(null));
     }
 
     @Test
     public void equals_differentType_returnsFalse() {
-        Payment payment = Payment.EMPTY;
+        PaymentHistory payment = PaymentHistory.EMPTY;
         assertFalse(payment.equals("payment"));
     }
 
     @Test
     public void hashCode_sameValues_sameHashCode() {
-        Payment payment1 = new Payment(DATE_1);
-        Payment payment2 = new Payment(DATE_1);
+        PaymentHistory payment1 = new PaymentHistory(DATE_1);
+        PaymentHistory payment2 = new PaymentHistory(DATE_1);
         assertEquals(payment1.hashCode(), payment2.hashCode());
     }
 
     @Test
     public void hashCode_differentDates_differentHashCode() {
-        Payment payment1 = new Payment(DATE_1);
-        Payment payment2 = new Payment(DATE_2);
+        PaymentHistory payment1 = new PaymentHistory(DATE_1);
+        PaymentHistory payment2 = new PaymentHistory(DATE_2);
         assertNotEquals(payment1.hashCode(), payment2.hashCode());
     }
 
     @Test
     public void toString_validPayment_returnsFormattedString() {
-        Payment payment = new Payment(DATE_1);
+        PaymentHistory payment = new PaymentHistory(DATE_1);
         String result = payment.toString();
         assertTrue(result.contains("Payment"));
         assertTrue(result.contains(DATE_1.toString()));
@@ -158,7 +158,7 @@ public class PaymentTest {
 
     @Test
     public void getPaidDates_returnsUnmodifiableSet() {
-        Payment payment = new Payment(DATE_1);
+        PaymentHistory payment = new PaymentHistory(DATE_1);
         Set<LocalDate> retrievedDates = payment.getPaidDates();
         assertThrows(UnsupportedOperationException.class, () ->
                 retrievedDates.add(DATE_2)); // Should not be able to modify

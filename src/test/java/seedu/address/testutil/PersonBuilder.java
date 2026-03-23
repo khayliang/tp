@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import seedu.address.model.billing.Billing;
-import seedu.address.model.billing.Payment;
+import seedu.address.model.billing.PaymentHistory;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
@@ -40,7 +40,7 @@ public class PersonBuilder {
     private Email parentEmail;
     private LocalDateTime appointmentStart;
     private Billing billing;
-    private Payment payment;
+    private PaymentHistory payment;
     private LocalDateTime lastAttendance;
 
     /**
@@ -58,7 +58,7 @@ public class PersonBuilder {
         parentEmail = null;
         appointmentStart = null;
         billing = Billing.defaultBilling();
-        payment = Payment.EMPTY;
+        payment = PaymentHistory.EMPTY;
         lastAttendance = null;
     }
 
@@ -193,7 +193,7 @@ public class PersonBuilder {
     /**
      * Sets the {@code Payment} history of the {@code Person} that we are building.
      */
-    public PersonBuilder withPayment(Payment payment) {
+    public PersonBuilder withPayment(PaymentHistory payment) {
         this.payment = payment;
         return this;
     }

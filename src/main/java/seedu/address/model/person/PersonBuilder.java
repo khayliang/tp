@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import seedu.address.model.billing.Billing;
-import seedu.address.model.billing.Payment;
+import seedu.address.model.billing.PaymentHistory;
 import seedu.address.model.subject.Subject;
 import seedu.address.model.tag.Tag;
 
@@ -27,7 +27,7 @@ public class PersonBuilder {
     private Optional<LocalDateTime> appointmentStart;
     private Optional<LocalDateTime> lastAttendance;
     private Billing billing;
-    private Payment payment;
+    private PaymentHistory payment;
 
     /**
      * Creates a builder initialized with required person fields.
@@ -46,7 +46,7 @@ public class PersonBuilder {
         this.appointmentStart = Optional.empty();
         this.lastAttendance = Optional.empty();
         this.billing = Billing.defaultBilling();
-        this.payment = Payment.EMPTY;
+        this.payment = PaymentHistory.EMPTY;
     }
 
     /**
@@ -195,7 +195,7 @@ public class PersonBuilder {
      * @param payment the new payment history and dates
      * @return this {@code PersonBuilder} instance for method chaining
      */
-    public PersonBuilder withPayment(Payment payment) {
+    public PersonBuilder withPayment(PaymentHistory payment) {
         this.payment = payment;
         return this;
     }

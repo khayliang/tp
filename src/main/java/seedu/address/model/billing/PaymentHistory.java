@@ -12,9 +12,9 @@ import java.util.Set;
  * Represents payment record for a tutee.
  * Guarantees: immutable.
  */
-public class Payment {
+public class PaymentHistory {
 
-    public static final Payment EMPTY = new Payment();
+    public static final PaymentHistory EMPTY = new PaymentHistory();
 
     private final Set<LocalDate> paidDates;
 
@@ -22,7 +22,7 @@ public class Payment {
      * Creates a {@code Payment} object with payment history
      * @param paidDates Payment history
      */
-    public Payment(LocalDate... paidDates) {
+    public PaymentHistory(LocalDate... paidDates) {
         requireNonNull(paidDates);
         this.paidDates = Collections.unmodifiableSet(new LinkedHashSet<>(Arrays.asList(paidDates)));
     }
@@ -36,11 +36,11 @@ public class Payment {
      * @param date A valid date
      * @return {@code Payment} object with updated payment history
      */
-    public Payment recordPayment(LocalDate date) {
+    public PaymentHistory recordPayment(LocalDate date) {
         requireNonNull(date);
         Set<LocalDate> next = new LinkedHashSet<>(paidDates);
         next.add(date);
-        return new Payment(next.toArray(new LocalDate[0]));
+        return new PaymentHistory(next.toArray(new LocalDate[0]));
     }
 
     /**
@@ -59,10 +59,10 @@ public class Payment {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof Payment)) {
+        if (!(other instanceof PaymentHistory)) {
             return false;
         }
-        Payment otherPayment = (Payment) other;
+        PaymentHistory otherPayment = (PaymentHistory) other;
         return paidDates.equals(otherPayment.paidDates);
     }
 
