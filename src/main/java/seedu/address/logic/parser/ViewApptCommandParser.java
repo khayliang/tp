@@ -1,7 +1,7 @@
 package seedu.address.logic.parser;
 
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_APPOINTMENT_START;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_DATE;
 
 import java.time.LocalDate;
 
@@ -20,14 +20,14 @@ public class ViewApptCommandParser implements Parser<ViewApptCommand> {
             return new ViewApptCommand(LocalDate.now());
         }
 
-        ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(" " + trimmedArgs, PREFIX_APPOINTMENT_START);
-        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_APPOINTMENT_START);
+        ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(" " + trimmedArgs, PREFIX_DATE);
+        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_DATE);
 
-        if (!argMultimap.getPreamble().isEmpty() || argMultimap.getValue(PREFIX_APPOINTMENT_START).isEmpty()) {
+        if (!argMultimap.getPreamble().isEmpty() || argMultimap.getValue(PREFIX_DATE).isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ViewApptCommand.MESSAGE_USAGE));
         }
 
-        LocalDate targetDate = ParserUtil.parseIsoDate(argMultimap.getValue(PREFIX_APPOINTMENT_START).get());
+        LocalDate targetDate = ParserUtil.parseIsoDate(argMultimap.getValue(PREFIX_DATE).get());
         return new ViewApptCommand(targetDate);
     }
 }
