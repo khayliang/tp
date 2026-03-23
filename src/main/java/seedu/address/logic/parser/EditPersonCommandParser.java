@@ -6,6 +6,9 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 
+import java.util.Optional;
+import java.util.function.Consumer;
+
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditPersonCommand;
@@ -16,6 +19,11 @@ import seedu.address.logic.parser.exceptions.ParseException;
  * Parses input arguments and creates a new {@code EditPersonCommand} object.
  */
 public class EditPersonCommandParser implements Parser<EditPersonCommand> {
+
+    @FunctionalInterface
+    private interface ThrowingParser<T> {
+        T parse(String value) throws ParseException;
+    }
 
     /**
      * Parses the given {@code String} of arguments in the context of the EditPersonCommand
@@ -34,23 +42,24 @@ public class EditPersonCommandParser implements Parser<EditPersonCommand> {
 
         EditPersonDescriptor editPersonDescriptor = new EditPersonDescriptor();
 
-        if (argMultimap.getValue(PREFIX_NAME).isPresent()) {
-            editPersonDescriptor.setName(ParserUtil.parseName(argMultimap.getValue(PREFIX_NAME).get()));
-        }
-        if (argMultimap.getValue(PREFIX_PHONE).isPresent()) {
-            editPersonDescriptor.setPhone(ParserUtil.parsePhone(argMultimap.getValue(PREFIX_PHONE).get()));
-        }
-        if (argMultimap.getValue(PREFIX_EMAIL).isPresent()) {
-            editPersonDescriptor.setEmail(ParserUtil.parseEmail(argMultimap.getValue(PREFIX_EMAIL).get()));
-        }
-        if (argMultimap.getValue(PREFIX_ADDRESS).isPresent()) {
-            editPersonDescriptor.setAddress(ParserUtil.parseAddress(argMultimap.getValue(PREFIX_ADDRESS).get()));
-        }
+        parseAndSet(argMultimap, PREFIX_NAME, ParserUtil::parseName, editPersonDescriptor::setName);
+        parseAndSet(argMultimap, PREFIX_PHONE, ParserUtil::parsePhone, editPersonDescriptor::setPhone);
+        parseAndSet(argMultimap, PREFIX_EMAIL, ParserUtil::parseEmail, editPersonDescriptor::setEmail);
+        parseAndSet(argMultimap, PREFIX_ADDRESS, ParserUtil::parseAddress, editPersonDescriptor::setAddress);
 
         if (!editPersonDescriptor.isAnyFieldEdited()) {
             throw new ParseException(EditCommand.MESSAGE_NOT_EDITED);
         }
 
         return new EditPersonCommand(index, editPersonDescriptor);
+    }
+
+    private static <T> void parseAndSet(ArgumentMultimap argMultimap, Prefix prefix,
+                                        ThrowingParser<T> parser, Consumer<T> setter)
+            throws ParseException {
+        Optional<String> value = argMultimap.getValue(prefix);
+        if (value.isPresent()) {
+            setter.accept(parser.parse(value.get()));
+        }
     }
 }

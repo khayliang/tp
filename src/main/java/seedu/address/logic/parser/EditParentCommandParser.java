@@ -5,6 +5,9 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_PARENT_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PARENT_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PARENT_PHONE;
 
+import java.util.Optional;
+import java.util.function.Consumer;
+
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditParentCommand;
@@ -15,6 +18,11 @@ import seedu.address.logic.parser.exceptions.ParseException;
  * Parses input arguments and creates a new {@code EditParentCommand} object.
  */
 public class EditParentCommandParser implements Parser<EditParentCommand> {
+
+    @FunctionalInterface
+    private interface ThrowingParser<T> {
+        T parse(String value) throws ParseException;
+    }
 
     /**
      * Parses the given {@code String} of arguments in the context of the EditParentCommand
@@ -33,23 +41,26 @@ public class EditParentCommandParser implements Parser<EditParentCommand> {
 
         EditParentDescriptor editParentDescriptor = new EditParentDescriptor();
 
-        if (argMultimap.getValue(PREFIX_PARENT_NAME).isPresent()) {
-            editParentDescriptor.setParentName(
-                    ParserUtil.parseParentName(argMultimap.getValue(PREFIX_PARENT_NAME).get()));
-        }
-        if (argMultimap.getValue(PREFIX_PARENT_PHONE).isPresent()) {
-            editParentDescriptor.setParentPhone(
-                    ParserUtil.parseParentPhone(argMultimap.getValue(PREFIX_PARENT_PHONE).get()));
-        }
-        if (argMultimap.getValue(PREFIX_PARENT_EMAIL).isPresent()) {
-            editParentDescriptor.setParentEmail(
-                    ParserUtil.parseParentEmail(argMultimap.getValue(PREFIX_PARENT_EMAIL).get()));
-        }
+        parseAndSet(argMultimap, PREFIX_PARENT_NAME, ParserUtil::parseParentName,
+                editParentDescriptor::setParentName);
+        parseAndSet(argMultimap, PREFIX_PARENT_PHONE, ParserUtil::parseParentPhone,
+                editParentDescriptor::setParentPhone);
+        parseAndSet(argMultimap, PREFIX_PARENT_EMAIL, ParserUtil::parseParentEmail,
+                editParentDescriptor::setParentEmail);
 
         if (!editParentDescriptor.isAnyFieldEdited()) {
             throw new ParseException(EditCommand.MESSAGE_NOT_EDITED);
         }
 
         return new EditParentCommand(index, editParentDescriptor);
+    }
+
+    private static <T> void parseAndSet(ArgumentMultimap argMultimap, Prefix prefix,
+                                        ThrowingParser<T> parser, Consumer<T> setter)
+            throws ParseException {
+        Optional<String> value = argMultimap.getValue(prefix);
+        if (value.isPresent()) {
+            setter.accept(parser.parse(value.get()));
+        }
     }
 }
