@@ -12,7 +12,9 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.index.Index;
+import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditParentCommand;
+import seedu.address.logic.commands.EditParentCommand.EditParentDescriptor;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
@@ -28,7 +30,7 @@ public class EditParentCommandParserTest {
 
     @Test
     public void parse_missingParts_failure() {
-        assertParseFailure(parser, "1", MESSAGE_INVALID_FORMAT);
+        assertParseFailure(parser, "1", EditCommand.MESSAGE_NOT_EDITED);
     }
 
     @Test
@@ -48,8 +50,12 @@ public class EditParentCommandParserTest {
         Optional<Phone> expectedPhone = Optional.of(new Phone(VALID_PHONE));
         Optional<Email> expectedEmail = Optional.of(new Email(VALID_EMAIL));
 
-        EditParentCommand expectedCommand = new EditParentCommand(targetIndex,
-                expectedName, expectedPhone, expectedEmail);
+        EditParentDescriptor expectedDescriptor = new EditParentDescriptor();
+        expectedName.ifPresent(expectedDescriptor::setParentName);
+        expectedPhone.ifPresent(expectedDescriptor::setParentPhone);
+        expectedEmail.ifPresent(expectedDescriptor::setParentEmail);
+
+        EditParentCommand expectedCommand = new EditParentCommand(targetIndex, expectedDescriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
     }
 }
