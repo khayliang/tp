@@ -1,7 +1,7 @@
 package seedu.address.logic.parser;
 
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_APPOINTMENT_START;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_DATE;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
@@ -18,8 +18,8 @@ public class EditPaymentCommandParserTest {
     private static final String MESSAGE_INVALID_FORMAT =
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditPaymentCommand.MESSAGE_USAGE);
     private static final String VALID_DATE = "2026-01-13";
-    private static final String VALID_DATE_DESC = " " + PREFIX_APPOINTMENT_START + VALID_DATE;
-    private static final String INVALID_DATE_DESC = " " + PREFIX_APPOINTMENT_START + "2026-13-40";
+    private static final String VALID_DATE_DESC = " " + PREFIX_DATE + VALID_DATE;
+    private static final String INVALID_DATE_DESC = " " + PREFIX_DATE + "2026-13-40";
 
     private EditPaymentCommandParser parser = new EditPaymentCommandParser();
 
