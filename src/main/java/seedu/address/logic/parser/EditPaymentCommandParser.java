@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import seedu.address.commons.core.index.Index;
+import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditPaymentCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 /**

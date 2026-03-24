@@ -42,16 +42,14 @@ public class EditPaymentCommandTest {
         EditPaymentCommand editCommand = new EditPaymentCommand(
                 INDEX_FIRST_PERSON, paymentDate, amountPaid);
 
-        Billing updatedBilling = personToEdit.recordFeesPaidAndAdvanceBilling(paymentDate);
-        Billing updatedBilling = personToEdit.getBilling().updateRate(
-                Double.parseDouble(VALID_PAYMENT_AMOUNT));
-
+        Billing updatedBilling = personToEdit.recordFeesPaidAndAdvanceBilling(paymentDate)
+                        .updateRate(Double.parseDouble(VALID_PAYMENT_AMOUNT));
         Person editedPerson = new PersonBuilder(personToEdit)
                 .withBilling(updatedBilling)
                 .build();
 
         String expectedMessage = String.format(EditPaymentCommand.MESSAGE_EDIT_PAYMENT_SUCCESS,
-                editedPerson.getBilling().getMonthlyRate(),
+                editedPerson.getBilling().getTuitionFee(),
                 Messages.format(editedPerson),
                 paymentDate.format(DateTimeFormatter.ISO_LOCAL_DATE));
 
