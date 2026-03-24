@@ -2,6 +2,7 @@ package seedu.address.model.tag;
 
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import seedu.address.model.person.Person;
 
@@ -15,6 +16,7 @@ import seedu.address.model.person.Person;
 public class TagContainsKeywordsPredicate implements Predicate<Person> {
 
     private final Set<Tag> keywords;
+    private final Set<String> keywordNames;
 
     /**
      * Constructs a predicate with the specified set of tag keywords.
@@ -22,16 +24,19 @@ public class TagContainsKeywordsPredicate implements Predicate<Person> {
      * @param keywords Set of tags to match against.
      */
     public TagContainsKeywordsPredicate(Set<Tag> keywords) {
+
         this.keywords = keywords;
+        this.keywordNames = keywords.stream()
+                .map(k -> k.tagName.toLowerCase())
+                .collect(Collectors.toSet());
     }
 
     @Override
     public boolean test(Person person) {
         return person.getTags().stream()
-                .anyMatch(personTag ->
-                        keywords.stream().anyMatch(keyword ->
-                                personTag.tagName.toLowerCase()
-                                        .contains(keyword.tagName.toLowerCase())));
+                .map(tag -> tag.tagName.toLowerCase())
+                .anyMatch(tagName ->
+                        keywordNames.stream().anyMatch(tagName::contains));
     }
 
     @Override
