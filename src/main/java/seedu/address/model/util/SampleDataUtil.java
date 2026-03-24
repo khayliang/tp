@@ -12,12 +12,15 @@ import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.academic.Academics;
 import seedu.address.model.academic.Level;
 import seedu.address.model.academic.Subject;
+import seedu.address.model.billing.Billing;
+import seedu.address.model.billing.PaymentHistory;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.PersonBuilder;
 import seedu.address.model.person.Phone;
+import seedu.address.model.recurrence.Recurrence;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -35,7 +38,8 @@ public class SampleDataUtil {
                     .withParentPhone(new Phone("98765432"))
                     .withParentEmail(new Email("janet@example.com"))
                     .withAppointmentStart(LocalDateTime.of(2026, 3, 21, 15, 30))
-                    .withPaymentDate(LocalDate.of(2026, 3, 15))
+                    .withBilling(new Billing(Recurrence.MONTHLY, (LocalDate.of(2026, 3, 15)), 25,
+                                new PaymentHistory(LocalDate.of(2026, 3, 15))))
                     .withLastAttendance(LocalDateTime.of(2026, 3, 18, 15, 30))
                     .build(),
             new PersonBuilder(new Name("Bernice Yu"), new Phone("99272758"), new Email("berniceyu@example.com"),
@@ -48,7 +52,8 @@ public class SampleDataUtil {
                     .withParentPhone(new Phone("97654321"))
                     .withParentEmail(new Email("ming@example.com"))
                     .withAppointmentStart(LocalDateTime.of(2026, 3, 22, 16, 0))
-                    .withPaymentDate(LocalDate.of(2026, 3, 10))
+                    .withBilling(new Billing(Recurrence.MONTHLY, (LocalDate.of(2026, 3, 10)), 25,
+                                new PaymentHistory(LocalDate.of(2026, 3, 10))))
                     .withLastAttendance(LocalDateTime.of(2026, 3, 17, 16, 0))
                     .build(),
             new PersonBuilder(new Name("Charlotte Oliveiro"), new Phone("93210283"),
@@ -61,7 +66,8 @@ public class SampleDataUtil {
                     .withParentPhone(new Phone("96543210"))
                     .withParentEmail(new Email("patricia@example.com"))
                     .withAppointmentStart(LocalDateTime.of(2026, 3, 23, 14, 30))
-                    .withPaymentDate(LocalDate.of(2026, 3, 5))
+                    .withBilling(new Billing(Recurrence.MONTHLY, (LocalDate.of(2026, 3, 5)), 25,
+                                new PaymentHistory(LocalDate.of(2026, 3, 5))))
                     .withLastAttendance(LocalDateTime.of(2026, 3, 16, 14, 30))
                     .build(),
             new PersonBuilder(new Name("David Li"), new Phone("91031282"), new Email("lidavid@example.com"),
@@ -73,7 +79,8 @@ public class SampleDataUtil {
                     .withParentPhone(new Phone("95432109"))
                     .withParentEmail(new Email("mary@example.com"))
                     .withAppointmentStart(LocalDateTime.of(2026, 3, 24, 10, 0))
-                    .withPaymentDate(LocalDate.of(2026, 3, 1))
+                    .withBilling(new Billing(Recurrence.MONTHLY, (LocalDate.of(2026, 3, 1)), 25,
+                                new PaymentHistory(LocalDate.of(2026, 3, 1))))
                     .withLastAttendance(LocalDateTime.of(2026, 3, 19, 10, 0))
                     .build(),
             new PersonBuilder(new Name("Irfan Ibrahim"), new Phone("92492021"), new Email("irfan@example.com"),
@@ -85,7 +92,8 @@ public class SampleDataUtil {
                     .withParentPhone(new Phone("94321098"))
                     .withParentEmail(new Email("zahra@example.com"))
                     .withAppointmentStart(LocalDateTime.of(2026, 3, 25, 11, 30))
-                    .withPaymentDate(LocalDate.of(2026, 2, 28))
+                    .withBilling(new Billing(Recurrence.MONTHLY, (LocalDate.of(2026, 2, 28)), 25,
+                                new PaymentHistory(LocalDate.of(2026, 2, 27))))
                     .withLastAttendance(LocalDateTime.of(2026, 3, 15, 11, 30))
                     .build(),
             new PersonBuilder(new Name("Roy Balakrishnan"), new Phone("92624417"), new Email("royb@example.com"),
@@ -97,7 +105,8 @@ public class SampleDataUtil {
                     .withParentPhone(new Phone("93210987"))
                     .withParentEmail(new Email("priya@example.com"))
                     .withAppointmentStart(LocalDateTime.of(2026, 3, 26, 17, 0))
-                    .withPaymentDate(LocalDate.of(2026, 2, 25))
+                    .withBilling(new Billing(Recurrence.MONTHLY, (LocalDate.of(2026, 2, 25)), 25,
+                                new PaymentHistory(LocalDate.of(2026, 2, 24))))
                     .withLastAttendance(LocalDateTime.of(2026, 3, 20, 17, 0))
                     .build()
         };

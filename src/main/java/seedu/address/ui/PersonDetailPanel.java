@@ -53,7 +53,10 @@ public class PersonDetailPanel extends UiPart<Region> {
     private Label lessonStartLabel;
 
     @FXML
-    private Label paymentDateLabel;
+    private Label paymentDueDateLabel;
+
+    @FXML
+    private FlowPane paymentHistoryFlowPane;
 
     @FXML
     private Label lastAttendanceLabel;
@@ -91,11 +94,13 @@ public class PersonDetailPanel extends UiPart<Region> {
         parentPhoneLabel.setText(person.getParentPhone().map(phone -> phone.value).orElse("-"));
         parentEmailLabel.setText(person.getParentEmail().map(email -> email.value).orElse("-"));
         lessonStartLabel.setText(formatDateTime(person.getAppointmentStart().orElse(null)));
-        paymentDateLabel.setText(formatDate(person.getPaymentDate().orElse(null)));
+        paymentDueDateLabel.setText(formatDate(person.getBilling().getNextDueDate()));
         lastAttendanceLabel.setText(formatDateTime(person.getLastAttendance().orElse(null)));
 
         tagsFlowPane.getChildren().clear();
         subjectsFlowPane.getChildren().clear();
+        paymentHistoryFlowPane.getChildren().clear();
+
         if (person.getTags().isEmpty()) {
             Label noTagsLabel = new Label("-");
             noTagsLabel.getStyleClass().add("detail-field-value");
@@ -124,6 +129,21 @@ public class PersonDetailPanel extends UiPart<Region> {
                     });
         }
 
+        // Display payment history
+        if (person.getPaymentHistory().getPaidDates().isEmpty()) {
+            Label noPaymentsLabel = new Label("No payment history");
+            noPaymentsLabel.getStyleClass().add("detail-field-value");
+            paymentHistoryFlowPane.getChildren().add(noPaymentsLabel);
+        } else {
+            person.getPaymentHistory().getPaidDates().stream()
+                    .sorted(java.util.Comparator.reverseOrder()) // Most recent first
+                    .forEach(date -> {
+                        Label paymentLabel = new Label(formatDate(date));
+                        paymentLabel.getStyleClass().add("detail-payment-date");
+                        paymentHistoryFlowPane.getChildren().add(paymentLabel);
+                    });
+        }
+
         contentContainer.setManaged(true);
         contentContainer.setVisible(true);
         emptyStateLabel.setManaged(false);
@@ -133,6 +153,7 @@ public class PersonDetailPanel extends UiPart<Region> {
     private void showEmptyState() {
         tagsFlowPane.getChildren().clear();
         subjectsFlowPane.getChildren().clear();
+        paymentHistoryFlowPane.getChildren().clear();
         contentContainer.setManaged(false);
         contentContainer.setVisible(false);
         emptyStateLabel.setManaged(true);

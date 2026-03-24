@@ -12,11 +12,14 @@ import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalPersons.ALICE;
 import static seedu.address.testutil.TypicalPersons.BOB;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.address.model.billing.Billing;
+import seedu.address.model.billing.PaymentHistory;
 import seedu.address.model.tag.Tag;
 import seedu.address.testutil.PersonBuilder;
 
@@ -53,7 +56,6 @@ public class PersonTest {
         assertTrue(person.getParentPhone().isEmpty());
         assertTrue(person.getParentEmail().isEmpty());
         assertTrue(person.getAppointmentStart().isEmpty());
-        assertTrue(person.getPaymentDate().isEmpty());
         assertTrue(person.getLastAttendance().isEmpty());
     }
 
@@ -187,7 +189,14 @@ public class PersonTest {
         editedAlice = new PersonBuilder(ALICE).withAppointmentStart("2026-01-13T08:00:00").build();
         assertFalse(ALICE.equals(editedAlice));
 
-        editedAlice = new PersonBuilder(ALICE).withPaymentDate("2026-01-13").build();
+        LocalDate differentPaymentDate = LocalDate.parse("2026-01-13");
+        PaymentHistory differentPaymentHistory = new PaymentHistory(differentPaymentDate);
+        Billing updatedBilling = new Billing(
+                ALICE.getBilling().getRecurrence(),
+                differentPaymentDate,
+                ALICE.getBilling().getTuitionFee(),
+                differentPaymentHistory);
+        editedAlice = new PersonBuilder(ALICE).withBilling(updatedBilling).build();
         assertFalse(ALICE.equals(editedAlice));
 
         editedAlice = new PersonBuilder(ALICE).withLastAttendance("2026-01-29T08:00:00").build();
@@ -207,7 +216,7 @@ public class PersonTest {
                 + ", parentPhone=" + ALICE.getParentPhone().orElse(null)
                 + ", parentEmail=" + ALICE.getParentEmail().orElse(null)
                 + ", appointmentStart=" + ALICE.getAppointmentStart()
-                + ", paymentDate=" + ALICE.getPaymentDate()
+                + ", billing=" + ALICE.getBilling()
                 + ", lastAttendance=" + ALICE.getLastAttendance()
                 + "}";
 

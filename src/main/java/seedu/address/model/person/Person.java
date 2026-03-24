@@ -12,6 +12,8 @@ import java.util.Set;
 
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.academic.Academics;
+import seedu.address.model.billing.Billing;
+import seedu.address.model.billing.PaymentHistory;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -34,7 +36,7 @@ public class Person {
     private final Optional<Name> parentName;
     private final Optional<Phone> parentPhone;
     private final Optional<Email> parentEmail;
-    private final Optional<LocalDate> paymentDate;
+    private final Billing billing;
 
     /**
      * Creates a {@code Person} with the given core fields and tags.
@@ -56,7 +58,7 @@ public class Person {
         this.parentPhone = Optional.empty();
         this.parentEmail = Optional.empty();
         this.appointmentStart = Optional.empty();
-        this.paymentDate = Optional.empty();
+        this.billing = Billing.defaultBilling();
         this.lastAttendance = Optional.empty();
     }
 
@@ -67,12 +69,12 @@ public class Person {
                   Set<Tag> tags, Academics academics,
                   Optional<Name> parentName, Optional<Phone> parentPhone, Optional<Email> parentEmail,
                   Optional<LocalDateTime> appointmentStart,
-                  Optional<LocalDate> paymentDate,
+                  Billing billing,
                   Optional<LocalDateTime> lastAttendance) {
 
         requireAllNonNull(name, phone, email, address, tags, academics,
                 parentName, parentPhone, parentEmail,
-                appointmentStart, paymentDate, lastAttendance);
+                appointmentStart, billing, lastAttendance);
 
         this.name = name;
         this.phone = phone;
@@ -87,7 +89,7 @@ public class Person {
         this.parentEmail = parentEmail;
         this.appointmentStart = appointmentStart;
         this.lastAttendance = lastAttendance;
-        this.paymentDate = paymentDate;
+        this.billing = billing;
     }
 
     public Name getName() {
@@ -110,8 +112,12 @@ public class Person {
         return appointmentStart;
     }
 
-    public Optional<LocalDate> getPaymentDate() {
-        return paymentDate;
+    public Billing getBilling() {
+        return billing;
+    }
+
+    public PaymentHistory getPaymentHistory() {
+        return billing.getPaymentHistory();
     }
 
     public Optional<LocalDateTime> getLastAttendance() {
@@ -164,6 +170,17 @@ public class Person {
     }
 
     /**
+     * Returns an immutable {@code Billing} object with updated payment history
+     * and advanced billing cycle
+     * @param paymentDate A valid {@code LocalDate}
+     * @return {@code Billing} object
+     */
+    public Billing recordFeesPaidAndAdvanceBilling(LocalDate paymentDate) {
+        Billing updatedBilling = billing.recordTuitionPaid(paymentDate);
+        return updatedBilling.advanceDueDate();
+    }
+
+    /**
      * Returns true if both persons have the same identity and data fields.
      * This defines a stronger notion of equality between two persons.
      */
@@ -189,7 +206,7 @@ public class Person {
                 && parentPhone.equals(otherPerson.parentPhone)
                 && parentEmail.equals(otherPerson.parentEmail)
                 && appointmentStart.equals(otherPerson.appointmentStart)
-                && paymentDate.equals(otherPerson.paymentDate)
+                && billing.equals(otherPerson.billing)
                 && lastAttendance.equals(otherPerson.lastAttendance);
     }
 
@@ -198,7 +215,7 @@ public class Person {
         // use this method for custom fields hashing instead of implementing your own
         return Objects.hash(name, phone, email, address, tags, academics,
                 parentName, parentPhone, parentEmail,
-                appointmentStart, paymentDate, lastAttendance);
+                appointmentStart, billing, lastAttendance);
     }
 
     @Override
@@ -214,7 +231,7 @@ public class Person {
                 .add("parentPhone", parentPhone.orElse(null))
                 .add("parentEmail", parentEmail.orElse(null))
                 .add("appointmentStart", appointmentStart)
-                .add("paymentDate", paymentDate)
+                .add("billing", billing)
                 .add("lastAttendance", lastAttendance)
                 .toString();
     }

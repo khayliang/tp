@@ -83,9 +83,16 @@
     <VBox spacing="4">
       <Label text="Payments" styleClass="detail-group-title" />
       <HBox spacing="10">
-        <Label text="Payment Date" styleClass="detail-field-label" />
-        <Label fx:id="paymentDateLabel" styleClass="detail-field-value" text="-" />
+        <Label text="Payment Due" styleClass="detail-field-label" />
+        <Label fx:id="paymentDueDateLabel" styleClass="detail-field-value" text="-" />
       </HBox>
+      <VBox spacing="6">
+        <VBox.margin>
+          <Insets top="4" />
+        </VBox.margin>
+        <Label text="Payment History" styleClass="detail-section-title" />
+        <FlowPane fx:id="paymentHistoryFlowPane" hgap="6" vgap="6" prefWrapLength="320" />
+      </VBox>
     </VBox>
     </VBox>
   </VBox>

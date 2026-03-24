@@ -397,6 +397,15 @@
     -fx-background-radius: 4;
 }
 
+.detail-payment-date {
+    -fx-font-family: "Segoe UI";
+    -fx-font-size: 11px;
+    -fx-text-fill: white;
+    -fx-background-color: #6b7cd3;
+    -fx-padding: 2 6 2 6;
+    -fx-background-radius: 4;
+}
+
 #filterField, #personListPanel, #personWebpage {
     -fx-effect: innershadow(gaussian, black, 10, 0, 0, 0);
 }

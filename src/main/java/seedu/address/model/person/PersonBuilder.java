@@ -1,12 +1,12 @@
 package seedu.address.model.person;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
 import seedu.address.model.academic.Academics;
+import seedu.address.model.billing.Billing;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -24,8 +24,8 @@ public class PersonBuilder {
     private Optional<Phone> parentPhone;
     private Optional<Email> parentEmail;
     private Optional<LocalDateTime> appointmentStart;
-    private Optional<LocalDate> paymentDate;
     private Optional<LocalDateTime> lastAttendance;
+    private Billing billing;
 
     /**
      * Creates a builder initialized with required person fields.
@@ -42,8 +42,8 @@ public class PersonBuilder {
         this.parentPhone = Optional.empty();
         this.parentEmail = Optional.empty();
         this.appointmentStart = Optional.empty();
-        this.paymentDate = Optional.empty();
         this.lastAttendance = Optional.empty();
+        this.billing = Billing.defaultBilling();
     }
 
     /**
@@ -60,8 +60,8 @@ public class PersonBuilder {
         this.parentPhone = personToCopy.getParentPhone();
         this.parentEmail = personToCopy.getParentEmail();
         this.appointmentStart = personToCopy.getAppointmentStart();
-        this.paymentDate = personToCopy.getPaymentDate();
         this.lastAttendance = personToCopy.getLastAttendance();
+        this.billing = personToCopy.getBilling();
     }
 
     /**
@@ -177,20 +177,18 @@ public class PersonBuilder {
     }
 
     /**
-     * Sets the payment date of the {@code Person} being built.
-     *
-     * @param paymentDate the payment date
+     * Sets the billing information of the {@code Person} being built.
+     * @param billing the new billing cycle
      * @return this {@code PersonBuilder} instance for method chaining
      */
-    public PersonBuilder withPaymentDate(LocalDate paymentDate) {
-        this.paymentDate = Optional.ofNullable(paymentDate);
+    public PersonBuilder withBilling(Billing billing) {
+        this.billing = billing;
         return this;
     }
 
     /**
      * Sets the last attendance time of the {@code Person} being built.
-     *
-     * @param lastAttendance the last attendance time
+     * @param lastAttendance the optional last attendance time
      * @return this {@code PersonBuilder} instance for method chaining
      */
     public PersonBuilder withLastAttendance(LocalDateTime lastAttendance) {
@@ -213,7 +211,7 @@ public class PersonBuilder {
                 parentPhone,
                 parentEmail,
                 appointmentStart,
-                paymentDate,
+                billing,
                 lastAttendance);
     }
 }
