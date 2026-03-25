@@ -180,7 +180,7 @@ public class PersonBuilder {
                 Optional.ofNullable(parentName),
                 Optional.ofNullable(parentPhone),
                 Optional.ofNullable(parentEmail),
-                Optional.ofNullable(appointmentStart),
+                appointmentStart == null ? Set.of() : Set.of(appointmentStart),
                 billing,
                 Optional.ofNullable(lastAttendance));
     }

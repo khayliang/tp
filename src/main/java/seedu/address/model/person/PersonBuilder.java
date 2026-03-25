@@ -177,16 +177,6 @@ public class PersonBuilder {
     }
 
     /**
-     * Replaces all appointment start times of the {@code Person} being built with a single value.
-     *
-     * @param appointmentStart the new appointment start time
-     * @return this {@code PersonBuilder} instance for method chaining
-     */
-    public PersonBuilder withAppointmentStart(LocalDateTime appointmentStart) {
-        return withAppointmentStarts(appointmentStart);
-    }
-
-    /**
      * Sets the billing information of the {@code Person} being built.
      * @param billing the new billing cycle
      * @return this {@code PersonBuilder} instance for method chaining

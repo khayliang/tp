@@ -281,12 +281,12 @@ class JsonAdaptedPerson {
         }
 
         PersonBuilder personBuilder = new PersonBuilder(modelName, modelPhone, modelEmail, modelAddress, modelTags)
-                .withAcademics(modelAcademics)
-                .withParentName(modelParentName)
-                .withParentPhone(modelParentPhone)
-                .withParentEmail(modelParentEmail)
-                .withBilling(modelBilling)
-                .withLastAttendance(modelLastAttendance);
+            .withAcademics(modelAcademics)
+            .withParentName(modelParentName)
+            .withParentPhone(modelParentPhone)
+            .withParentEmail(modelParentEmail)
+            .withBilling(modelBilling)
+            .withLastAttendance(modelLastAttendance);
 
         if (modelAppointmentStart != null) {
             personBuilder.withAppointmentStarts(modelAppointmentStart);

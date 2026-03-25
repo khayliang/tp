@@ -68,19 +68,6 @@ public class Person {
     public Person(Name name, Phone phone, Email email, Address address,
                   Set<Tag> tags, Academics academics,
                   Optional<Name> parentName, Optional<Phone> parentPhone, Optional<Email> parentEmail,
-                  Optional<LocalDateTime> appointmentStart,
-                  Billing billing,
-                  Optional<LocalDateTime> lastAttendance) {
-        this(name, phone, email, address, tags, academics, parentName, parentPhone, parentEmail,
-                appointmentStart.map(Set::of).orElseGet(Set::of), billing, lastAttendance);
-    }
-
-    /**
-     * Every field must be present and not null. parentName defaults to empty.
-     */
-    public Person(Name name, Phone phone, Email email, Address address,
-                  Set<Tag> tags, Academics academics,
-                  Optional<Name> parentName, Optional<Phone> parentPhone, Optional<Email> parentEmail,
                   Set<LocalDateTime> appointmentStarts,
                   Billing billing,
                   Optional<LocalDateTime> lastAttendance) {
