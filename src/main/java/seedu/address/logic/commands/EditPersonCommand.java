@@ -28,7 +28,8 @@ public class EditPersonCommand extends EditCommand {
 
     public static final String SUB_COMMAND_WORD = "student";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Edits the details of the student identified "
+    public static final String MESSAGE_USAGE = COMMAND_WORD + " " + SUB_COMMAND_WORD
+            + ": Edits the details of the student identified "
             + "by the index number used in the displayed student list. "
             + "Existing values will be overwritten by the input values.\n"
             + "Parameters: INDEX (must be a positive integer) "

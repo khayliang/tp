@@ -8,7 +8,7 @@ import seedu.address.model.Model;
 import seedu.address.model.person.Person;
 
 /**
- * Deletes a person identified using it's displayed index from the address book.
+ * Deletes a person identified using its displayed index from the address book.
  */
 public class DeletePersonCommand extends DeleteCommand {
 
@@ -17,7 +17,7 @@ public class DeletePersonCommand extends DeleteCommand {
     public static final String MESSAGE_USAGE = COMMAND_WORD + " " + SUB_COMMAND_WORD
         + ": Deletes the student identified by the index number used in the displayed student list.\n"
         + "Parameters: INDEX (must be a positive integer)\n"
-            + "Example: " + COMMAND_WORD + " " + SUB_COMMAND_WORD + " 1";
+        + "Example: " + COMMAND_WORD + " " + SUB_COMMAND_WORD + " 1";
 
     public static final String MESSAGE_DELETE_PERSON_SUCCESS = "Deleted Student: %1$s";
 

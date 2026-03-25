@@ -37,7 +37,7 @@ public class EditParentCommand extends EditCommand {
             + PREFIX_PARENT_NAME + "John Lim " + PREFIX_PARENT_PHONE + "91234567 "
             + PREFIX_PARENT_EMAIL + "johnlim@example.com";
 
-    public static final String MESSAGE_EDIT_PARENT_SUCCESS = "Edited parent details of Person: %1$s";
+    public static final String MESSAGE_EDIT_PARENT_SUCCESS = "Edited parent details of student: %1$s";
 
     private final EditParentDescriptor editParentDescriptor;
 

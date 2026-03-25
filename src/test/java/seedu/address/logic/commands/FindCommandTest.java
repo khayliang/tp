@@ -10,7 +10,7 @@ public class FindCommandTest {
     public void verifyConstants() {
         assertEquals("find", FindCommand.COMMAND_WORD);
         assertEquals(FindCommand.COMMAND_WORD + ": Finds entries by subcommand.\n"
-                + "Parameters: SUBCOMMAND [ARGS]\n"
+            + "Parameters: SUBCOMMAND [ARGS]\n"
             + "Example: " + FindCommand.COMMAND_WORD + " student alice", FindCommand.MESSAGE_USAGE);
     }
 }
