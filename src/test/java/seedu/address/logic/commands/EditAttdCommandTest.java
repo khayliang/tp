@@ -39,7 +39,7 @@ public class EditAttdCommandTest {
         EditAttdCommand editCommand = new EditAttdCommand(INDEX_FIRST_PERSON, lastAttendance);
 
         Person editedPerson = new PersonBuilder(personToEdit)
-            .withLastAttendance(VALID_LAST_ATTENDANCE)
+            .addAttendance(VALID_LAST_ATTENDANCE)
             .build();
         String expectedMessage = String.format(EditAttdCommand.MESSAGE_EDIT_ATTD_SUCCESS,
                 Messages.format(editedPerson), lastAttendance.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
@@ -64,6 +64,22 @@ public class EditAttdCommandTest {
 
         assertEquals(fixedTime, recordedAttendance);
         assertEquals(personToEdit.getName(), editedPerson.getName());
+    }
+
+    @Test
+    public void execute_duplicateAttendanceDateTime_historyNotDuplicated() throws CommandException {
+        LocalDateTime existingAttendance = LocalDateTime.parse("2026-03-20T17:00:05");
+        new EditAttdCommand(INDEX_FIRST_PERSON, existingAttendance).execute(model);
+        Person personAfterFirstAdd = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        int originalSize = personAfterFirstAdd.getAttendance().getHistory().size();
+
+        EditAttdCommand editCommand = new EditAttdCommand(
+                INDEX_FIRST_PERSON, LocalDateTime.parse("2026-03-20T17:00:59.123456"));
+        editCommand.execute(model);
+
+        Person editedPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        assertEquals(originalSize, editedPerson.getAttendance().getHistory().size());
+        assertEquals(LocalDateTime.parse("2026-03-20T17:00:00"), editedPerson.getLastAttendance().orElseThrow());
     }
 
     @Test

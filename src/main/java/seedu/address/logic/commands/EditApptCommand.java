@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import seedu.address.commons.core.index.Index;
+import seedu.address.commons.util.DateTimeUtil;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
@@ -40,7 +41,7 @@ public class EditApptCommand extends EditCommand {
     public EditApptCommand(Index index, LocalDateTime appointmentStart) {
         super(index);
         requireNonNull(appointmentStart);
-        this.appointmentStart = appointmentStart;
+        this.appointmentStart = DateTimeUtil.normalizeToMinute(appointmentStart);
     }
 
     @Override

@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import seedu.address.commons.core.index.Index;
+import seedu.address.commons.util.DateTimeUtil;
 import seedu.address.logic.commands.EditAttdCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 
@@ -29,7 +30,7 @@ public class EditAttdCommandParser implements Parser<EditAttdCommand> {
         if (attendanceDateTimeInput.isPresent()) {
             attendanceDateTime = ParserUtil.parseIsoDateTime(attendanceDateTimeInput.get());
         } else {
-            attendanceDateTime = LocalDateTime.now().withNano(0);
+            attendanceDateTime = DateTimeUtil.normalizeToMinute(LocalDateTime.now());
         }
 
         return new EditAttdCommand(index, attendanceDateTime);

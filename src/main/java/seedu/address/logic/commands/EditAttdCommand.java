@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import seedu.address.commons.core.index.Index;
+import seedu.address.commons.util.DateTimeUtil;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
@@ -14,19 +15,19 @@ import seedu.address.model.person.Person;
 import seedu.address.model.person.PersonBuilder;
 
 /**
- * Edits the last attendance date-time of an existing person in the address book.
+ * Appends an attendance date-time for an existing person in the address book.
  */
 public class EditAttdCommand extends EditCommand {
 
     public static final String SUB_COMMAND_WORD = "attd";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + " " + SUB_COMMAND_WORD
-            + ": Records the last attendance date-time for the person identified "
+            + ": Records an attendance date-time for the person identified "
             + "by the index number used in the displayed person list.\n"
             + "Parameters: attd INDEX (must be a positive integer) [d/DATETIME]\n"
             + "Example: " + COMMAND_WORD + " " + SUB_COMMAND_WORD + " 1 d/2026-01-29T08:00:00";
 
-    public static final String MESSAGE_EDIT_ATTD_SUCCESS = "Recorded last attendance for %1$s: %2$s";
+    public static final String MESSAGE_EDIT_ATTD_SUCCESS = "Added attendance for %1$s: %2$s";
 
     private final LocalDateTime attendanceToSet;
 
@@ -37,14 +38,14 @@ public class EditAttdCommand extends EditCommand {
     public EditAttdCommand(Index index, LocalDateTime attendanceToSet) {
         super(index);
         requireNonNull(attendanceToSet);
-        this.attendanceToSet = attendanceToSet;
+        this.attendanceToSet = DateTimeUtil.normalizeToMinute(attendanceToSet);
     }
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
         Person personToEdit = getTargetPerson(model);
         Person editedPerson = new PersonBuilder(personToEdit)
-                .withLastAttendance(attendanceToSet)
+                .addAttendance(attendanceToSet)
                 .build();
 
         replacePerson(model, personToEdit, editedPerson);
