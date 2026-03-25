@@ -4,6 +4,8 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
@@ -22,6 +24,8 @@ public class ModelManager implements Model {
     private final AddressBook addressBook;
     private final UserPrefs userPrefs;
     private final FilteredList<Person> filteredPersons;
+    private Predicate<Person> currentFilterPredicate;
+    private final Set<Person> preservedPersons;
     private ListDisplayMode listDisplayMode;
 
     /**
@@ -35,6 +39,8 @@ public class ModelManager implements Model {
         this.addressBook = new AddressBook(addressBook);
         this.userPrefs = new UserPrefs(userPrefs);
         filteredPersons = new FilteredList<>(this.addressBook.getPersonList());
+        currentFilterPredicate = PREDICATE_SHOW_ALL_PERSONS;
+        preservedPersons = new HashSet<>();
         listDisplayMode = ListDisplayMode.PERSON;
     }
 
@@ -82,6 +88,8 @@ public class ModelManager implements Model {
     @Override
     public void setAddressBook(ReadOnlyAddressBook addressBook) {
         this.addressBook.resetData(addressBook);
+        preservedPersons.clear();
+        applyEffectiveFilterPredicate();
     }
 
     @Override
@@ -98,6 +106,7 @@ public class ModelManager implements Model {
     @Override
     public void deletePerson(Person target) {
         addressBook.removePerson(target);
+        preservedPersons.remove(target);
     }
 
     @Override
@@ -110,15 +119,12 @@ public class ModelManager implements Model {
     public void setPerson(Person target, Person editedPerson) {
         requireAllNonNull(target, editedPerson);
 
-        // Add the edited person to the filtered list if there is a filter applied
-        // This is to ensure that the edited person is always visible in the filtered list
-        Predicate<? super Person> currentPredicate = filteredPersons.getPredicate();
-        if (currentPredicate != null && currentPredicate != PREDICATE_SHOW_ALL_PERSONS) {
-            Predicate<Person> updatedPredicate = p -> currentPredicate.test(p) || p.equals(editedPerson);
-            filteredPersons.setPredicate(updatedPredicate);
+        preservedPersons.remove(target);
+        if (hasActiveFilter()) {
+            preservedPersons.add(editedPerson);
         }
-
         addressBook.setPerson(target, editedPerson);
+        applyEffectiveFilterPredicate();
     }
 
     //=========== Filtered Person List Accessors =============================================================
@@ -135,7 +141,30 @@ public class ModelManager implements Model {
     @Override
     public void updateFilteredPersonList(Predicate<Person> predicate) {
         requireNonNull(predicate);
-        filteredPersons.setPredicate(predicate);
+        preservedPersons.clear();
+        currentFilterPredicate = predicate;
+        applyEffectiveFilterPredicate();
+    }
+
+    @Override
+    public void updateFilteredPersonListWithAnd(Predicate<Person> predicate) {
+        requireNonNull(predicate);
+
+        Predicate<? super Person> previousDisplayedPredicate = filteredPersons.getPredicate();
+
+        // If there is no previous filter, allow everyone; otherwise, keep the current displayed set.
+        Predicate<Person> displayedPredicate = person -> previousDisplayedPredicate == null
+                || previousDisplayedPredicate.test(person);
+
+        // Edited persons are preserved only until the next find command.
+        preservedPersons.clear();
+
+        if (currentFilterPredicate == PREDICATE_SHOW_ALL_PERSONS) {
+            currentFilterPredicate = predicate;
+        } else {
+            currentFilterPredicate = displayedPredicate.and(predicate);
+        }
+        applyEffectiveFilterPredicate();
     }
 
     @Override
@@ -165,6 +194,23 @@ public class ModelManager implements Model {
                 && userPrefs.equals(otherModelManager.userPrefs)
                 && filteredPersons.equals(otherModelManager.filteredPersons)
                 && listDisplayMode == otherModelManager.listDisplayMode;
+    }
+
+    private boolean hasActiveFilter() {
+        return currentFilterPredicate != PREDICATE_SHOW_ALL_PERSONS;
+    }
+
+    private void applyEffectiveFilterPredicate() {
+        if (preservedPersons.isEmpty()) {
+            filteredPersons.setPredicate(currentFilterPredicate);
+            return;
+        }
+
+        Set<Person> pinnedSnapshot = new HashSet<>(preservedPersons);
+        Predicate<Person> basePredicateSnapshot = currentFilterPredicate;
+        Predicate<Person> effectivePredicate = person -> pinnedSnapshot.contains(person)
+                || basePredicateSnapshot.test(person);
+        filteredPersons.setPredicate(effectivePredicate);
     }
 
 }

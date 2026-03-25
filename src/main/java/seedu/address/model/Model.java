@@ -86,6 +86,13 @@ public interface Model {
     void updateFilteredPersonList(Predicate<Person> predicate);
 
     /**
+     * Updates the filter of the filtered person list by combining the current predicate
+     * with the given {@code predicate} using logical AND.
+     * @throws NullPointerException if {@code predicate} is null.
+     */
+    void updateFilteredPersonListWithAnd(Predicate<Person> predicate);
+
+    /**
      * Returns the current list display mode.
      */
     ListDisplayMode getListDisplayMode();
