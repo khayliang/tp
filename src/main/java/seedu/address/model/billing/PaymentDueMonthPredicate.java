@@ -27,7 +27,7 @@ public class PaymentDueMonthPredicate implements Predicate<Person> {
     @Override
     public boolean test(Person person) {
         requireNonNull(person);
-        LocalDate due = person.getBilling().getNextDueDate();
+        LocalDate due = person.getBilling().getLastDueDate();
         if (due == null) {
             return false;
         }
