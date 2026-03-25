@@ -1,5 +1,6 @@
 package seedu.address.model.academic;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static seedu.address.testutil.Assert.assertThrows;
 
 import org.junit.jupiter.api.Test;
@@ -25,14 +26,12 @@ public class SubjectTest {
 
     @Test
     public void constructor_validNameNoLevel_success() {
-        Subject subject = new Subject("Math", null);
-        // no exception = pass
+        assertDoesNotThrow(() -> new Subject("Math", null));
     }
 
     @Test
     public void constructor_validNameWithLevel_success() {
-        Subject subject = new Subject("Math", Level.STRONG);
-        // no exception = pass
+        assertDoesNotThrow(() -> new Subject("Math", Level.STRONG));
     }
 
     @Test

@@ -2,8 +2,10 @@ package seedu.address.model.person;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
@@ -17,24 +19,21 @@ public class GuardianTest {
     public void constructor_allFields_success() {
         Guardian guardian = new Guardian(VALID_NAME, VALID_PHONE, VALID_EMAIL);
         assertEquals(VALID_NAME, guardian.getName());
-        assertEquals(VALID_PHONE, guardian.getPhone());
-        assertEquals(VALID_EMAIL, guardian.getEmail());
+        assertEquals(Optional.of(VALID_PHONE), guardian.getPhone());
+        assertEquals(Optional.of(VALID_EMAIL), guardian.getEmail());
     }
 
     @Test
-    public void constructor_nullFields_success() {
-        Guardian guardian = new Guardian(null, null, null);
-        assertNull(guardian.getName());
-        assertNull(guardian.getPhone());
-        assertNull(guardian.getEmail());
+    public void constructor_nullName_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> new Guardian(null, VALID_PHONE, VALID_EMAIL));
     }
 
     @Test
-    public void constructor_partialFields_success() {
+    public void constructor_optionalFieldsNull_success() {
         Guardian guardian = new Guardian(VALID_NAME, null, null);
         assertEquals(VALID_NAME, guardian.getName());
-        assertNull(guardian.getPhone());
-        assertNull(guardian.getEmail());
+        assertEquals(Optional.empty(), guardian.getPhone());
+        assertEquals(Optional.empty(), guardian.getEmail());
     }
 
     @Test
@@ -62,10 +61,10 @@ public class GuardianTest {
         // different email -> returns false
         assertFalse(guardian.equals(new Guardian(VALID_NAME, VALID_PHONE, new Email("other@example.com"))));
 
-        // null fields equal to each other
-        Guardian nullGuardian1 = new Guardian(null, null, null);
-        Guardian nullGuardian2 = new Guardian(null, null, null);
-        assertTrue(nullGuardian1.equals(nullGuardian2));
+        // guardians with only name equal to each other
+        Guardian nameOnly1 = new Guardian(VALID_NAME, null, null);
+        Guardian nameOnly2 = new Guardian(VALID_NAME, null, null);
+        assertTrue(nameOnly1.equals(nameOnly2));
     }
 
     @Test

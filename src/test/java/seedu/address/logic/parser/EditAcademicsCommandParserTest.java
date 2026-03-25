@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.EditAcademicsCommand;
-import seedu.address.logic.commands.EditCommand;
 import seedu.address.model.academic.Academics;
 import seedu.address.model.academic.Level;
 import seedu.address.model.academic.Subject;
@@ -27,9 +26,6 @@ import seedu.address.model.academic.Subject;
 public class EditAcademicsCommandParserTest {
 
     private static final String SUBJECT_EMPTY = " " + PREFIX_SUBJECT;
-
-    private static final String MESSAGE_INVALID_FORMAT =
-            String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE);
 
     private static final String MESSAGE_INVALID_SUBJECT_FORMAT =
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditAcademicsCommand.MESSAGE_USAGE);

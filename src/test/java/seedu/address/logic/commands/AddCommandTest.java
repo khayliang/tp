@@ -160,6 +160,11 @@ public class AddCommandTest {
         }
 
         @Override
+        public void updateFilteredPersonListWithAnd(Predicate<Person> predicate) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
         public ListDisplayMode getListDisplayMode() {
             return ListDisplayMode.PERSON;
         }

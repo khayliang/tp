@@ -58,15 +58,15 @@ public class EditParentCommand extends EditCommand {
         Person personToEdit = getTargetPerson(model);
         PersonBuilder builder = new PersonBuilder(personToEdit);
 
-        Guardian existing = personToEdit.getGuardian().orElse(null);
+        Optional<Guardian> existingGuardian = personToEdit.getGuardian();
         Name name = editParentDescriptor.getParentName()
-                .orElse(existing != null ? existing.getName() : null);
+                .orElse(existingGuardian.map(Guardian::getName).orElse(null));
         Phone phone = editParentDescriptor.getParentPhone()
-                .orElse(existing != null ? existing.getPhone() : null);
+                .orElse(existingGuardian.flatMap(Guardian::getPhone).orElse(null));
         Email email = editParentDescriptor.getParentEmail()
-                .orElse(existing != null ? existing.getEmail() : null);
+                .orElse(existingGuardian.flatMap(Guardian::getEmail).orElse(null));
 
-        if (name != null || phone != null || email != null) {
+        if (name != null) {
             builder.withGuardian(new Guardian(name, phone, email));
         }
 

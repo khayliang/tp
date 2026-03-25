@@ -50,8 +50,6 @@ class JsonAdaptedSubject {
 
         Level modelLevel = null;
         if (level != null) {
-            String normalized = level.trim().toLowerCase();
-
             try {
                 modelLevel = LevelUtil.levelFromString(level);
             } catch (IllegalArgumentException e) {

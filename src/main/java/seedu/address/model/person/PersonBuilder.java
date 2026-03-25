@@ -1,6 +1,7 @@
 package seedu.address.model.person;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -21,7 +22,7 @@ public class PersonBuilder {
     private Set<Tag> tags;
     private Academics academics;
     private Optional<Guardian> guardian;
-    private Optional<LocalDateTime> appointmentStart;
+    private Set<LocalDateTime> appointmentStarts;
     private Optional<LocalDateTime> lastAttendance;
     private Billing billing;
 
@@ -37,7 +38,7 @@ public class PersonBuilder {
         this.tags = new HashSet<>(tags);
         this.academics = new Academics();
         this.guardian = Optional.empty();
-        this.appointmentStart = Optional.empty();
+        this.appointmentStarts = new HashSet<>();
         this.lastAttendance = Optional.empty();
         this.billing = Billing.defaultBilling();
     }
@@ -53,7 +54,7 @@ public class PersonBuilder {
         this.tags = new HashSet<>(personToCopy.getTags());
         this.academics = personToCopy.getAcademics();
         this.guardian = personToCopy.getGuardian();
-        this.appointmentStart = personToCopy.getAppointmentStart();
+        this.appointmentStarts = new HashSet<>(personToCopy.getAppointmentStarts());
         this.lastAttendance = personToCopy.getLastAttendance();
         this.billing = personToCopy.getBilling();
     }
@@ -115,10 +116,9 @@ public class PersonBuilder {
     }
 
     /**
-     * Replaces the subject set of the {@code Person} being built.
-     * A defensive copy of the provided subject set is created.
+     * Replaces the academic profile of the {@code Person} being built.
      *
-     * @param academics
+     * @param academics the new academics profile
      * @return this {@code PersonBuilder} instance for method chaining
      */
     public PersonBuilder withAcademics(Academics academics) {
@@ -138,13 +138,13 @@ public class PersonBuilder {
     }
 
     /**
-     * Sets the appointment start time of the {@code Person} being built.
+     * Replaces all appointment start times of the {@code Person} being built.
      *
-     * @param appointmentStart the appointment start time
+     * @param appointmentStarts the new appointment start times
      * @return this {@code PersonBuilder} instance for method chaining
      */
-    public PersonBuilder withAppointmentStart(LocalDateTime appointmentStart) {
-        this.appointmentStart = Optional.ofNullable(appointmentStart);
+    public PersonBuilder withAppointmentStarts(LocalDateTime... appointmentStarts) {
+        this.appointmentStarts = new HashSet<>(Arrays.asList(appointmentStarts));
         return this;
     }
 
@@ -180,7 +180,7 @@ public class PersonBuilder {
                 tags,
                 academics,
                 guardian,
-                appointmentStart,
+                appointmentStarts,
                 billing,
                 lastAttendance);
     }

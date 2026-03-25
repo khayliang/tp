@@ -1,37 +1,41 @@
 package seedu.address.model.person;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.Objects;
+import java.util.Optional;
 
 import seedu.address.commons.util.ToStringBuilder;
 
 /**
  * Represents a Guardian (parent/caretaker) of a Person in the address book. A Guardian is a contact belonging to a
- * student, containing optional name, phone, and email fields. This is a value object — immutable once created.
+ * student, with a compulsory name and optional phone and email fields. This is a value object — immutable once created.
  */
 public class Guardian {
 
     private final Name name;
-    private final Phone phone;
-    private final Email email;
+    private final Optional<Phone> phone;
+    private final Optional<Email> email;
 
     /**
-     * Constructs a {@code Guardian}. Any field may be {@code null}.
+     * Constructs a {@code Guardian}. Name must not be null. Phone and email are optional.
      */
     public Guardian(Name name, Phone phone, Email email) {
+        requireNonNull(name);
         this.name = name;
-        this.phone = phone;
-        this.email = email;
+        this.phone = Optional.ofNullable(phone);
+        this.email = Optional.ofNullable(email);
     }
 
     public Name getName() {
         return name;
     }
 
-    public Phone getPhone() {
+    public Optional<Phone> getPhone() {
         return phone;
     }
 
-    public Email getEmail() {
+    public Optional<Email> getEmail() {
         return email;
     }
 
@@ -56,6 +60,10 @@ public class Guardian {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).add("name", name).add("phone", phone).add("email", email).toString();
+        return new ToStringBuilder(this)
+                .add("name", name)
+                .add("phone", phone.orElse(null))
+                .add("email", email.orElse(null))
+                .toString();
     }
 }

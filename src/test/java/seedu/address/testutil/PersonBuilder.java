@@ -70,8 +70,8 @@ public class PersonBuilder {
         academics = personToCopy.getAcademics();
         Guardian guardianToCopy = personToCopy.getGuardian().orElse(null);
         parentName = guardianToCopy != null ? guardianToCopy.getName() : null;
-        parentPhone = guardianToCopy != null ? guardianToCopy.getPhone() : null;
-        parentEmail = guardianToCopy != null ? guardianToCopy.getEmail() : null;
+        parentPhone = guardianToCopy != null ? guardianToCopy.getPhone().orElse(null) : null;
+        parentEmail = guardianToCopy != null ? guardianToCopy.getEmail().orElse(null) : null;
         appointmentStart = personToCopy.getAppointmentStart().orElse(null);
         billing = personToCopy.getBilling();
         lastAttendance = personToCopy.getLastAttendance().orElse(null);
@@ -178,13 +178,15 @@ public class PersonBuilder {
      */
     public Person build() {
         Guardian guardian = null;
-        if (parentName != null || parentPhone != null || parentEmail != null) {
+        if (parentName != null) {
             guardian = new Guardian(parentName, parentPhone, parentEmail);
         }
         return new seedu.address.model.person.PersonBuilder(name, phone, email, address, tags)
                 .withAcademics(academics)
                 .withGuardian(guardian)
-                .withAppointmentStart(appointmentStart)
+                .withAppointmentStarts(appointmentStart == null
+                        ? new java.time.LocalDateTime[0]
+                        : new java.time.LocalDateTime[]{appointmentStart})
                 .withBilling(billing)
                 .withLastAttendance(lastAttendance)
                 .build();

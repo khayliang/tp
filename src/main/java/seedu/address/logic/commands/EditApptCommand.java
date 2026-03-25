@@ -47,7 +47,7 @@ public class EditApptCommand extends EditCommand {
     public CommandResult execute(Model model) throws CommandException {
         Person personToEdit = getTargetPerson(model);
         Person editedPerson = new PersonBuilder(personToEdit)
-                .withAppointmentStart(appointmentStart)
+                .withAppointmentStarts(appointmentStart)
                 .build();
 
         replacePerson(model, personToEdit, editedPerson);

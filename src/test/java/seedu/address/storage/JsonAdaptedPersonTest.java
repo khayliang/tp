@@ -45,11 +45,11 @@ public class JsonAdaptedPersonTest {
     private static final Double VALID_TUITION_FEE = 25.0;
     private static final String VALID_LAST_ATTENDANCE = "2026-01-29T08:00:00";
     private static final String VALID_PARENT_NAME = BENSON.getGuardian()
-            .map(g -> g.getName()).map(n -> n.fullName).orElse(null);
+            .map(g -> g.getName().fullName).orElse(null);
     private static final String VALID_PARENT_PHONE = BENSON.getGuardian()
-            .map(g -> g.getPhone()).map(p -> p.value).orElse(null);
+            .flatMap(g -> g.getPhone()).map(p -> p.value).orElse(null);
     private static final String VALID_PARENT_EMAIL = BENSON.getGuardian()
-            .map(g -> g.getEmail()).map(e -> e.value).orElse(null);
+            .flatMap(g -> g.getEmail()).map(e -> e.value).orElse(null);
     private static final List<JsonAdaptedTag> VALID_TAGS = BENSON.getTags().stream().map(JsonAdaptedTag::new)
             .collect(Collectors.toList());
     private static final JsonAdaptedAcademics VALID_ACADEMICS = new JsonAdaptedAcademics(BENSON.getAcademics());

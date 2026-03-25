@@ -69,9 +69,27 @@ public class FindPersonCommandTest {
         String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 3);
         NameContainsKeywordsPredicate predicate = preparePredicate("Kurz Elle Kunz");
         FindPersonCommand command = new FindPersonCommand(predicate);
-        expectedModel.updateFilteredPersonList(predicate);
+        expectedModel.updateFilteredPersonListWithAnd(predicate);
         assertCommandSuccess(command, model, expectedMessage, expectedModel);
         assertEquals(Arrays.asList(CARL, ELLE, FIONA), model.getFilteredPersonList());
+    }
+
+    @Test
+    public void execute_twoFindCommands_chainsWithAnd() {
+        NameContainsKeywordsPredicate firstPredicate = preparePredicate("Kurz Elle Kunz");
+        NameContainsKeywordsPredicate secondPredicate = preparePredicate("Elle");
+
+        FindPersonCommand firstCommand = new FindPersonCommand(firstPredicate);
+        FindPersonCommand secondCommand = new FindPersonCommand(secondPredicate);
+
+        expectedModel.updateFilteredPersonListWithAnd(firstPredicate);
+        assertCommandSuccess(firstCommand, model,
+                String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 3), expectedModel);
+
+        expectedModel.updateFilteredPersonListWithAnd(secondPredicate);
+        assertCommandSuccess(secondCommand, model,
+                String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 1), expectedModel);
+        assertEquals(Collections.singletonList(ELLE), model.getFilteredPersonList());
     }
 
     @Test

@@ -34,10 +34,9 @@ public class AppointmentInWeekPredicate implements Predicate<Person> {
 
     @Override
     public boolean test(Person person) {
-        return person.getAppointmentStart()
+        return person.getAppointmentStarts().stream()
                 .map(appointmentStart -> appointmentStart.toLocalDate())
-                .filter(date -> !date.isBefore(weekStart) && !date.isAfter(weekEnd))
-                .isPresent();
+                .anyMatch(date -> !date.isBefore(weekStart) && !date.isAfter(weekEnd));
     }
 
     @Override
