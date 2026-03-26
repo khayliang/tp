@@ -19,13 +19,13 @@ import seedu.address.model.academic.Academics;
 import seedu.address.model.billing.Billing;
 import seedu.address.model.billing.PaymentHistory;
 import seedu.address.model.person.Address;
-import seedu.address.model.person.Attendance;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.PersonBuilder;
 import seedu.address.model.person.Phone;
 import seedu.address.model.recurrence.Recurrence;
+import seedu.address.model.session.Attendance;
 import seedu.address.model.tag.Tag;
 
 /**

@@ -16,6 +16,7 @@ import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.academic.Academics;
 import seedu.address.model.billing.Billing;
 import seedu.address.model.billing.PaymentHistory;
+import seedu.address.model.session.Attendance;
 import seedu.address.model.tag.Tag;
 
 /**

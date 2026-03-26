@@ -8,6 +8,7 @@ import java.util.Set;
 
 import seedu.address.model.academic.Academics;
 import seedu.address.model.billing.Billing;
+import seedu.address.model.session.Attendance;
 import seedu.address.model.tag.Tag;
 
 /**
