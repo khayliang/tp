@@ -174,11 +174,6 @@ public class EditApptCommandTest {
         // same object -> returns true
         assertTrue(standardCommand.equals(standardCommand));
 
-        // same minute but different seconds/nanoseconds -> returns true
-        EditApptCommand sameMinuteCommand = new EditApptCommand(
-                INDEX_FIRST_PERSON, LocalDateTime.parse("2026-01-13T08:00:59.999999"));
-        assertTrue(standardCommand.equals(sameMinuteCommand));
-
         // null -> returns false
         assertFalse(standardCommand.equals(null));
 

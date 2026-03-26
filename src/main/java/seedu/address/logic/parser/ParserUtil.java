@@ -13,7 +13,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import seedu.address.commons.core.index.Index;
-import seedu.address.commons.util.DateTimeUtil;
 import seedu.address.commons.util.StringUtil;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Address;
@@ -159,8 +158,7 @@ public class ParserUtil {
         requireNonNull(dateTime);
         String trimmedDateTime = dateTime.trim();
         try {
-            return DateTimeUtil.normalizeToMinute(
-                    LocalDateTime.parse(trimmedDateTime, ISO_LOCAL_DATE_TIME_FORMATTER));
+            return LocalDateTime.parse(trimmedDateTime, ISO_LOCAL_DATE_TIME_FORMATTER);
         } catch (DateTimeParseException e) {
             throw new ParseException(MESSAGE_INVALID_DATE_TIME);
         }

@@ -204,13 +204,6 @@ public class ParserUtilTest {
     }
 
     @Test
-    public void parseIsoDateTime_validValueWithSecondsAndNanoseconds_returnsMinutePrecision() throws Exception {
-        LocalDateTime expectedAppointmentStart = LocalDateTime.parse(VALID_APPOINTMENT_START_NO_SECONDS);
-        assertEquals(expectedAppointmentStart, ParserUtil.parseIsoDateTime(VALID_APPOINTMENT_START_WITH_SECONDS));
-        assertEquals(expectedAppointmentStart, ParserUtil.parseIsoDateTime(VALID_APPOINTMENT_START_WITH_NANOSECONDS));
-    }
-
-    @Test
     public void parseIsoDate_null_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> ParserUtil.parseIsoDate(null));
     }
