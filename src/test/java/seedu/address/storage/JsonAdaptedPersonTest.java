@@ -48,9 +48,12 @@ public class JsonAdaptedPersonTest {
     private static final List<String> VALID_ATTENDANCE_HISTORY = List.of(
             "2026-01-28T08:00:00",
             VALID_ATTENDANCE_ENTRY);
-    private static final String VALID_PARENT_NAME = BENSON.getParentName().map(pn -> pn.fullName).orElse(null);
-    private static final String VALID_PARENT_PHONE = BENSON.getParentPhone().map(pp -> pp.value).orElse(null);
-    private static final String VALID_PARENT_EMAIL = BENSON.getParentEmail().map(pe -> pe.value).orElse(null);
+    private static final String VALID_PARENT_NAME = BENSON.getGuardian()
+            .map(g -> g.getName().fullName).orElse(null);
+    private static final String VALID_PARENT_PHONE = BENSON.getGuardian()
+            .flatMap(g -> g.getPhone()).map(p -> p.value).orElse(null);
+    private static final String VALID_PARENT_EMAIL = BENSON.getGuardian()
+            .flatMap(g -> g.getEmail()).map(e -> e.value).orElse(null);
     private static final List<JsonAdaptedTag> VALID_TAGS = BENSON.getTags().stream().map(JsonAdaptedTag::new)
             .collect(Collectors.toList());
     private static final JsonAdaptedAcademics VALID_ACADEMICS = new JsonAdaptedAcademics(BENSON.getAcademics());

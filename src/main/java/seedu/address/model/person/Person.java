@@ -36,9 +36,7 @@ public class Person {
     private final Academics academics;
     private final Set<LocalDateTime> appointmentStarts = new TreeSet<>();
     private final Attendance attendance;
-    private final Optional<Name> parentName;
-    private final Optional<Phone> parentPhone;
-    private final Optional<Email> parentEmail;
+    private final Optional<Guardian> guardian;
     private final Billing billing;
 
     /**
@@ -57,9 +55,7 @@ public class Person {
 
         this.academics = new Academics();
 
-        this.parentName = Optional.empty();
-        this.parentPhone = Optional.empty();
-        this.parentEmail = Optional.empty();
+        this.guardian = Optional.empty();
         this.billing = Billing.defaultBilling();
         this.attendance = Attendance.EMPTY;
     }
@@ -69,13 +65,12 @@ public class Person {
      */
     public Person(Name name, Phone phone, Email email, Address address,
                   Set<Tag> tags, Academics academics,
-                  Optional<Name> parentName, Optional<Phone> parentPhone, Optional<Email> parentEmail,
+                  Optional<Guardian> guardian,
                   Set<LocalDateTime> appointmentStarts,
                   Billing billing, Attendance attendance) {
 
         requireAllNonNull(name, phone, email, address, tags, academics,
-                parentName, parentPhone, parentEmail,
-                appointmentStarts, billing, attendance);
+                guardian, appointmentStarts, billing, attendance);
 
         this.name = name;
         this.phone = phone;
@@ -85,9 +80,7 @@ public class Person {
 
         this.academics = academics;
 
-        this.parentName = parentName;
-        this.parentPhone = parentPhone;
-        this.parentEmail = parentEmail;
+        this.guardian = guardian;
         appointmentStarts.forEach(Objects::requireNonNull);
         appointmentStarts.stream()
             .map(DateTimeUtil::normalizeToMinute)
@@ -162,24 +155,10 @@ public class Person {
     }
 
     /**
-     * Returns the parent name wrapped in an Optional, or empty if not set.
+     * Returns the guardian wrapped in an Optional, or empty if not set.
      */
-    public Optional<Name> getParentName() {
-        return parentName;
-    }
-
-    /**
-     * Returns the parent phone wrapped in an Optional, or empty if not set.
-     */
-    public Optional<Phone> getParentPhone() {
-        return parentPhone;
-    }
-
-    /**
-     * Returns the parent email wrapped in an Optional, or empty if not set.
-     */
-    public Optional<Email> getParentEmail() {
-        return parentEmail;
+    public Optional<Guardian> getGuardian() {
+        return guardian;
     }
 
     /**
@@ -235,9 +214,7 @@ public class Person {
                 && address.equals(otherPerson.address)
                 && tags.equals(otherPerson.tags)
                 && academics.equals(otherPerson.academics)
-                && parentName.equals(otherPerson.parentName)
-                && parentPhone.equals(otherPerson.parentPhone)
-                && parentEmail.equals(otherPerson.parentEmail)
+                && guardian.equals(otherPerson.guardian)
                 && appointmentStarts.equals(otherPerson.appointmentStarts)
                 && billing.equals(otherPerson.billing)
                 && attendance.equals(otherPerson.attendance);
@@ -247,8 +224,7 @@ public class Person {
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
         return Objects.hash(name, phone, email, address, tags, academics,
-                parentName, parentPhone, parentEmail,
-            appointmentStarts, billing, attendance);
+                guardian, appointmentStarts, billing, attendance);
     }
 
     @Override
@@ -260,9 +236,7 @@ public class Person {
                 .add("address", address)
                 .add("tags", tags)
                 .add("academics", academics)
-                .add("parentName", parentName.orElse(null))
-                .add("parentPhone", parentPhone.orElse(null))
-                .add("parentEmail", parentEmail.orElse(null))
+                .add("guardian", guardian.orElse(null))
                 .add("appointmentStart", getAppointmentStart())
                 .add("appointmentStarts", appointmentStarts)
                 .add("billing", billing)

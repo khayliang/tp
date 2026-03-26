@@ -14,6 +14,7 @@ import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.person.Email;
+import seedu.address.model.person.Guardian;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.PersonBuilder;
@@ -59,9 +60,18 @@ public class EditParentCommand extends EditCommand {
     public CommandResult execute(Model model) throws CommandException {
         Person personToEdit = getTargetPerson(model);
         PersonBuilder builder = new PersonBuilder(personToEdit);
-        editParentDescriptor.getParentName().ifPresent(builder::withParentName);
-        editParentDescriptor.getParentPhone().ifPresent(builder::withParentPhone);
-        editParentDescriptor.getParentEmail().ifPresent(builder::withParentEmail);
+
+        Optional<Guardian> existingGuardian = personToEdit.getGuardian();
+        Name name = editParentDescriptor.getParentName()
+                .orElse(existingGuardian.map(Guardian::getName).orElse(null));
+        Phone phone = editParentDescriptor.getParentPhone()
+                .orElse(existingGuardian.flatMap(Guardian::getPhone).orElse(null));
+        Email email = editParentDescriptor.getParentEmail()
+                .orElse(existingGuardian.flatMap(Guardian::getEmail).orElse(null));
+
+        if (name != null) {
+            builder.withGuardian(new Guardian(name, phone, email));
+        }
 
         Person editedPerson = builder.build();
 

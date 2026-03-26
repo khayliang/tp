@@ -53,9 +53,7 @@ public class PersonTest {
         assertTrue(person.getAcademics().getNotes().isEmpty());
 
         // optionals default
-        assertTrue(person.getParentName().isEmpty());
-        assertTrue(person.getParentPhone().isEmpty());
-        assertTrue(person.getParentEmail().isEmpty());
+        assertTrue(person.getGuardian().isEmpty());
         assertTrue(person.getAppointmentStart().isEmpty());
         assertTrue(person.getAttendance().isEmpty());
         assertTrue(person.getLastAttendance().isEmpty());
@@ -229,9 +227,7 @@ public class PersonTest {
                 + ", address=" + ALICE.getAddress()
                 + ", tags=" + ALICE.getTags()
                 + ", academics=" + ALICE.getAcademics()
-                + ", parentName=" + ALICE.getParentName().orElse(null)
-                + ", parentPhone=" + ALICE.getParentPhone().orElse(null)
-                + ", parentEmail=" + ALICE.getParentEmail().orElse(null)
+                + ", guardian=" + ALICE.getGuardian().orElse(null)
                 + ", appointmentStart=" + ALICE.getAppointmentStart()
                 + ", appointmentStarts=" + ALICE.getAppointmentStarts()
                 + ", billing=" + ALICE.getBilling()

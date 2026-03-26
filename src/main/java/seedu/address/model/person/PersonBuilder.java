@@ -22,9 +22,7 @@ public class PersonBuilder {
     private Address address;
     private Set<Tag> tags;
     private Academics academics;
-    private Optional<Name> parentName;
-    private Optional<Phone> parentPhone;
-    private Optional<Email> parentEmail;
+    private Optional<Guardian> guardian;
     private Set<LocalDateTime> appointmentStarts;
     private Attendance attendance;
     private Billing billing;
@@ -40,9 +38,7 @@ public class PersonBuilder {
         this.address = address;
         this.tags = new HashSet<>(tags);
         this.academics = new Academics();
-        this.parentName = Optional.empty();
-        this.parentPhone = Optional.empty();
-        this.parentEmail = Optional.empty();
+        this.guardian = Optional.empty();
         this.appointmentStarts = new HashSet<>();
         this.attendance = Attendance.EMPTY;
         this.billing = Billing.defaultBilling();
@@ -58,9 +54,7 @@ public class PersonBuilder {
         this.address = personToCopy.getAddress();
         this.tags = new HashSet<>(personToCopy.getTags());
         this.academics = personToCopy.getAcademics();
-        this.parentName = personToCopy.getParentName();
-        this.parentPhone = personToCopy.getParentPhone();
-        this.parentEmail = personToCopy.getParentEmail();
+        this.guardian = personToCopy.getGuardian();
         this.appointmentStarts = new HashSet<>(personToCopy.getAppointmentStarts());
         this.attendance = personToCopy.getAttendance();
         this.billing = personToCopy.getBilling();
@@ -134,35 +128,13 @@ public class PersonBuilder {
     }
 
     /**
-     * Sets the parent's {@code Name} of the {@code Person} being built.
+     * Sets the {@code Guardian} of the {@code Person} being built.
      *
-     * @param parentName the parent name
+     * @param guardian the guardian
      * @return this {@code PersonBuilder} instance for method chaining
      */
-    public PersonBuilder withParentName(Name parentName) {
-        this.parentName = Optional.ofNullable(parentName);
-        return this;
-    }
-
-    /**
-     * Sets the parent's {@code Phone} of the {@code Person} being built.
-     *
-     * @param parentPhone the parent phone
-     * @return this {@code PersonBuilder} instance for method chaining
-     */
-    public PersonBuilder withParentPhone(Phone parentPhone) {
-        this.parentPhone = Optional.ofNullable(parentPhone);
-        return this;
-    }
-
-    /**
-     * Sets the parent's {@code Email} of the {@code Person} being built.
-     *
-     * @param parentEmail the parent email
-     * @return this {@code PersonBuilder} instance for method chaining
-     */
-    public PersonBuilder withParentEmail(Email parentEmail) {
-        this.parentEmail = Optional.ofNullable(parentEmail);
+    public PersonBuilder withGuardian(Guardian guardian) {
+        this.guardian = Optional.ofNullable(guardian);
         return this;
     }
 
@@ -208,9 +180,7 @@ public class PersonBuilder {
                 address,
                 tags,
                 academics,
-                parentName,
-                parentPhone,
-                parentEmail,
+                guardian,
                 appointmentStarts,
                 billing,
                 attendance);

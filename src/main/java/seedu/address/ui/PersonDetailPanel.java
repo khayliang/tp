@@ -93,9 +93,12 @@ public class PersonDetailPanel extends UiPart<Region> {
         phoneLabel.setText(person.getPhone().value);
         emailLabel.setText(person.getEmail().value);
         addressLabel.setText(person.getAddress().value);
-        parentNameLabel.setText(person.getParentName().map(parent -> parent.fullName).orElse("-"));
-        parentPhoneLabel.setText(person.getParentPhone().map(phone -> phone.value).orElse("-"));
-        parentEmailLabel.setText(person.getParentEmail().map(email -> email.value).orElse("-"));
+        parentNameLabel.setText(person.getGuardian()
+                .map(g -> g.getName().fullName).orElse("-"));
+        parentPhoneLabel.setText(person.getGuardian()
+                .flatMap(g -> g.getPhone()).map(p -> p.value).orElse("-"));
+        parentEmailLabel.setText(person.getGuardian()
+                .flatMap(g -> g.getEmail()).map(e -> e.value).orElse("-"));
         lessonStartLabel.setText(formatDateTime(person.getAppointmentStart().orElse(null)));
         paymentAmountLabel.setText(formatAmount(person.getBilling().getTuitionFee()));
         paymentDueDateLabel.setText(formatDate(person.getBilling().getCurrentDueDate()));

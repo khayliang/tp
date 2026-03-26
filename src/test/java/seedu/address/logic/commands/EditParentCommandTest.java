@@ -20,8 +20,10 @@ import seedu.address.logic.commands.EditParentCommand.EditParentDescriptor;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
+import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.Phone;
 import seedu.address.testutil.PersonBuilder;
 
 /**
@@ -40,6 +42,52 @@ public class EditParentCommandTest {
         EditParentCommand editParentCommand = new EditParentCommand(INDEX_FIRST_PERSON, descriptor);
 
         Person editedPerson = new PersonBuilder(personToEdit).withParentName(VALID_PARENT_NAME_AMY).build();
+        String expectedMessage = String.format(EditParentCommand.MESSAGE_EDIT_PARENT_SUCCESS,
+                Messages.format(editedPerson));
+
+        Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        expectedModel.setPerson(personToEdit, editedPerson);
+
+        CommandResult expectedCommandResult = new CommandResult(expectedMessage, editedPerson);
+        assertCommandSuccess(editParentCommand, model, expectedCommandResult, expectedModel);
+    }
+
+    @Test
+    public void execute_editPersonWithExistingGuardian_success() {
+        // BENSON (index 2) already has a guardian with parentName "Susan Meier"
+        Person personToEdit = model.getFilteredPersonList().get(INDEX_SECOND_PERSON.getZeroBased());
+
+        // Edit only phone — existing name should be preserved
+        Phone newPhone = new Phone("99998888");
+        EditParentDescriptor descriptor = new EditParentDescriptor();
+        descriptor.setParentPhone(newPhone);
+        EditParentCommand editParentCommand = new EditParentCommand(INDEX_SECOND_PERSON, descriptor);
+
+        Person editedPerson = new PersonBuilder(personToEdit).withParentPhone("99998888").build();
+        String expectedMessage = String.format(EditParentCommand.MESSAGE_EDIT_PARENT_SUCCESS,
+                Messages.format(editedPerson));
+
+        Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        expectedModel.setPerson(personToEdit, editedPerson);
+
+        CommandResult expectedCommandResult = new CommandResult(expectedMessage, editedPerson);
+        assertCommandSuccess(editParentCommand, model, expectedCommandResult, expectedModel);
+    }
+
+    @Test
+    public void execute_editAllParentFields_success() {
+        Person personToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Name newName = new Name(VALID_PARENT_NAME_AMY);
+        Phone newPhone = new Phone("91234567");
+        Email newEmail = new Email("parent@example.com");
+        EditParentDescriptor descriptor = new EditParentDescriptor();
+        descriptor.setParentName(newName);
+        descriptor.setParentPhone(newPhone);
+        descriptor.setParentEmail(newEmail);
+        EditParentCommand editParentCommand = new EditParentCommand(INDEX_FIRST_PERSON, descriptor);
+
+        Person editedPerson = new PersonBuilder(personToEdit).withParentName(VALID_PARENT_NAME_AMY)
+                .withParentPhone("91234567").withParentEmail("parent@example.com").build();
         String expectedMessage = String.format(EditParentCommand.MESSAGE_EDIT_PARENT_SUCCESS,
                 Messages.format(editedPerson));
 

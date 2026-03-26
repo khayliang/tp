@@ -16,6 +16,7 @@ import seedu.address.model.billing.Billing;
 import seedu.address.model.billing.PaymentHistory;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
+import seedu.address.model.person.Guardian;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.PersonBuilder;
@@ -35,9 +36,9 @@ public class SampleDataUtil {
                     .withAcademics(new Academics(getSubjectSet(
                             new Subject("Mathematics", Level.BASIC),
                             new Subject("English", Level.BASIC))))
-                    .withParentName(new Name("Janet Yeoh"))
-                    .withParentPhone(new Phone("98765432"))
-                    .withParentEmail(new Email("janet@example.com"))
+                    .withGuardian(new Guardian(
+                            new Name("Janet Yeoh"), new Phone("98765432"),
+                            new Email("janet@example.com")))
                     .withAppointmentStarts(LocalDateTime.of(2026, 3, 21, 15, 30))
                     .withBilling(new Billing(Recurrence.MONTHLY, LocalDate.of(2026, 3, 15), 25.0,
                             new PaymentHistory(LocalDate.of(2026, 3, 15))))
@@ -49,9 +50,9 @@ public class SampleDataUtil {
                     .withAcademics(new Academics(getSubjectSet(
                             new Subject("Physics", Level.STRONG),
                             new Subject("Chemistry", Level.BASIC))))
-                    .withParentName(new Name("Ming Yu"))
-                    .withParentPhone(new Phone("97654321"))
-                    .withParentEmail(new Email("ming@example.com"))
+                    .withGuardian(new Guardian(
+                            new Name("Ming Yu"), new Phone("97654321"),
+                            new Email("ming@example.com")))
                     .withAppointmentStarts(LocalDateTime.of(2026, 3, 22, 16, 0))
                     .withBilling(new Billing(Recurrence.MONTHLY, LocalDate.of(2026, 3, 10), 25.0,
                             new PaymentHistory(LocalDate.of(2026, 3, 10))))
@@ -63,9 +64,9 @@ public class SampleDataUtil {
                     .withAcademics(new Academics(getSubjectSet(
                             new Subject("English", Level.STRONG),
                             new Subject("Literature", Level.BASIC))))
-                    .withParentName(new Name("Patricia Oliveiro"))
-                    .withParentPhone(new Phone("96543210"))
-                    .withParentEmail(new Email("patricia@example.com"))
+                    .withGuardian(new Guardian(
+                            new Name("Patricia Oliveiro"), new Phone("96543210"),
+                            new Email("patricia@example.com")))
                     .withAppointmentStarts(LocalDateTime.of(2026, 3, 23, 14, 30))
                     .withBilling(new Billing(Recurrence.MONTHLY, LocalDate.of(2026, 3, 5), 25.0,
                             new PaymentHistory(LocalDate.of(2026, 3, 5))))
@@ -76,9 +77,9 @@ public class SampleDataUtil {
                     .withAcademics(new Academics(getSubjectSet(
                             new Subject("Mathematics", Level.STRONG),
                             new Subject("Economics", Level.STRONG))))
-                    .withParentName(new Name("Mary Li"))
-                    .withParentPhone(new Phone("95432109"))
-                    .withParentEmail(new Email("mary@example.com"))
+                    .withGuardian(new Guardian(
+                            new Name("Mary Li"), new Phone("95432109"),
+                            new Email("mary@example.com")))
                     .withAppointmentStarts(LocalDateTime.of(2026, 3, 24, 10, 0))
                     .withBilling(new Billing(Recurrence.MONTHLY, LocalDate.of(2026, 3, 1), 25.0,
                             new PaymentHistory(LocalDate.of(2026, 3, 1))))
@@ -89,9 +90,9 @@ public class SampleDataUtil {
                     .withAcademics(new Academics(getSubjectSet(
                             new Subject("Science", Level.BASIC),
                             new Subject("Mathematics", Level.BASIC))))
-                    .withParentName(new Name("Zahra Ibrahim"))
-                    .withParentPhone(new Phone("94321098"))
-                    .withParentEmail(new Email("zahra@example.com"))
+                    .withGuardian(new Guardian(
+                            new Name("Zahra Ibrahim"), new Phone("94321098"),
+                            new Email("zahra@example.com")))
                     .withAppointmentStarts(LocalDateTime.of(2026, 3, 25, 11, 30))
                     .withBilling(new Billing(Recurrence.MONTHLY, LocalDate.of(2026, 2, 28), 25.0,
                             new PaymentHistory(LocalDate.of(2026, 2, 27))))
@@ -102,9 +103,9 @@ public class SampleDataUtil {
                     .withAcademics(new Academics(getSubjectSet(
                             new Subject("Physics", Level.STRONG),
                             new Subject("Mathematics", Level.BASIC))))
-                    .withParentName(new Name("Priya Balakrishnan"))
-                    .withParentPhone(new Phone("93210987"))
-                    .withParentEmail(new Email("priya@example.com"))
+                    .withGuardian(new Guardian(
+                            new Name("Priya Balakrishnan"), new Phone("93210987"),
+                            new Email("priya@example.com")))
                     .withAppointmentStarts(LocalDateTime.of(2026, 3, 26, 17, 0))
                     .withBilling(new Billing(Recurrence.MONTHLY, LocalDate.of(2026, 2, 25), 25.0,
                         new PaymentHistory(LocalDate.of(2026, 2, 24))))

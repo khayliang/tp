@@ -20,6 +20,7 @@ import seedu.address.model.billing.Billing;
 import seedu.address.model.billing.PaymentHistory;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
+import seedu.address.model.person.Guardian;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.PersonBuilder;
@@ -119,9 +120,13 @@ class JsonAdaptedPerson {
                 .map(JsonAdaptedTag::new)
                 .collect(Collectors.toList()));
         academics = new JsonAdaptedAcademics(source.getAcademics());
-        parentName = source.getParentName().map(pn -> pn.fullName).orElse(null);
-        parentPhone = source.getParentPhone().map(pp -> pp.value).orElse(null);
-        parentEmail = source.getParentEmail().map(pe -> pe.value).orElse(null);
+        // Use Optional chaining per review feedback — avoid null checks
+        parentName = source.getGuardian()
+                .map(Guardian::getName).map(n -> n.fullName).orElse(null);
+        parentPhone = source.getGuardian()
+                .flatMap(Guardian::getPhone).map(p -> p.value).orElse(null);
+        parentEmail = source.getGuardian()
+                .flatMap(Guardian::getEmail).map(e -> e.value).orElse(null);
         paymentDates = source.getPaymentHistory().getPaidDates().stream()
                 .map(value -> value.format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .collect(java.util.stream.Collectors.toList());
@@ -189,29 +194,31 @@ class JsonAdaptedPerson {
                 ? academics.toModelType()
                 : new Academics(new HashSet<>());
 
-        // ---------- Parent ----------
-        Name modelParentName = null;
+        // ---------- Guardian (Name is required if guardian exists) ----------
+        Guardian modelGuardian = null;
         if (parentName != null) {
             if (!Name.isValidName(parentName)) {
                 throw new IllegalValueException(Name.MESSAGE_CONSTRAINTS);
             }
-            modelParentName = new Name(parentName);
-        }
+            Name modelParentName = new Name(parentName);
 
-        Phone modelParentPhone = null;
-        if (parentPhone != null) {
-            if (!Phone.isValidPhone(parentPhone)) {
-                throw new IllegalValueException(Phone.MESSAGE_CONSTRAINTS);
+            Phone modelParentPhone = null;
+            if (parentPhone != null) {
+                if (!Phone.isValidPhone(parentPhone)) {
+                    throw new IllegalValueException(Phone.MESSAGE_CONSTRAINTS);
+                }
+                modelParentPhone = new Phone(parentPhone);
             }
-            modelParentPhone = new Phone(parentPhone);
-        }
 
-        Email modelParentEmail = null;
-        if (parentEmail != null) {
-            if (!Email.isValidEmail(parentEmail)) {
-                throw new IllegalValueException(Email.MESSAGE_CONSTRAINTS);
+            Email modelParentEmail = null;
+            if (parentEmail != null) {
+                if (!Email.isValidEmail(parentEmail)) {
+                    throw new IllegalValueException(Email.MESSAGE_CONSTRAINTS);
+                }
+                modelParentEmail = new Email(parentEmail);
             }
-            modelParentEmail = new Email(parentEmail);
+
+            modelGuardian = new Guardian(modelParentName, modelParentPhone, modelParentEmail);
         }
 
         // ---------- Appointment ----------
@@ -286,9 +293,7 @@ class JsonAdaptedPerson {
 
         PersonBuilder personBuilder = new PersonBuilder(modelName, modelPhone, modelEmail, modelAddress, modelTags)
             .withAcademics(modelAcademics)
-            .withParentName(modelParentName)
-            .withParentPhone(modelParentPhone)
-            .withParentEmail(modelParentEmail)
+            .withGuardian(modelGuardian)
             .withBilling(modelBilling)
             .withAttendance(modelAttendance);
 

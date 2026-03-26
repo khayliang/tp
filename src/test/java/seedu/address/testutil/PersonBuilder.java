@@ -3,13 +3,13 @@ package seedu.address.testutil;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 import seedu.address.model.academic.Academics;
 import seedu.address.model.billing.Billing;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
+import seedu.address.model.person.Guardian;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
@@ -69,9 +69,10 @@ public class PersonBuilder {
         address = personToCopy.getAddress();
         tags = new HashSet<>(personToCopy.getTags());
         academics = personToCopy.getAcademics();
-        parentName = personToCopy.getParentName().orElse(null);
-        parentPhone = personToCopy.getParentPhone().orElse(null);
-        parentEmail = personToCopy.getParentEmail().orElse(null);
+        Guardian guardianToCopy = personToCopy.getGuardian().orElse(null);
+        parentName = guardianToCopy != null ? guardianToCopy.getName() : null;
+        parentPhone = guardianToCopy != null ? guardianToCopy.getPhone().orElse(null) : null;
+        parentEmail = guardianToCopy != null ? guardianToCopy.getEmail().orElse(null) : null;
         appointmentStarts = new HashSet<>(personToCopy.getAppointmentStarts());
         billing = personToCopy.getBilling();
         attendance = personToCopy.getAttendance();
@@ -88,7 +89,7 @@ public class PersonBuilder {
     /**
      * Parses the {@code tags} into a {@code Set<Tag>} and set it to the {@code Person} that we are building.
      */
-    public PersonBuilder withTags(String ... tags) {
+    public PersonBuilder withTags(String... tags) {
         this.tags = SampleDataUtil.getTagSet(tags);
         return this;
     }
@@ -180,12 +181,13 @@ public class PersonBuilder {
      * Builds a {@code Person} with the current builder state.
      */
     public Person build() {
-        return new Person(name, phone, email, address, tags, academics,
-                Optional.ofNullable(parentName),
-                Optional.ofNullable(parentPhone),
-                Optional.ofNullable(parentEmail),
-                appointmentStarts,
-                billing,
-                attendance);
+        Guardian guardian = parentName != null ? new Guardian(parentName, parentPhone, parentEmail) : null;
+        return new seedu.address.model.person.PersonBuilder(name, phone, email, address, tags)
+                .withAcademics(academics)
+                .withGuardian(guardian)
+                .withAppointmentStarts(appointmentStarts.toArray(new java.time.LocalDateTime[0]))
+                .withBilling(billing)
+                .withAttendance(attendance)
+                .build();
     }
 }
