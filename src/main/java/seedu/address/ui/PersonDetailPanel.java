@@ -53,6 +53,9 @@ public class PersonDetailPanel extends UiPart<Region> {
     private Label lessonStartLabel;
 
     @FXML
+    private Label paymentAmountLabel;
+
+    @FXML
     private Label paymentDueDateLabel;
 
     @FXML
@@ -94,6 +97,7 @@ public class PersonDetailPanel extends UiPart<Region> {
         parentPhoneLabel.setText(person.getParentPhone().map(phone -> phone.value).orElse("-"));
         parentEmailLabel.setText(person.getParentEmail().map(email -> email.value).orElse("-"));
         lessonStartLabel.setText(formatDateTime(person.getAppointmentStart().orElse(null)));
+        paymentAmountLabel.setText(formatAmount(person.getBilling().getTuitionFee()));
         paymentDueDateLabel.setText(formatDate(person.getBilling().getNextDueDate()));
 
         tagsFlowPane.getChildren().clear();
@@ -185,5 +189,9 @@ public class PersonDetailPanel extends UiPart<Region> {
             return "-";
         }
         return value.format(DATE_FORMATTER);
+    }
+
+    private String formatAmount(double amount) {
+        return String.format("$%.2f", amount);
     }
 }

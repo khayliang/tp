@@ -70,13 +70,13 @@ public class EditCommandParserTest {
         assertParseFailure(parser, "1", MESSAGE_INVALID_FORMAT);
 
         // valid subcommand but no index specified
-        assertParseFailure(parser, "person " + VALID_NAME_AMY, MESSAGE_INVALID_PERSON_FORMAT);
+        assertParseFailure(parser, "student " + VALID_NAME_AMY, MESSAGE_INVALID_PERSON_FORMAT);
 
         // attd subcommand with no index
         assertParseFailure(parser, "attd" + LAST_ATTENDANCE_DESC, MESSAGE_INVALID_ATTD_FORMAT);
 
         // valid subcommand but no field specified
-        assertParseFailure(parser, "person 1", EditCommand.MESSAGE_NOT_EDITED);
+        assertParseFailure(parser, "student 1", EditCommand.MESSAGE_NOT_EDITED);
 
         // valid appt subcommand but no field specified
         assertParseFailure(parser, "appt 1", EditCommand.MESSAGE_NOT_EDITED);
@@ -88,16 +88,16 @@ public class EditCommandParserTest {
     @Test
     public void parse_invalidPreamble_failure() {
         // negative index
-        assertParseFailure(parser, "person -5" + NAME_DESC_AMY, MESSAGE_INVALID_PERSON_FORMAT);
+        assertParseFailure(parser, "student -5" + NAME_DESC_AMY, MESSAGE_INVALID_PERSON_FORMAT);
 
         // zero index
-        assertParseFailure(parser, "person 0" + NAME_DESC_AMY, MESSAGE_INVALID_PERSON_FORMAT);
+        assertParseFailure(parser, "student 0" + NAME_DESC_AMY, MESSAGE_INVALID_PERSON_FORMAT);
 
         // invalid arguments being parsed as preamble
-        assertParseFailure(parser, "person 1 some random string", MESSAGE_INVALID_PERSON_FORMAT);
+        assertParseFailure(parser, "student 1 some random string", MESSAGE_INVALID_PERSON_FORMAT);
 
         // invalid prefix being parsed as preamble
-        assertParseFailure(parser, "person 1 i/ string", MESSAGE_INVALID_PERSON_FORMAT);
+        assertParseFailure(parser, "student 1 i/ string", MESSAGE_INVALID_PERSON_FORMAT);
 
         // invalid prefix being parsed as preamble for appt
         assertParseFailure(parser, "appt 1 i/ string", MESSAGE_INVALID_APPT_FORMAT);
@@ -114,17 +114,17 @@ public class EditCommandParserTest {
 
     @Test
     public void parse_invalidValue_failure() {
-        assertParseFailure(parser, "person 1" + INVALID_NAME_DESC, Name.MESSAGE_CONSTRAINTS); // invalid name
-        assertParseFailure(parser, "person 1" + INVALID_PHONE_DESC, Phone.MESSAGE_CONSTRAINTS); // invalid phone
-        assertParseFailure(parser, "person 1" + INVALID_EMAIL_DESC, Email.MESSAGE_CONSTRAINTS); // invalid email
-        assertParseFailure(parser, "person 1" + INVALID_ADDRESS_DESC, Address.MESSAGE_CONSTRAINTS); // invalid address
+        assertParseFailure(parser, "student 1" + INVALID_NAME_DESC, Name.MESSAGE_CONSTRAINTS); // invalid name
+        assertParseFailure(parser, "student 1" + INVALID_PHONE_DESC, Phone.MESSAGE_CONSTRAINTS); // invalid phone
+        assertParseFailure(parser, "student 1" + INVALID_EMAIL_DESC, Email.MESSAGE_CONSTRAINTS); // invalid email
+        assertParseFailure(parser, "student 1" + INVALID_ADDRESS_DESC, Address.MESSAGE_CONSTRAINTS); // invalid address
 
         // invalid phone followed by valid email
-        assertParseFailure(parser, "person 1" + INVALID_PHONE_DESC + EMAIL_DESC_AMY, Phone.MESSAGE_CONSTRAINTS);
+        assertParseFailure(parser, "student 1" + INVALID_PHONE_DESC + EMAIL_DESC_AMY, Phone.MESSAGE_CONSTRAINTS);
 
         // multiple invalid values, but only the first invalid value is captured
         assertParseFailure(parser,
-                "person 1" + INVALID_NAME_DESC + INVALID_EMAIL_DESC + VALID_ADDRESS_AMY + VALID_PHONE_AMY,
+                "student 1" + INVALID_NAME_DESC + INVALID_EMAIL_DESC + VALID_ADDRESS_AMY + VALID_PHONE_AMY,
                 Name.MESSAGE_CONSTRAINTS);
 
         // invalid appointment start
@@ -139,7 +139,7 @@ public class EditCommandParserTest {
     @Test
     public void parse_allFieldsSpecified_success() {
         Index targetIndex = INDEX_SECOND_PERSON;
-        String userInput = "person " + targetIndex.getOneBased() + PHONE_DESC_BOB
+        String userInput = "student " + targetIndex.getOneBased() + PHONE_DESC_BOB
                 + EMAIL_DESC_AMY + ADDRESS_DESC_AMY + NAME_DESC_AMY;
 
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withName(VALID_NAME_AMY)
@@ -153,7 +153,7 @@ public class EditCommandParserTest {
     @Test
     public void parse_someFieldsSpecified_success() {
         Index targetIndex = INDEX_FIRST_PERSON;
-        String userInput = "person " + targetIndex.getOneBased() + PHONE_DESC_BOB + EMAIL_DESC_AMY;
+        String userInput = "student " + targetIndex.getOneBased() + PHONE_DESC_BOB + EMAIL_DESC_AMY;
 
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withPhone(VALID_PHONE_BOB)
                 .withEmail(VALID_EMAIL_AMY).build();
@@ -166,25 +166,25 @@ public class EditCommandParserTest {
     public void parse_oneFieldSpecified_success() {
         // name
         Index targetIndex = INDEX_THIRD_PERSON;
-        String userInput = "person " + targetIndex.getOneBased() + NAME_DESC_AMY;
+        String userInput = "student " + targetIndex.getOneBased() + NAME_DESC_AMY;
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withName(VALID_NAME_AMY).build();
         EditPersonCommand expectedCommand = new EditPersonCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
 
         // phone
-        userInput = "person " + targetIndex.getOneBased() + PHONE_DESC_AMY;
+        userInput = "student " + targetIndex.getOneBased() + PHONE_DESC_AMY;
         descriptor = new EditPersonDescriptorBuilder().withPhone(VALID_PHONE_AMY).build();
         expectedCommand = new EditPersonCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
 
         // email
-        userInput = "person " + targetIndex.getOneBased() + EMAIL_DESC_AMY;
+        userInput = "student " + targetIndex.getOneBased() + EMAIL_DESC_AMY;
         descriptor = new EditPersonDescriptorBuilder().withEmail(VALID_EMAIL_AMY).build();
         expectedCommand = new EditPersonCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
 
         // address
-        userInput = "person " + targetIndex.getOneBased() + ADDRESS_DESC_AMY;
+        userInput = "student " + targetIndex.getOneBased() + ADDRESS_DESC_AMY;
         descriptor = new EditPersonDescriptorBuilder().withAddress(VALID_ADDRESS_AMY).build();
         expectedCommand = new EditPersonCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
@@ -206,7 +206,7 @@ public class EditCommandParserTest {
     public void parse_caseInsensitiveSubcommand_success() {
         Index targetIndex = INDEX_FIRST_PERSON;
 
-        String personInput = "PeRsOn " + targetIndex.getOneBased() + NAME_DESC_AMY;
+        String personInput = "StUdEnT " + targetIndex.getOneBased() + NAME_DESC_AMY;
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withName(VALID_NAME_AMY).build();
         assertParseSuccess(parser, personInput, new EditPersonCommand(targetIndex, descriptor));
 
@@ -226,17 +226,17 @@ public class EditCommandParserTest {
 
         // valid followed by invalid
         Index targetIndex = INDEX_FIRST_PERSON;
-        String userInput = "person " + targetIndex.getOneBased() + INVALID_PHONE_DESC + PHONE_DESC_BOB;
+        String userInput = "student " + targetIndex.getOneBased() + INVALID_PHONE_DESC + PHONE_DESC_BOB;
 
         assertParseFailure(parser, userInput, Messages.getErrorMessageForDuplicatePrefixes(PREFIX_PHONE));
 
         // invalid followed by valid
-        userInput = "person " + targetIndex.getOneBased() + PHONE_DESC_BOB + INVALID_PHONE_DESC;
+        userInput = "student " + targetIndex.getOneBased() + PHONE_DESC_BOB + INVALID_PHONE_DESC;
 
         assertParseFailure(parser, userInput, Messages.getErrorMessageForDuplicatePrefixes(PREFIX_PHONE));
 
         // mulltiple valid fields repeated
-        userInput = "person " + targetIndex.getOneBased() + PHONE_DESC_AMY + ADDRESS_DESC_AMY + EMAIL_DESC_AMY
+        userInput = "student " + targetIndex.getOneBased() + PHONE_DESC_AMY + ADDRESS_DESC_AMY + EMAIL_DESC_AMY
                 + PHONE_DESC_AMY + ADDRESS_DESC_AMY + EMAIL_DESC_AMY
                 + PHONE_DESC_BOB + ADDRESS_DESC_BOB + EMAIL_DESC_BOB;
 
@@ -244,7 +244,7 @@ public class EditCommandParserTest {
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS));
 
         // multiple invalid values
-        userInput = "person " + targetIndex.getOneBased() + INVALID_PHONE_DESC + INVALID_ADDRESS_DESC
+        userInput = "student " + targetIndex.getOneBased() + INVALID_PHONE_DESC + INVALID_ADDRESS_DESC
                 + INVALID_EMAIL_DESC
                 + INVALID_PHONE_DESC + INVALID_ADDRESS_DESC + INVALID_EMAIL_DESC;
 

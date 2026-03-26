@@ -1,9 +1,11 @@
 package seedu.address.logic.parser;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_AMOUNT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DATE;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.EditCommand;
@@ -22,11 +24,12 @@ public class EditPaymentCommandParser implements Parser<EditPaymentCommand> {
     @Override
     public EditPaymentCommand parse(String args) throws ParseException {
         requireNonNull(args);
-        ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_DATE);
+        ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(
+                args, PREFIX_DATE, PREFIX_AMOUNT);
 
         Index index = ParserUtil.parseIndex(argMultimap.getPreamble(), EditPaymentCommand.MESSAGE_USAGE);
 
-        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_DATE);
+        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_DATE, PREFIX_AMOUNT);
 
         if (argMultimap.getValue(PREFIX_DATE).isEmpty()) {
             throw new ParseException(EditCommand.MESSAGE_NOT_EDITED);
@@ -35,6 +38,9 @@ public class EditPaymentCommandParser implements Parser<EditPaymentCommand> {
         LocalDate paymentDate =
                 ParserUtil.parseIsoDate(argMultimap.getValue(PREFIX_DATE).get());
 
-        return new EditPaymentCommand(index, paymentDate);
+        Optional<Double> tuitionFee = argMultimap.getValue(PREFIX_AMOUNT)
+                .map(Double::parseDouble);
+
+        return new EditPaymentCommand(index, paymentDate, tuitionFee);
     }
 }

@@ -44,7 +44,8 @@ public class EditPaymentCommandParserTest {
     public void parse_allFieldsSpecified_success() {
         Index targetIndex = INDEX_FIRST_PERSON;
         String userInput = targetIndex.getOneBased() + VALID_DATE_DESC;
-        EditPaymentCommand expectedCommand = new EditPaymentCommand(targetIndex, LocalDate.parse(VALID_DATE));
+        EditPaymentCommand expectedCommand = new EditPaymentCommand(targetIndex,
+            LocalDate.parse(VALID_DATE), java.util.Optional.empty());
         assertParseSuccess(parser, userInput, expectedCommand);
     }
 }

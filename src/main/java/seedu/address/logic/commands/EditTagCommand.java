@@ -22,10 +22,10 @@ public class EditTagCommand extends EditCommand {
 
     public static final String SUB_COMMAND_WORD = "tag";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Edits the tags of the person identified "
-            + "by the index number used in the displayed person list. "
+    public static final String MESSAGE_USAGE = COMMAND_WORD + " " + SUB_COMMAND_WORD
+            + ": Edits the tags of the student identified by the index number used in the displayed student list. "
             + "Existing tags will be overwritten by the input values.\n"
-            + "Parameters: " + SUB_COMMAND_WORD + " INDEX (must be a positive integer) "
+            + "Parameters: INDEX (must be a positive integer) "
             + "[" + PREFIX_TAG + "TAG]...\n"
             + "Example: " + COMMAND_WORD + " " + EditTagCommand.SUB_COMMAND_WORD + " 1 "
             + PREFIX_TAG + "JC " + PREFIX_TAG + "J1";

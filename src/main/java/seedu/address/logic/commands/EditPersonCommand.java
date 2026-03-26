@@ -26,12 +26,13 @@ import seedu.address.model.person.Phone;
  */
 public class EditPersonCommand extends EditCommand {
 
-    public static final String SUB_COMMAND_WORD = "person";
+    public static final String SUB_COMMAND_WORD = "student";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Edits the details of the person identified "
-            + "by the index number used in the displayed person list. "
+    public static final String MESSAGE_USAGE = COMMAND_WORD + " " + SUB_COMMAND_WORD
+            + ": Edits the details of the student identified "
+            + "by the index number used in the displayed student list. "
             + "Existing values will be overwritten by the input values.\n"
-            + "Parameters: person INDEX (must be a positive integer) "
+            + "Parameters: INDEX (must be a positive integer) "
             + "[" + PREFIX_NAME + "NAME] "
             + "[" + PREFIX_PHONE + "PHONE] "
             + "[" + PREFIX_EMAIL + "EMAIL] "
@@ -40,8 +41,8 @@ public class EditPersonCommand extends EditCommand {
             + PREFIX_PHONE + "91234567 "
             + PREFIX_EMAIL + "johndoe@example.com";
 
-    public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Person: %1$s";
-    public static final String MESSAGE_DUPLICATE_PERSON = "This person already exists in the address book.";
+    public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Student: %1$s";
+    public static final String MESSAGE_DUPLICATE_PERSON = "This student already exists in the address book.";
 
     private final EditPersonDescriptor editPersonDescriptor;
 

@@ -21,10 +21,10 @@ public class EditAcademicsCommand extends EditCommand {
 
     public static final String SUB_COMMAND_WORD = "acad";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Edits the academics of the person identified "
-            + "by the index number used in the displayed person list. "
-            + "Existing academics will be overwritten by the input values.\n"
-            + "Parameters: person INDEX (must be a positive integer) "
+    public static final String MESSAGE_USAGE = COMMAND_WORD + " " + SUB_COMMAND_WORD
+            + ": Edits the academics of the student identified by the index number used in the displayed "
+            + "student list. Existing academics will be overwritten by the input values.\n"
+            + "Parameters: INDEX (must be a positive integer) "
             + "[" + PREFIX_SUBJECT + "SUBJECT [" + PREFIX_LEVEL + "LEVEL]]...\n"
             + "Example: " + COMMAND_WORD + " " + SUB_COMMAND_WORD + " 1 "
             + PREFIX_SUBJECT + "Math " + PREFIX_LEVEL + "Strong "

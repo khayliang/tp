@@ -89,6 +89,10 @@
         <Label text="Payment Due" styleClass="detail-field-label" />
         <Label fx:id="paymentDueDateLabel" styleClass="detail-field-value" text="-" />
       </HBox>
+      <HBox spacing="10">
+        <Label text="Tuition Fees" styleClass="detail-field-label" />
+        <Label fx:id="paymentAmountLabel" styleClass="detail-field-value" text="-" />
+      </HBox>
       <VBox spacing="6">
         <VBox.margin>
           <Insets top="4" />

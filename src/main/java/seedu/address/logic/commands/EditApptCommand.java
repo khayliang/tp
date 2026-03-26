@@ -22,9 +22,9 @@ public class EditApptCommand extends EditCommand {
     public static final String SUB_COMMAND_WORD = "appt";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + " " + SUB_COMMAND_WORD
-            + ": Records the lesson start date-time for the person identified "
-            + "by the index number used in the displayed person list.\n"
-            + "Parameters: appt INDEX (must be a positive integer) "
+            + ": Records the lesson start date-time for the student identified by the index number used "
+            + "in the displayed student list.\n"
+            + "Parameters: INDEX (must be a positive integer) "
             + PREFIX_DATE + "DATETIME\n"
             + "Example: " + COMMAND_WORD + " " + SUB_COMMAND_WORD + " 1 "
             + PREFIX_DATE + "2026-01-13T08:00:00";

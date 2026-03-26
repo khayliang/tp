@@ -39,7 +39,7 @@ public class SampleDataUtil {
                     .withParentPhone(new Phone("98765432"))
                     .withParentEmail(new Email("janet@example.com"))
                     .withAppointmentStarts(LocalDateTime.of(2026, 3, 21, 15, 30))
-                    .withBilling(new Billing(Recurrence.MONTHLY, LocalDate.of(2026, 3, 15), 25,
+                    .withBilling(new Billing(Recurrence.MONTHLY, LocalDate.of(2026, 3, 15), 25.0,
                             new PaymentHistory(LocalDate.of(2026, 3, 15))))
                     .withAttendance(new Attendance(LocalDateTime.of(2026, 3, 18, 15, 30)))
                     .build(),
@@ -53,7 +53,7 @@ public class SampleDataUtil {
                     .withParentPhone(new Phone("97654321"))
                     .withParentEmail(new Email("ming@example.com"))
                     .withAppointmentStarts(LocalDateTime.of(2026, 3, 22, 16, 0))
-                    .withBilling(new Billing(Recurrence.MONTHLY, LocalDate.of(2026, 3, 10), 25,
+                    .withBilling(new Billing(Recurrence.MONTHLY, LocalDate.of(2026, 3, 10), 25.0,
                             new PaymentHistory(LocalDate.of(2026, 3, 10))))
                     .withAttendance(new Attendance(LocalDateTime.of(2026, 3, 17, 16, 0)))
                     .build(),
@@ -67,7 +67,7 @@ public class SampleDataUtil {
                     .withParentPhone(new Phone("96543210"))
                     .withParentEmail(new Email("patricia@example.com"))
                     .withAppointmentStarts(LocalDateTime.of(2026, 3, 23, 14, 30))
-                    .withBilling(new Billing(Recurrence.MONTHLY, LocalDate.of(2026, 3, 5), 25,
+                    .withBilling(new Billing(Recurrence.MONTHLY, LocalDate.of(2026, 3, 5), 25.0,
                             new PaymentHistory(LocalDate.of(2026, 3, 5))))
                     .withAttendance(new Attendance(LocalDateTime.of(2026, 3, 16, 14, 30)))
                     .build(),
@@ -80,7 +80,7 @@ public class SampleDataUtil {
                     .withParentPhone(new Phone("95432109"))
                     .withParentEmail(new Email("mary@example.com"))
                     .withAppointmentStarts(LocalDateTime.of(2026, 3, 24, 10, 0))
-                    .withBilling(new Billing(Recurrence.MONTHLY, LocalDate.of(2026, 3, 1), 25,
+                    .withBilling(new Billing(Recurrence.MONTHLY, LocalDate.of(2026, 3, 1), 25.0,
                             new PaymentHistory(LocalDate.of(2026, 3, 1))))
                     .withAttendance(new Attendance(LocalDateTime.of(2026, 3, 19, 10, 0)))
                     .build(),
@@ -93,7 +93,7 @@ public class SampleDataUtil {
                     .withParentPhone(new Phone("94321098"))
                     .withParentEmail(new Email("zahra@example.com"))
                     .withAppointmentStarts(LocalDateTime.of(2026, 3, 25, 11, 30))
-                    .withBilling(new Billing(Recurrence.MONTHLY, LocalDate.of(2026, 2, 28), 25,
+                    .withBilling(new Billing(Recurrence.MONTHLY, LocalDate.of(2026, 2, 28), 25.0,
                             new PaymentHistory(LocalDate.of(2026, 2, 27))))
                     .withAttendance(new Attendance(LocalDateTime.of(2026, 3, 15, 11, 30)))
                     .build(),
@@ -106,7 +106,7 @@ public class SampleDataUtil {
                     .withParentPhone(new Phone("93210987"))
                     .withParentEmail(new Email("priya@example.com"))
                     .withAppointmentStarts(LocalDateTime.of(2026, 3, 26, 17, 0))
-                    .withBilling(new Billing(Recurrence.MONTHLY, LocalDate.of(2026, 2, 25), 25,
+                    .withBilling(new Billing(Recurrence.MONTHLY, LocalDate.of(2026, 2, 25), 25.0,
                         new PaymentHistory(LocalDate.of(2026, 2, 24))))
                     .withAttendance(new Attendance(LocalDateTime.of(2026, 3, 20, 17, 0)))
                     .build()
