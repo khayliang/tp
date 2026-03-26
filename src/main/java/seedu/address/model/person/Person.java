@@ -208,7 +208,7 @@ public class Person {
     /**
      * Returns attendance history with the provided attendance date-time appended.
      */
-    public Attendance withAddedAttendance(LocalDateTime attendanceDateTime) {
+    public Attendance addAttendance(LocalDateTime attendanceDateTime) {
         requireAllNonNull(attendanceDateTime);
         return attendance.addAttendance(attendanceDateTime);
     }

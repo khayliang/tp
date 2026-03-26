@@ -44,9 +44,9 @@ public class EditAttdCommand extends EditCommand {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         Person personToEdit = getTargetPerson(model);
-        Attendance updatedAttendance = personToEdit.withAddedAttendance(attendanceToSet);
+        Attendance updatedAttendance = personToEdit.addAttendance(attendanceToSet);
         Person editedPerson = new PersonBuilder(personToEdit)
-            .withAttendance(updatedAttendance)
+                .withAttendance(updatedAttendance)
                 .build();
 
         replacePerson(model, personToEdit, editedPerson);
