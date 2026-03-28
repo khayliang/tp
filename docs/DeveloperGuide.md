@@ -155,6 +155,27 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 
 This section describes some noteworthy details on how certain features are implemented.
 
+### Edit command
+
+The `edit` family uses subcommand dispatch. To keep the diagrams readable, the flow is split into two smaller sequence diagrams using `edit student 1 p/98765432` as the representative example.
+
+The first diagram shows how `AddressBookParser` routes the input to `EditCommandParser`, which then delegates to the concrete subcommand parser.
+
+<img src="images/EditCommandParsingSequenceDiagram.png" width="700" />
+
+The second diagram shows the successful execution path after parsing. Error paths such as invalid indices and duplicate students are omitted to keep the diagram compact.
+
+<img src="images/EditCommandExecutionSequenceDiagram.png" width="760" />
+
+How the `edit` command works:
+
+1. `AddressBookParser` recognizes `edit` as the command word and forwards the remaining input to `EditCommandParser`.
+1. `EditCommandParser` dispatches by subcommand name (`student`, `appt`, `attd`, `payment`, etc.) and invokes the matching concrete parser.
+1. The concrete parser validates the index and prefixed arguments, then constructs the corresponding `Edit...Command`.
+1. During execution, the command resolves the target student from the currently displayed list, builds the edited `Person`, and checks any command-specific constraints.
+1. The command updates the `Model`, which replaces the target `Person` in the `AddressBook` while preserving the active filter.
+1. `LogicManager` detects that the address book changed and persists the updated state through `Storage`.
+
 ### \[Proposed\] Undo/redo feature
 
 #### Proposed Implementation

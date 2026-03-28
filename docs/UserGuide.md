@@ -128,6 +128,25 @@ Examples:
 * `edit attd 1 d/2026-01-29T08:00:00`
 * `edit attd 1`
 
+### Recording an appointment : `edit appt`
+
+Records the lesson start date-time for an existing student contact.
+
+Format: `edit appt INDEX d/DATETIME`
+
+* Records the appointment for the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, ...
+* Exactly one `d/` prefix must be provided.
+* `d/` accepts ISO 8601 local date-time.
+* Reduced precision without seconds is accepted (e.g., `2026-01-13T08:00`) and will be interpreted as seconds `:00`.
+* Leading and trailing whitespaces around the date-time value are ignored.
+* Appointment times are stored to minute precision, so any supplied seconds are dropped.
+* Recording a new appointment replaces any existing appointment recorded for that student.
+* The recorded appointment is shown in the GUI for each student as `Appt: ...`.
+
+Examples:
+* `edit appt 1 d/2026-01-13T08:00:00`
+* `edit appt 2 d/2026-01-13T08:00`
+
 ### Locating persons by name: `find person`
 
 Finds persons whose names contain any of the given keywords.
@@ -161,18 +180,21 @@ Examples:
 * `find payment d/2026-03` returns all students in currently displayed list with payment due dates in March 2026.
 * `find payment d/2025-12` returns students with due dates in December 2025.
 
-### Viewing appointments for a week: `viewAppt`
+### Viewing appointments for a week: `viewappt`
 
-Shows all appointments in the Monday-Sunday week containing the given date.
+Shows all students whose appointment date falls within the Monday-Sunday week containing the given date.
 
-Format: `viewAppt [d/DATE]`
+Format: `viewappt [d/DATE]`
 
-* If `d/DATE` is omitted, the current date is used.
+* If `d/DATE` is omitted, the current local date is used.
 * `DATE` must be in ISO format (`YYYY-MM-DD`).
+* At most one `d/` prefix may be provided.
+* Text outside the optional `d/` prefix is invalid.
+* The displayed list switches to appointment view and shows the recorded appointment for each matching student.
 
 Examples:
-* `viewAppt`
-* `viewAppt d/2026-02-13`
+* `viewappt`
+* `viewappt d/2026-02-13`
 
 ### Deleting a person : `delete`
 
@@ -241,9 +263,10 @@ Action | Format, Examples
 **Clear** | `clear`
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
 **Edit** | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
+**Edit Appointment** | `edit appt INDEX d/ISO8601_DATETIME`<br> e.g., `edit appt 1 d/2026-01-13T08:00:00`
 **Edit Attendance** | `edit attd INDEX [d/ISO8601_DATETIME]`<br> e.g., `edit attd 1 d/2026-01-29T08:00:00`, `edit attd 1`
 **Find** | `find person KEYWORD [MORE_KEYWORDS]`<br> e.g., `find person James Jake`
 **Find Payment** | `find payment d/YYYY-MM`<br> e.g., `find payment d/2026-03`
-**View Appointments** | `viewAppt [d/DATE]`<br> e.g., `viewAppt d/2026-02-13`
+**View Appointments** | `viewappt [d/DATE]`<br> e.g., `viewappt d/2026-02-13`
 **List** | `list`
 **Help** | `help`
