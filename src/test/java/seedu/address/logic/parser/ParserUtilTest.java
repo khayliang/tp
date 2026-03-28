@@ -234,6 +234,17 @@ public class ParserUtilTest {
     }
 
     @Test
+    public void parseAmount_infiniteValue_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseAmount("-Infinity"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseAmount("Infinity"));
+    }
+
+    @Test
+    public void parseAmount_nanValue_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseAmount("NaN"));
+    }
+
+    @Test
     public void parseAmount_validValueWithWhitespace_returnsAmount() throws Exception {
         String valueWithWhitespace = WHITESPACE + VALID_AMOUNT + WHITESPACE;
         assertEquals(Double.parseDouble(VALID_AMOUNT), ParserUtil.parseAmount(valueWithWhitespace));

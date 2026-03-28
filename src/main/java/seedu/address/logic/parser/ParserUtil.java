@@ -192,7 +192,7 @@ public class ParserUtil {
         String trimmedAmount = amount.trim();
         try {
             double parsedAmount = Double.parseDouble(trimmedAmount);
-            if (parsedAmount < 0) {
+            if (!Double.isFinite(parsedAmount) || parsedAmount < 0) {
                 throw new ParseException(MESSAGE_INVALID_AMOUNT);
             }
             return parsedAmount;
