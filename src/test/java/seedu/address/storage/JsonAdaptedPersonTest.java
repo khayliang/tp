@@ -5,7 +5,10 @@ import static seedu.address.storage.JsonAdaptedPerson.MISSING_FIELD_MESSAGE_FORM
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalPersons.BENSON;
 
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -45,9 +48,13 @@ public class JsonAdaptedPersonTest {
     private static final String VALID_PAYMENT_RECURRENCE = "MONTHLY";
     private static final Double VALID_TUITION_FEE = 25.0;
     private static final String VALID_ATTENDANCE_ENTRY = "2026-01-29T08:00:00";
+    private static final String FUTURE_PAYMENT_DATE = "2026-03-29";
     private static final List<String> VALID_ATTENDANCE_HISTORY = List.of(
             "2026-01-28T08:00:00",
             VALID_ATTENDANCE_ENTRY);
+    private static final Clock FIXED_CLOCK = Clock.fixed(
+            Instant.parse("2026-03-28T12:00:00Z"),
+            ZoneId.of("Asia/Singapore"));
     private static final String VALID_PARENT_NAME = BENSON.getGuardian()
             .map(g -> g.getName().fullName).orElse(null);
     private static final String VALID_PARENT_PHONE = BENSON.getGuardian()
@@ -218,6 +225,19 @@ public class JsonAdaptedPersonTest {
                         VALID_PAYMENT_RECURRENCE, VALID_TUITION_FEE,
                         List.of(VALID_ATTENDANCE_ENTRY));
         assertThrows(IllegalValueException.class, person::toModelType);
+    }
+
+    @Test
+    public void toModelType_futurePaymentDate_throwsIllegalValueException() {
+        JsonAdaptedPerson person =
+                new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
+                        VALID_TAGS, VALID_ACADEMICS,
+                        VALID_PARENT_NAME, VALID_PARENT_PHONE, VALID_PARENT_EMAIL,
+                        VALID_APPOINTMENT_START,
+                        List.of(FUTURE_PAYMENT_DATE), VALID_PAYMENT_DUE_DATE,
+                        VALID_PAYMENT_RECURRENCE, VALID_TUITION_FEE,
+                        List.of(VALID_ATTENDANCE_ENTRY));
+        assertThrows(IllegalValueException.class, () -> person.toModelType(FIXED_CLOCK));
     }
 
     @Test

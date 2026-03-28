@@ -6,7 +6,10 @@ import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailur
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 import org.junit.jupiter.api.Test;
 
@@ -18,10 +21,17 @@ public class EditPaymentCommandParserTest {
     private static final String MESSAGE_INVALID_FORMAT =
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditPaymentCommand.MESSAGE_USAGE);
     private static final String VALID_DATE = "2026-01-13";
+    private static final String TODAY_DATE = "2026-03-28";
+    private static final String FUTURE_DATE = "2026-03-29";
     private static final String VALID_DATE_DESC = " " + PREFIX_DATE + VALID_DATE;
+    private static final String TODAY_DATE_DESC = " " + PREFIX_DATE + TODAY_DATE;
+    private static final String FUTURE_DATE_DESC = " " + PREFIX_DATE + FUTURE_DATE;
     private static final String INVALID_DATE_DESC = " " + PREFIX_DATE + "2026-13-40";
+    private static final Clock FIXED_CLOCK = Clock.fixed(
+            Instant.parse("2026-03-28T12:00:00Z"),
+            ZoneId.of("Asia/Singapore"));
 
-    private EditPaymentCommandParser parser = new EditPaymentCommandParser();
+    private final EditPaymentCommandParser parser = new EditPaymentCommandParser(FIXED_CLOCK);
 
     @Test
     public void parse_missingParts_failure() {
@@ -47,5 +57,19 @@ public class EditPaymentCommandParserTest {
         EditPaymentCommand expectedCommand = new EditPaymentCommand(targetIndex,
             LocalDate.parse(VALID_DATE), java.util.Optional.empty());
         assertParseSuccess(parser, userInput, expectedCommand);
+    }
+
+    @Test
+    public void parse_paymentDateIsToday_success() {
+        Index targetIndex = INDEX_FIRST_PERSON;
+        String userInput = targetIndex.getOneBased() + TODAY_DATE_DESC;
+        EditPaymentCommand expectedCommand = new EditPaymentCommand(targetIndex,
+                LocalDate.parse(TODAY_DATE), java.util.Optional.empty());
+        assertParseSuccess(parser, userInput, expectedCommand);
+    }
+
+    @Test
+    public void parse_futurePaymentDate_failure() {
+        assertParseFailure(parser, "1" + FUTURE_DATE_DESC, ParserUtil.MESSAGE_DATE_AFTER_TODAY);
     }
 }

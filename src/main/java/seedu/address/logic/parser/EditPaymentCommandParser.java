@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_AMOUNT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DATE;
 
+import java.time.Clock;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -15,6 +16,17 @@ import seedu.address.logic.parser.exceptions.ParseException;
  * Parses input arguments and creates a new {@code EditApptCommand} object.
  */
 public class EditPaymentCommandParser implements Parser<EditPaymentCommand> {
+
+    private final Clock clock;
+
+    public EditPaymentCommandParser() {
+        this(Clock.systemDefaultZone());
+    }
+
+    EditPaymentCommandParser(Clock clock) {
+        requireNonNull(clock);
+        this.clock = clock;
+    }
 
     /**
      * Parses the given {@code String} of arguments in the context of the EditPaymentCommand
@@ -36,7 +48,7 @@ public class EditPaymentCommandParser implements Parser<EditPaymentCommand> {
         }
 
         LocalDate paymentDate =
-                ParserUtil.parseIsoDate(argMultimap.getValue(PREFIX_DATE).get());
+                ParserUtil.parseIsoDateNotAfterToday(argMultimap.getValue(PREFIX_DATE).get(), clock);
 
         Optional<Double> tuitionFee = argMultimap.getValue(PREFIX_AMOUNT)
                 .map(Double::parseDouble);
