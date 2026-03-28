@@ -13,7 +13,7 @@ import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditPaymentCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 /**
- * Parses input arguments and creates a new {@code EditApptCommand} object.
+ * Parses input arguments and creates a new {@code EditPaymentCommand} object.
  */
 public class EditPaymentCommandParser implements Parser<EditPaymentCommand> {
 
