@@ -159,6 +159,12 @@ This section describes some noteworthy details on how certain features are imple
 
 The `edit` family uses subcommand dispatch. To keep the diagrams readable, the flow is split into two smaller sequence diagrams using `edit student 1 p/98765432` as the representative example.
 
+The two class diagrams below split the `edit` feature into its command hierarchy and parser-dispatch structure. This keeps the overview readable while still generalizing the shared pattern across edit subcommands.
+
+<img src="images/EditCommandHierarchyClassDiagram.png" width="520" />
+
+<img src="images/EditCommandParserClassDiagram.png" width="720" />
+
 The first diagram shows how `AddressBookParser` routes the input to `EditCommandParser`, which then delegates to the concrete subcommand parser.
 
 <img src="images/EditCommandParsingSequenceDiagram.png" width="700" />
