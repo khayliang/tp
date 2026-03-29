@@ -1,0 +1,48 @@
+@startuml
+!include style.puml
+!pragma layout smetana
+skinparam arrowThickness 1.1
+skinparam arrowColor LOGIC_COLOR_T4
+skinparam classBackgroundColor LOGIC_COLOR
+top to bottom direction
+
+package "Subject command structure" {
+abstract class "{abstract}\nCommand" as Command
+abstract class "{abstract}\nIndexedPersonCommand" as IndexedPersonCommand
+abstract class "{abstract}\nEditCommand" as EditCommand
+class EditAcademicsCommand
+
+interface "<<interface>>\nParser<T>" as Parser
+class EditAcademicsCommandParser
+
+class Academics
+class Subject
+enum Level
+class LevelUtil
+}
+
+IndexedPersonCommand -up-|> Command
+EditCommand -up-|> IndexedPersonCommand
+EditAcademicsCommand -up-|> EditCommand
+
+EditAcademicsCommandParser .up.|> Parser
+EditAcademicsCommandParser ..> EditAcademicsCommand : <<create>>
+EditAcademicsCommandParser ..> Academics : <<create>>
+EditAcademicsCommandParser ..> Subject : <<create>>
+EditAcademicsCommandParser ..> LevelUtil : <<use>>
+
+EditAcademicsCommand ..> Academics : <<use>>
+Subject --> Level
+LevelUtil ..> Level : <<parse>>
+
+note right of EditAcademicsCommandParser
+Parses alternating `s/` and optional `l/`
+tokens into an `Academics` object.
+end note
+
+note right of EditAcademicsCommand
+Applies the new `Academics`
+to the selected student.
+end note
+
+@enduml
