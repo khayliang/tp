@@ -175,13 +175,25 @@ public class Person {
 
     /**
      * Returns an immutable {@code Billing} object with updated payment history
-     * and advanced billing cycle
+     * and advanced billing cycle if paymentDate is before or on today's date in SG timezone
      * @param paymentDate A valid {@code LocalDate}
      * @return {@code Billing} object
      */
     public Billing recordFeesPaidAndAdvanceBilling(LocalDate paymentDate) {
         Billing updatedBilling = billing.recordTuitionPaid(paymentDate);
         return updatedBilling.advanceDueDate();
+    }
+
+    /**
+     * Returns an immutable {@code Billing} object with updated payment history after deleting
+     * a recorded payment date. Due date is rolled back one recurrence cycle only when deleting
+     * the latest chronological payment date.
+     * @param paymentDate A valid {@code LocalDate}
+     * @return updated {@code Billing} object
+     * @throws IllegalArgumentException if paymentDate is not recorded
+     */
+    public Billing deleteRecordedPayment(LocalDate paymentDate) {
+        return billing.deleteRecordedPayment(paymentDate);
     }
 
     /**

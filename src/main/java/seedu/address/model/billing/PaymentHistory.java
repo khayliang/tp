@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -40,7 +41,30 @@ public class PaymentHistory {
         requireNonNull(date);
         Set<LocalDate> next = new LinkedHashSet<>(paidDates);
         next.add(date);
-        return new PaymentHistory(next.toArray(new LocalDate[0]));
+        return new PaymentHistory(next.toArray(LocalDate[]::new));
+    }
+
+    /**
+     * Deletes payment made on {@code date}
+     * @param date A valid date
+     * @return {@code Payment} object with updated payment history
+     * @throws IllegalArgumentException if {@code date} is not in payment history
+     */
+    public PaymentHistory removePayment(LocalDate date) {
+        requireNonNull(date);
+        if (!hasPaidOn(date)) {
+            throw new IllegalArgumentException("Payment date not found");
+        }
+        Set<LocalDate> next = new LinkedHashSet<>(paidDates);
+        next.remove(date);
+        return new PaymentHistory(next.toArray(LocalDate[]::new));
+    }
+
+    /**
+     * Returns latest date in payment history if present
+     */
+    public Optional<LocalDate> getLatestPaidDate() {
+        return paidDates.stream().max(LocalDate::compareTo);
     }
 
     /**
