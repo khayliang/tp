@@ -1,0 +1,58 @@
+@startuml
+!include style.puml
+!pragma layout smetana
+skinparam arrowThickness 1.1
+skinparam arrowColor LOGIC_COLOR_T4
+skinparam classBackgroundColor LOGIC_COLOR
+top to bottom direction
+
+package "Payment and billing command structure" {
+abstract class "{abstract}\nCommand" as Command
+abstract class "{abstract}\nIndexedPersonCommand" as IndexedPersonCommand
+abstract class "{abstract}\nEditCommand" as EditCommand
+abstract class "{abstract}\nFindCommand" as FindCommand
+
+class EditPaymentCommand
+class FindPaymentCommand
+
+interface "<<interface>>\nParser<T>" as Parser
+class EditPaymentCommandParser
+class FindPaymentCommandParser
+
+class Billing
+class PaymentDueMonthPredicate
+}
+
+IndexedPersonCommand -up-|> Command
+EditCommand -up-|> IndexedPersonCommand
+FindCommand -up-|> Command
+
+EditPaymentCommand -up-|> EditCommand
+FindPaymentCommand -up-|> FindCommand
+
+EditPaymentCommandParser .up.|> Parser
+FindPaymentCommandParser .up.|> Parser
+
+EditPaymentCommandParser ..> EditPaymentCommand : <<create>>
+EditPaymentCommandParser ..> Billing : <<uses billing update>>
+
+FindPaymentCommandParser ..> FindPaymentCommand : <<create>>
+FindPaymentCommandParser ..> PaymentDueMonthPredicate : <<create>>
+FindPaymentCommand ..> PaymentDueMonthPredicate : <<use>>
+
+note right of EditPaymentCommandParser
+Parses `d/DATE` and optional `a/AMOUNT`
+for `edit payment`.
+end note
+
+note right of EditPaymentCommand
+Records a payment date, advances the due date,
+and may update the tuition fee.
+end note
+
+note right of FindPaymentCommand
+Filters displayed students by
+billing due month.
+end note
+
+@enduml

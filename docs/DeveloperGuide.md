@@ -248,6 +248,27 @@ How the subject-related feature works:
 1. `EditAcademicsCommand` applies that `Academics` object to the selected student by rebuilding the `Person` with updated academics.
 1. Each `Subject` stores a mandatory name and an optional `Level`, while `Academics` stores the set of subjects for that student.
 
+### Payment and billing commands
+
+The payment and billing feature covers two related workflows:
+`edit payment`, which records a payment and updates billing data, and `find payment`, which filters students by billing due month.
+
+The first class diagram shows the command and parser structure for these workflows.
+
+<img src="images/PaymentBillingCommandClassDiagram.png" width="720" />
+
+The second class diagram shows the billing model objects used by those commands.
+
+<img src="images/BillingModelClassDiagram.png" width="620" />
+
+How the payment and billing feature works:
+
+1. `EditPaymentCommandParser` parses a required `d/DATE` and an optional `a/AMOUNT` from `edit payment`.
+1. `EditPaymentCommand` updates the selected student's `Billing` by recording the payment date, advancing the next due date, and optionally changing the tuition fee.
+1. `FindPaymentCommandParser` parses `d/YYYY-MM` and creates a `PaymentDueMonthPredicate`.
+1. `FindPaymentCommand` applies that predicate to the displayed list so only students with matching billing due months remain visible.
+1. `Billing` stores the recurrence schedule, current due date, tuition fee, and `PaymentHistory`, while `PaymentHistory` stores the set of recorded paid dates.
+
 ### \[Proposed\] Undo/redo feature
 
 #### Proposed Implementation
