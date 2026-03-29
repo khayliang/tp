@@ -93,7 +93,7 @@ public class BillingTest {
     @Test
     public void deleteRecordedPayment_latestDate_rollsBackDueDateAndRemovesDate() {
         PaymentHistory history = new PaymentHistory(
-                LocalDate.of(2026, 3, 1), 
+                LocalDate.of(2026, 3, 1),
                 LocalDate.of(2026, 4, 1));
         Billing original = new Billing(Recurrence.MONTHLY, DUE_DATE, 100.0, history);
 
@@ -107,7 +107,7 @@ public class BillingTest {
     @Test
     public void deleteRecordedPayment_nonLatestDate_keepsDueDateAndRemovesDate() {
         PaymentHistory history = new PaymentHistory(
-                LocalDate.of(2026, 3, 1), 
+                LocalDate.of(2026, 3, 1),
                 LocalDate.of(2026, 4, 1));
         Billing original = new Billing(Recurrence.MONTHLY, DUE_DATE, 100.0, history);
 
@@ -122,7 +122,7 @@ public class BillingTest {
     public void deleteRecordedPayment_missingDate_throwsIllegalArgumentException() {
         Billing original = new Billing(Recurrence.MONTHLY, DUE_DATE, 100.0,
                 new PaymentHistory(LocalDate.of(2026, 4, 1)));
-        assertThrows(IllegalArgumentException.class, () -> 
+        assertThrows(IllegalArgumentException.class, () ->
                 original.deleteRecordedPayment(LocalDate.of(2026, 5, 1)));
     }
 
