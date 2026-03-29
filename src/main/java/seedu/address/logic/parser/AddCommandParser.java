@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import seedu.address.logic.commands.AddCommand;
+import seedu.address.logic.commands.AddPaymentCommand;
 import seedu.address.logic.commands.AddPersonCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 
@@ -20,6 +21,7 @@ public class AddCommandParser implements Parser<AddCommand> {
     public AddCommandParser() {
         Map<String, Parser<? extends AddCommand>> parsers = new HashMap<>();
         parsers.put(AddPersonCommand.SUB_COMMAND_WORD, new AddPersonCommandParser());
+        parsers.put(AddPaymentCommand.SUB_COMMAND_WORD, new AddPaymentCommandParser());
         this.dispatcher = new SubcommandDispatcherParser<>(parsers, AddCommand.MESSAGE_USAGE);
     }
 

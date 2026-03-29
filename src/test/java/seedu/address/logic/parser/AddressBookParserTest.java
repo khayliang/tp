@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.AddCommand;
+import seedu.address.logic.commands.AddPaymentCommand;
 import seedu.address.logic.commands.AddPersonCommand;
 import seedu.address.logic.commands.ClearCommand;
 import seedu.address.logic.commands.DeletePersonCommand;
@@ -46,6 +47,18 @@ public class AddressBookParserTest {
         Person person = new PersonBuilder().build();
         AddCommand command = (AddCommand) parser.parseCommand(PersonUtil.getAddCommand(person));
         assertEquals(new AddPersonCommand(person), command);
+    }
+
+    @Test
+    public void parseCommand_addPayment() throws Exception {
+        AddPaymentCommand command = (AddPaymentCommand) parser.parseCommand(
+                AddCommand.COMMAND_WORD + " " + AddPaymentCommand.SUB_COMMAND_WORD + " "
+                        + INDEX_FIRST_PERSON.getOneBased() + " d/2026-01-13");
+        assertEquals(new AddPaymentCommand(
+                INDEX_FIRST_PERSON,
+                LocalDate.parse("2026-01-13"),
+                java.util.Optional.empty()),
+                command);
     }
 
     @Test
