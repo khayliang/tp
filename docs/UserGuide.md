@@ -123,18 +123,22 @@ Format: `edit payment INDEX d/DATE`
 Examples:
 * `edit payment 1 d/2026-03-05`
 
-### Editing billing amount : `edit billing`
+### Editing billing details : `edit billing`
 
-Updates tuition fee amount for an existing student contact.
+Updates billing details for an existing student contact.
 
-Format: `edit billing INDEX a/AMOUNT`
+Format: `edit billing INDEX [a/AMOUNT] [d/DATE]`
 
-* Updates billing amount for the person at the specified `INDEX`.
+* Updates tuition fee and/or payment due date for the person at the specified `INDEX`.
+* At least one of `a/` or `d/` must be provided.
 * `a/` must be a non-negative number.
-* This command updates tuition fee only and does not change payment history.
+* `d/` accepts ISO 8601 local date (`YYYY-MM-DD`).
+* This command updates billing configuration only and does not change payment history.
 
 Examples:
 * `edit billing 1 a/250`
+* `edit billing 1 d/2026-03-20`
+* `edit billing 1 a/250 d/2026-03-20`
 
 ### Recording last attendance : `edit attd`
 
@@ -320,7 +324,7 @@ Action | Format, Examples
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
 **Edit** | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
 **Edit Payment** | `edit payment INDEX d/ISO8601_DATE`<br> e.g., `edit payment 1 d/2026-03-05`
-**Edit Billing** | `edit billing INDEX a/AMOUNT`<br> e.g., `edit billing 1 a/250`
+**Edit Billing** | `edit billing INDEX [a/AMOUNT] [d/ISO8601_DATE]`<br> e.g., `edit billing 1 a/250 d/2026-03-20`
 **Edit Appointment** | `edit appt INDEX d/ISO8601_DATETIME`<br> e.g., `edit appt 1 d/2026-01-13T08:00:00`
 **Edit Attendance** | `edit attd INDEX [d/ISO8601_DATETIME]`<br> e.g., `edit attd 1 d/2026-01-29T08:00:00`, `edit attd 1`
 **Find** | `find person KEYWORD [MORE_KEYWORDS]`<br> e.g., `find person James Jake`

@@ -36,6 +36,7 @@ import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_THIRD_PERSON;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
@@ -218,7 +219,8 @@ public class EditCommandParserTest {
         // billing amount
         userInput = "billing " + targetIndex.getOneBased() + " " + PREFIX_AMOUNT + VALID_PAYMENT_AMOUNT;
         EditBillingCommand expectedBillingCommand = new EditBillingCommand(targetIndex,
-                Double.parseDouble(VALID_PAYMENT_AMOUNT));
+                Optional.of(Double.parseDouble(VALID_PAYMENT_AMOUNT)),
+                Optional.empty());
         assertParseSuccess(parser, userInput, expectedBillingCommand);
     }
 

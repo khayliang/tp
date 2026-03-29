@@ -29,6 +29,8 @@ public class ParserUtil {
     public static final String MESSAGE_INVALID_INDEX = "Index is not a non-zero unsigned integer.";
     public static final String MESSAGE_INVALID_DATE =
             "Date must be in ISO 8601 local date format, e.g. 2026-01-13";
+    public static final String MESSAGE_INVALID_DATE_NOT_AFTER_TODAY =
+            "Date must be today or in the past.";
     public static final String MESSAGE_INVALID_DATE_TIME =
             "Date-time must be in ISO 8601 local format, e.g. 2026-01-13T08:00:00";
     public static final String MESSAGE_INVALID_AMOUNT = "Amount must be a non-negative number.";
@@ -179,6 +181,20 @@ public class ParserUtil {
         } catch (DateTimeParseException e) {
             throw new ParseException(MESSAGE_INVALID_DATE);
         }
+    }
+
+    /**
+     * Parses a {@code String date} into a {@code LocalDate} that is not after today.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws ParseException if the given {@code date} is invalid or after today.
+     */
+    public static LocalDate parseIsoDateNotAfterToday(String date) throws ParseException {
+        LocalDate parsedDate = parseIsoDate(date);
+        if (parsedDate.isAfter(LocalDate.now())) {
+            throw new ParseException(MESSAGE_INVALID_DATE_NOT_AFTER_TODAY);
+        }
+        return parsedDate;
     }
 
     /**
