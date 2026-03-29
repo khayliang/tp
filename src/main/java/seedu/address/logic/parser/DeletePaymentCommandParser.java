@@ -16,8 +16,8 @@ import seedu.address.logic.parser.exceptions.ParseException;
 public class DeletePaymentCommandParser implements Parser<DeletePaymentCommand> {
 
     /**
-     * Parses the given {@code String} of arguments in the context of the DeleteCommand
-     * and returns a DeleteCommand object for execution.
+     * Parses the given {@code String} of arguments in the context of the DeletePaymentCommand
+     * and returns a DeletePaymentCommand object for execution.
      * @throws ParseException if the user input does not conform the expected format
      */
     @Override

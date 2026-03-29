@@ -33,7 +33,7 @@ public class DeletePaymentCommand extends DeleteCommand {
     private final LocalDate paymentDate;
 
     /**
-     * @param index of the person in the filtered person list to edit
+     * @param index of the person in the filtered person list whose payment date is to be deleted
      * @param paymentDate payment date to delete
      */
     public DeletePaymentCommand(Index index, LocalDate paymentDate) {

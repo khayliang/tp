@@ -21,7 +21,7 @@ public class PaymentHistory {
     private final Set<LocalDate> paidDates;
 
     /**
-     * Creates a {@code Payment} object with payment history
+     * Creates a {@code PaymentHistory} object with payment history
      * @param paidDates Payment history
      */
     public PaymentHistory(LocalDate... paidDates) {
@@ -36,7 +36,7 @@ public class PaymentHistory {
     /**
      * Record payment made on {@code date}
      * @param date A valid date
-     * @return {@code Payment} object with updated payment history
+     * @return {@code PaymentHistory} object with updated payment history
      */
     public PaymentHistory recordPayment(LocalDate date) {
         requireNonNull(date);
@@ -48,12 +48,12 @@ public class PaymentHistory {
     /**
      * Deletes payment made on {@code date}
      * @param date A valid date
-     * @return {@code Payment} object with updated payment history
+     * @return {@code PaymentHistory} object with updated payment history
      * @throws IllegalArgumentException if {@code date} is not in payment history
      */
     public PaymentHistory removePayment(LocalDate date) {
         requireNonNull(date);
-        checkArgument(!hasPaidOn(date), "Payment date not found");
+        checkArgument(hasPaidOn(date), "Payment date not found");
         Set<LocalDate> next = new LinkedHashSet<>(paidDates);
         next.remove(date);
         return new PaymentHistory(next.toArray(LocalDate[]::new));
