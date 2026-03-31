@@ -13,9 +13,7 @@ public abstract class DeleteCommand extends IndexedPersonCommand {
             + ": Deletes the particulars of the person identified by the index "
             + "number used in the displayed person list.\n"
             + "Format: " + COMMAND_WORD + " SUBCOMMAND_PARAMETERS INDEX (must be a positive integer)\n"
-            + "Examples: " + COMMAND_WORD + " person 1 n/John Doe, "
-            + COMMAND_WORD + " appt 1 d/2026-01-13T08:00:00, "
-            + COMMAND_WORD + " attd 1 d/2026-01-29T08:00:00";
+            + "Examples: " + COMMAND_WORD + " person 1 n/John Doe";
 
     public static final String MESSAGE_NOT_DELETED = "At least one field to delete must be provided.";
 

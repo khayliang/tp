@@ -1,18 +1,16 @@
 package seedu.address.logic.parser;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_AMOUNT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DATE;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditPaymentCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 /**
- * Parses input arguments and creates a new {@code EditApptCommand} object.
+ * Parses input arguments and creates a new {@code EditPaymentCommand} object.
  */
 public class EditPaymentCommandParser implements Parser<EditPaymentCommand> {
 
@@ -24,12 +22,11 @@ public class EditPaymentCommandParser implements Parser<EditPaymentCommand> {
     @Override
     public EditPaymentCommand parse(String args) throws ParseException {
         requireNonNull(args);
-        ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(
-                args, PREFIX_DATE, PREFIX_AMOUNT);
+        ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_DATE);
 
         Index index = ParserUtil.parseIndex(argMultimap.getPreamble(), EditPaymentCommand.MESSAGE_USAGE);
 
-        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_DATE, PREFIX_AMOUNT);
+        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_DATE);
 
         if (argMultimap.getValue(PREFIX_DATE).isEmpty()) {
             throw new ParseException(EditCommand.MESSAGE_NOT_EDITED);
@@ -38,9 +35,6 @@ public class EditPaymentCommandParser implements Parser<EditPaymentCommand> {
         LocalDate paymentDate =
                 ParserUtil.parseIsoDate(argMultimap.getValue(PREFIX_DATE).get());
 
-        Optional<Double> tuitionFee = argMultimap.getValue(PREFIX_AMOUNT)
-                .map(Double::parseDouble);
-
-        return new EditPaymentCommand(index, paymentDate, tuitionFee);
+        return new EditPaymentCommand(index, paymentDate);
     }
 }

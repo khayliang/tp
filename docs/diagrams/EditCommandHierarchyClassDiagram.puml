@@ -1,0 +1,38 @@
+@startuml
+!include style.puml
+!pragma layout smetana
+skinparam arrowThickness 1.1
+skinparam arrowColor LOGIC_COLOR_T4
+skinparam classBackgroundColor LOGIC_COLOR
+top to bottom direction
+
+package "Edit command hierarchy" {
+abstract class "{abstract}\nCommand" as Command
+abstract class "{abstract}\nIndexedPersonCommand" as IndexedPersonCommand
+abstract class "{abstract}\nEditCommand" as EditCommand
+
+class EditPersonCommand
+class EditApptCommand
+class EditAttdCommand
+}
+
+IndexedPersonCommand -up-|> Command
+EditCommand -up-|> IndexedPersonCommand
+
+EditPersonCommand -up-|> EditCommand
+EditApptCommand -up-|> EditCommand
+EditAttdCommand -up-|> EditCommand
+
+note right of EditCommand
+All edit subcommands share the same
+top-level command word: `edit`.
+end note
+
+note right of EditPersonCommand
+Other concrete edit commands such as
+`EditTagCommand`, `EditAcademicsCommand`,
+`EditParentCommand`, and `EditPaymentCommand`
+follow the same inheritance pattern.
+end note
+
+@enduml

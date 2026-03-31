@@ -1,59 +1,59 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_DATE;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_AMOUNT;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
+import seedu.address.model.billing.Billing;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.PersonBuilder;
 
 /**
- * Edits the appointment start date-time of an existing person in the address book.
+ * Edits billing fields of an existing person in the address book.
  */
-public class EditApptCommand extends EditCommand {
+public class EditBillingCommand extends EditCommand {
 
-    public static final String SUB_COMMAND_WORD = "appt";
+    public static final String SUB_COMMAND_WORD = "billing";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + " " + SUB_COMMAND_WORD
-            + ": Records the lesson start date-time for the student identified by the index number used "
+            + ": Updates billing configuration for the student identified by the index number used "
             + "in the displayed student list.\n"
             + "Parameters: INDEX (must be a positive integer) "
-            + PREFIX_DATE + "DATETIME\n"
+            + PREFIX_AMOUNT + "AMOUNT\n"
             + "Example: " + COMMAND_WORD + " " + SUB_COMMAND_WORD + " 1 "
-            + PREFIX_DATE + "2026-01-13T08:00:00";
+            + PREFIX_AMOUNT + "50";
 
-    public static final String MESSAGE_EDIT_APPT_SUCCESS = "Recorded lesson start date for %1$s: %2$s";
+    public static final String MESSAGE_EDIT_BILLING_SUCCESS = "Updated tuition fee for %1$s: $%2$.2f";
 
-    private final LocalDateTime appointmentStart;
+    private final double tuitionFee;
 
     /**
      * @param index of the person in the filtered person list to edit
-     * @param appointmentStart appointment start date-time to set
+     * @param tuitionFee the tuition fee to set
      */
-    public EditApptCommand(Index index, LocalDateTime appointmentStart) {
+    public EditBillingCommand(Index index, double tuitionFee) {
         super(index);
-        requireNonNull(appointmentStart);
-        this.appointmentStart = appointmentStart;
+        this.tuitionFee = tuitionFee;
     }
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
+        requireNonNull(model);
+
         Person personToEdit = getTargetPerson(model);
+        Billing updatedBilling = personToEdit.updateTuitionRate(tuitionFee);
         Person editedPerson = new PersonBuilder(personToEdit)
-                .withAppointmentStarts(appointmentStart)
+                .withBilling(updatedBilling)
                 .build();
 
         replacePerson(model, personToEdit, editedPerson);
-        String formattedStart = appointmentStart.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        return new CommandResult(String.format(MESSAGE_EDIT_APPT_SUCCESS,
-                Messages.format(editedPerson), formattedStart), editedPerson);
+
+        return new CommandResult(String.format(MESSAGE_EDIT_BILLING_SUCCESS,
+                Messages.format(editedPerson), updatedBilling.getTuitionFee()), editedPerson);
     }
 
     @Override
@@ -62,20 +62,20 @@ public class EditApptCommand extends EditCommand {
             return true;
         }
 
-        if (!(other instanceof EditApptCommand)) {
+        if (!(other instanceof EditBillingCommand)) {
             return false;
         }
 
-        EditApptCommand otherCommand = (EditApptCommand) other;
+        EditBillingCommand otherCommand = (EditBillingCommand) other;
         return index.equals(otherCommand.index)
-                && appointmentStart.equals(otherCommand.appointmentStart);
+                && Double.compare(tuitionFee, otherCommand.tuitionFee) == 0;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .add("index", index)
-                .add("appointmentStart", appointmentStart)
+                .add("tuitionFee", tuitionFee)
                 .toString();
     }
 }

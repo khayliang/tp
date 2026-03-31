@@ -28,7 +28,7 @@ TutorFlow is a **desktop app for managing contacts, optimized for use via a Comm
 
    * `list` : Lists all contacts.
 
-   * `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01` : Adds a contact named `John Doe` to the address book.
+   * `add student n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01` : Adds a contact named `John Doe` to the address book.
 
    * `delete 3` : Deletes the 3rd contact shown in the current list.
 
@@ -47,7 +47,7 @@ TutorFlow is a **desktop app for managing contacts, optimized for use via a Comm
 **:information_source: Notes about the command format:**<br>
 
 * Words in `UPPER_CASE` are the parameters to be supplied by the user.<br>
-  e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/John Doe`.
+  e.g. in `add student n/NAME`, `NAME` is a parameter which can be used as `add student n/John Doe`.
 
 * Items in square brackets are optional.<br>
   e.g `n/NAME [t/TAG]` can be used as `n/John Doe t/friend` or as `n/John Doe`.
@@ -73,19 +73,19 @@ Shows a message explaining how to access the help page.
 Format: `help`
 
 
-### Adding a person: `add`
+### Adding a student: `add`
 
-Adds a person to the address book.
+Adds a student to the address book.
 
-Format: `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​`
+Format: `add student n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​`
 
 <div markdown="span" class="alert alert-primary">:bulb: **Tip:**
-A person can have any number of tags (including 0)
+A student can have any number of tags (including 0)
 </div>
 
 Examples:
-* `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01`
-* `add n/Betsy Crowe t/friend e/betsycrowe@example.com a/Newgate Prison p/1234567 t/criminal`
+* `add student n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01`
+* `add student n/Betsy Crowe t/friend e/betsycrowe@example.com a/Newgate Prison p/1234567 t/criminal`
 
 ### Listing all persons : `list`
 
@@ -93,40 +93,84 @@ Shows a list of all persons in the address book.
 
 Format: `list`
 
-### Editing a person : `edit`
+### Editing a student : `edit student`
 
-Edits an existing person in the address book.
+Edits an existing student in the address book.
 
-Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`
+Format: `edit student INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS]`
 
 * Edits the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, …​
 * At least one of the optional fields must be provided.
 * Existing values will be updated to the input values.
-* When editing tags, the existing tags of the person will be removed i.e adding of tags is not cumulative.
-* You can remove all the person’s tags by typing `t/` without
-    specifying any tags after it.
 
 Examples:
-*  `edit 1 p/91234567 e/johndoe@example.com` Edits the phone number and email address of the 1st person to be `91234567` and `johndoe@example.com` respectively.
-*  `edit 2 n/Betsy Crower t/` Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
+* `edit student 1 p/91234567 e/johndoe@example.com` edits the phone number and email address of the 1st person.
+* `edit student 2 n/Betsy Crower` edits the name of the 2nd person.
 
-### Recording last attendance : `edit attd`
+### Recording payment date : `edit payment`
 
-Records the last attendance date-time for an existing student contact.
+Records a tuition payment date for an existing student contact.
 
-Format: `edit attd INDEX [d/DATETIME]`
+Format: `edit payment INDEX d/DATE`
+
+* Records payment for the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, ...
+* `d/` accepts ISO 8601 local date (`YYYY-MM-DD`).
+* This command records payment history and advances the billing due date based on recurrence.
+
+Examples:
+* `edit payment 1 d/2026-03-05`
+
+### Editing billing amount : `edit billing`
+
+Updates tuition fee amount for an existing student contact.
+
+Format: `edit billing INDEX a/AMOUNT`
+
+* Updates billing amount for the person at the specified `INDEX`.
+* `a/` must be a non-negative number.
+* This command updates tuition fee only and does not change payment history.
+
+Examples:
+* `edit billing 1 a/250`
+
+### Adding an appointment : `add appt`
+
+Adds an appointment to an existing student contact.
+
+Format: `add appt INDEX d/DATETIME [r/RECURRENCE] dsc/DESCRIPTION`
+
+* Adds the appointment to the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, ...
+* `d/` accepts ISO 8601 local date-time.
+* `r/` is optional. Supported values are `NONE`, `WEEKLY`, `BIWEEKLY`, and `MONTHLY`. If omitted, `NONE` is used.
+* `dsc/` is required and stores a short appointment description.
+* Adding a new appointment replaces any existing appointment for that student.
+
+Examples:
+* `add appt 1 d/2026-01-29T08:00:00 dsc/Weekly algebra practice`
+* `add appt 2 d/2026-02-02T15:30:00 r/WEEKLY dsc/Physics consultation`
+
+### Recording appointment attendance : `add attd`
+
+Records attendance for the current appointment of an existing student contact.
+
+Format: `add attd INDEX [y|n] [d/DATE]`
 
 * Records attendance for the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, ...
-* If `d/` is omitted, the current local date-time is used.
-* `d/` accepts ISO 8601 local date-time.
-* Reduced precision without seconds is accepted (e.g., `2026-01-29T08:00`) and will be interpreted as seconds `:00`.
-* Leading and trailing whitespaces around the date-time value are ignored.
-* Invalid date-time values are rejected with an error asking for a valid date-time.
-* The recorded attendance is shown in the GUI for each student as `Attendance: ...`.
+* If `y` or `n` is omitted, `y` is assumed.
+* `y` records that the student attended the current appointment.
+* `n` records that the student was absent for the current appointment.
+* If `d/DATE` is omitted, the current appointment date is taken from the appointment's `next` date.
+* `d/DATE` is only allowed together with `y`.
+* `d/DATE` must be in ISO local date format (`YYYY-MM-DD`).
+* Attendance cannot be recorded for a future date.
+* This command only works when the student currently has an appointment.
+* Non-recurring appointments can only have attendance recorded once.
 
 Examples:
-* `edit attd 1 d/2026-01-29T08:00:00`
-* `edit attd 1`
+* `add attd 1`
+* `add attd 1 y`
+* `add attd 1 y d/2026-01-29`
+* `add attd 1 n`
 
 ### Locating persons by name: `find person`
 
@@ -146,6 +190,36 @@ Examples:
 * `find person alex david` returns `Alex Yeoh`, `David Li`<br>
   ![result for 'find person alex david'](images/findAlexDavidResult.png)
 
+
+### Locating persons by tag: `find tag`
+
+Finds persons whose tags match any of the given keywords.
+
+Format: `find tag t/TAG [t/MORE_TAGS]...`
+
+* At least one `t/` prefix must be provided.
+* Multiple `t/` prefixes are allowed.
+* Tags can contain spaces (e.g. `t/Upper Sec`, `t/JC Year 1`).
+* The search is case-insensitive.
+* Partial matching is supported (e.g. `t/math` matches `Mathematics`).
+* Persons matching **at least one** tag keyword will be returned (i.e. `OR` search).
+* The displayed list is updated to show only matching persons.
+
+### Locating persons by subject: `find subject`
+
+Finds persons whose subjects match any of the given keywords.
+
+Format: `find subject s/SUBJECT [s/MORE_SUBJECTS]...`
+
+* At least one `s/` prefix must be provided.
+* Multiple `s/` prefixes are allowed.
+* Subjects can contain spaces (e.g. `s/Additional Math`, `s/Computer Science`).
+* The search is case-insensitive.
+* Partial matching is supported.
+* Persons matching **at least one** subject keyword will be returned (i.e. `OR` search).
+* The displayed list is updated to show only matching persons.
+
+
 ### Finding payment due by month: `find payment`
 
 Finds all persons whose billing payment due date falls within the specified year-month.
@@ -161,18 +235,21 @@ Examples:
 * `find payment d/2026-03` returns all students in currently displayed list with payment due dates in March 2026.
 * `find payment d/2025-12` returns students with due dates in December 2025.
 
-### Viewing appointments for a week: `viewAppt`
+### Viewing appointments for a week: `viewappt`
 
-Shows all appointments in the Monday-Sunday week containing the given date.
+Shows all students whose appointment date falls within the Monday-Sunday week containing the given date.
 
-Format: `viewAppt [d/DATE]`
+Format: `viewappt [d/DATE]`
 
-* If `d/DATE` is omitted, the current date is used.
+* If `d/DATE` is omitted, the current local date is used.
 * `DATE` must be in ISO format (`YYYY-MM-DD`).
+* At most one `d/` prefix may be provided.
+* Text outside the optional `d/` prefix is invalid.
+* The displayed list switches to appointment view and shows the recorded appointment for each matching student.
 
 Examples:
-* `viewAppt`
-* `viewAppt d/2026-02-13`
+* `viewappt`
+* `viewappt d/2026-02-13`
 
 ### Deleting a person : `delete`
 
@@ -237,13 +314,16 @@ _Details coming soon ..._
 
 Action | Format, Examples
 --------|------------------
-**Add** | `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague`
+**Add** | `add student n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​` <br> e.g., `add student n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague`
+**Add Appointment** | `add appt INDEX d/ISO8601_DATETIME [r/RECURRENCE] dsc/DESCRIPTION`<br> e.g., `add appt 1 d/2026-01-29T08:00:00 dsc/Weekly algebra practice`
+**Add Attendance** | `add attd INDEX [y\|n] [d/DATE]`<br> e.g., `add attd 1`, `add attd 1 n`, `add attd 1 d/2026-01-29`
 **Clear** | `clear`
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
-**Edit** | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
-**Edit Attendance** | `edit attd INDEX [d/ISO8601_DATETIME]`<br> e.g., `edit attd 1 d/2026-01-29T08:00:00`, `edit attd 1`
+**Edit Student** | `edit student INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS]`<br> e.g., `edit student 2 n/James Lee e/jameslee@example.com`
+**Edit Payment** | `edit payment INDEX d/ISO8601_DATE`<br> e.g., `edit payment 1 d/2026-03-05`
+**Edit Billing** | `edit billing INDEX a/AMOUNT`<br> e.g., `edit billing 1 a/250`
 **Find** | `find person KEYWORD [MORE_KEYWORDS]`<br> e.g., `find person James Jake`
 **Find Payment** | `find payment d/YYYY-MM`<br> e.g., `find payment d/2026-03`
-**View Appointments** | `viewAppt [d/DATE]`<br> e.g., `viewAppt d/2026-02-13`
+**View Appointments** | `viewappt [d/DATE]`<br> e.g., `viewappt d/2026-02-13`
 **List** | `list`
 **Help** | `help`

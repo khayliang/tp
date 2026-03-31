@@ -1,0 +1,42 @@
+@startuml
+!include style.puml
+!pragma layout smetana
+skinparam arrowThickness 1.1
+skinparam arrowColor LOGIC_COLOR_T4
+skinparam classBackgroundColor LOGIC_COLOR
+top to bottom direction
+
+package "Find command parser structure" {
+
+class AddressBookParser
+class FindCommandParser
+class "SubcommandDispatcherParser<FindCommand>" as Dispatcher
+
+class FindPersonCommandParser
+class FindTagCommandParser
+class FindSubjectCommandParser
+class FindPaymentCommandParser
+
+}
+
+AddressBookParser --> FindCommandParser : parseCommand(...)
+
+FindCommandParser --> Dispatcher
+
+Dispatcher --> FindPersonCommandParser
+Dispatcher --> FindTagCommandParser
+Dispatcher --> FindSubjectCommandParser
+Dispatcher --> FindPaymentCommandParser
+
+note right of FindCommandParser
+Dispatches to concrete subcommand parsers
+based on the subcommand word.
+end note
+
+note right of Dispatcher
+Maps subcommand strings (e.g. "tag",
+"person", "payment") to their
+corresponding parsers.
+end note
+
+@enduml

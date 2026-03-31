@@ -1,0 +1,37 @@
+@startuml
+!include style.puml
+!pragma layout smetana
+skinparam arrowThickness 1.1
+skinparam arrowColor LOGIC_COLOR_T4
+skinparam classBackgroundColor LOGIC_COLOR
+top to bottom direction
+
+package "Find command hierarchy" {
+abstract class "{abstract}\nCommand" as Command
+abstract class "{abstract}\nFindCommand" as FindCommand
+
+class FindPersonCommand
+class FindTagCommand
+class FindSubjectCommand
+class FindPaymentCommand
+}
+
+FindCommand -up-|> Command
+
+FindPersonCommand -up-|> FindCommand
+FindTagCommand -up-|> FindCommand
+FindSubjectCommand -up-|> FindCommand
+FindPaymentCommand -up-|> FindCommand
+
+note right of FindCommand
+All find subcommands share the same
+top-level command word: `find`.
+end note
+
+note right of FindTagCommand
+Other concrete find commands such as
+`FindApptCommand` or `FindAttdCommand`
+can follow the same inheritance pattern.
+end note
+
+@enduml

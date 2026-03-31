@@ -5,7 +5,7 @@ import static seedu.address.storage.JsonAdaptedPerson.MISSING_FIELD_MESSAGE_FORM
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalPersons.BENSON;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -58,6 +58,16 @@ public class JsonAdaptedPersonTest {
             .collect(Collectors.toList());
     private static final JsonAdaptedAcademics VALID_ACADEMICS = new JsonAdaptedAcademics(BENSON.getAcademics());
 
+    private static JsonAdaptedPerson makeJsonAdaptedPerson(String name, String phone, String email, String address,
+            List<JsonAdaptedTag> tags, JsonAdaptedAcademics academics,
+            String parentName, String parentPhone, String parentEmail, String appointmentStart,
+            List<String> paymentDates, String paymentDueDate, String paymentRecurrence,
+            Double tuitionFee, List<String> attendanceHistory) {
+        return new JsonAdaptedPerson(name, phone, email, address, tags, academics, parentName, parentPhone,
+                parentEmail, appointmentStart, null, null, null, null, paymentDates, paymentDueDate,
+                paymentRecurrence, tuitionFee, attendanceHistory);
+    }
+
     @Test
     public void toModelType_validPersonDetails_returnsPerson() throws Exception {
         JsonAdaptedPerson person = new JsonAdaptedPerson(BENSON);
@@ -67,7 +77,7 @@ public class JsonAdaptedPersonTest {
     @Test
     public void toModelType_invalidName_throwsIllegalValueException() {
         JsonAdaptedPerson person =
-                new JsonAdaptedPerson(INVALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
+                makeJsonAdaptedPerson(INVALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
                         VALID_TAGS, VALID_ACADEMICS,
                         VALID_PARENT_NAME, VALID_PARENT_PHONE, VALID_PARENT_EMAIL,
                         VALID_APPOINTMENT_START,
@@ -81,7 +91,7 @@ public class JsonAdaptedPersonTest {
     @Test
     public void toModelType_nullName_throwsIllegalValueException() {
         JsonAdaptedPerson person =
-                new JsonAdaptedPerson(null, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
+                makeJsonAdaptedPerson(null, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
                         VALID_TAGS, VALID_ACADEMICS,
                         VALID_PARENT_NAME, VALID_PARENT_PHONE, VALID_PARENT_EMAIL,
                         VALID_APPOINTMENT_START,
@@ -95,7 +105,7 @@ public class JsonAdaptedPersonTest {
     @Test
     public void toModelType_invalidPhone_throwsIllegalValueException() {
         JsonAdaptedPerson person =
-                new JsonAdaptedPerson(VALID_NAME, INVALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
+                makeJsonAdaptedPerson(VALID_NAME, INVALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
                         VALID_TAGS, VALID_ACADEMICS,
                         VALID_PARENT_NAME, VALID_PARENT_PHONE, VALID_PARENT_EMAIL,
                         VALID_APPOINTMENT_START,
@@ -109,7 +119,7 @@ public class JsonAdaptedPersonTest {
     @Test
     public void toModelType_nullPhone_throwsIllegalValueException() {
         JsonAdaptedPerson person =
-                new JsonAdaptedPerson(VALID_NAME, null, VALID_EMAIL, VALID_ADDRESS,
+                makeJsonAdaptedPerson(VALID_NAME, null, VALID_EMAIL, VALID_ADDRESS,
                         VALID_TAGS, VALID_ACADEMICS,
                         VALID_PARENT_NAME, VALID_PARENT_PHONE, VALID_PARENT_EMAIL,
                         VALID_APPOINTMENT_START,
@@ -123,7 +133,7 @@ public class JsonAdaptedPersonTest {
     @Test
     public void toModelType_invalidEmail_throwsIllegalValueException() {
         JsonAdaptedPerson person =
-                new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, INVALID_EMAIL, VALID_ADDRESS,
+                makeJsonAdaptedPerson(VALID_NAME, VALID_PHONE, INVALID_EMAIL, VALID_ADDRESS,
                         VALID_TAGS, VALID_ACADEMICS,
                         VALID_PARENT_NAME, VALID_PARENT_PHONE, VALID_PARENT_EMAIL,
                         VALID_APPOINTMENT_START,
@@ -137,7 +147,7 @@ public class JsonAdaptedPersonTest {
     @Test
     public void toModelType_nullEmail_throwsIllegalValueException() {
         JsonAdaptedPerson person =
-                new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, null, VALID_ADDRESS,
+                makeJsonAdaptedPerson(VALID_NAME, VALID_PHONE, null, VALID_ADDRESS,
                         VALID_TAGS, VALID_ACADEMICS,
                         VALID_PARENT_NAME, VALID_PARENT_PHONE, VALID_PARENT_EMAIL,
                         VALID_APPOINTMENT_START,
@@ -151,7 +161,7 @@ public class JsonAdaptedPersonTest {
     @Test
     public void toModelType_invalidAddress_throwsIllegalValueException() {
         JsonAdaptedPerson person =
-                new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, INVALID_ADDRESS,
+                makeJsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, INVALID_ADDRESS,
                         VALID_TAGS, VALID_ACADEMICS,
                         VALID_PARENT_NAME, VALID_PARENT_PHONE, VALID_PARENT_EMAIL,
                         VALID_APPOINTMENT_START,
@@ -166,7 +176,7 @@ public class JsonAdaptedPersonTest {
     @Test
     public void toModelType_nullAddress_throwsIllegalValueException() {
         JsonAdaptedPerson person =
-                new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, null,
+                makeJsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, null,
                         VALID_TAGS, VALID_ACADEMICS,
                         VALID_PARENT_NAME, VALID_PARENT_PHONE, VALID_PARENT_EMAIL,
                         VALID_APPOINTMENT_START,
@@ -183,7 +193,7 @@ public class JsonAdaptedPersonTest {
         List<JsonAdaptedTag> invalidTags = new ArrayList<>(VALID_TAGS);
         invalidTags.add(new JsonAdaptedTag(INVALID_TAG));
         JsonAdaptedPerson person =
-                new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
+                makeJsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
                         invalidTags, VALID_ACADEMICS,
                         VALID_PARENT_NAME, VALID_PARENT_PHONE, VALID_PARENT_EMAIL,
                         VALID_APPOINTMENT_START,
@@ -197,7 +207,7 @@ public class JsonAdaptedPersonTest {
     @Test
     public void toModelType_invalidAppointmentStart_throwsIllegalValueException() {
         JsonAdaptedPerson person =
-                new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
+                makeJsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
                         VALID_TAGS, VALID_ACADEMICS,
                         VALID_PARENT_NAME, VALID_PARENT_PHONE, VALID_PARENT_EMAIL,
                         INVALID_APPOINTMENT_START,
@@ -210,7 +220,7 @@ public class JsonAdaptedPersonTest {
     @Test
     public void toModelType_invalidPaymentDates_throwsIllegalValueException() {
         JsonAdaptedPerson person =
-                new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
+                makeJsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
                         VALID_TAGS, VALID_ACADEMICS,
                         VALID_PARENT_NAME, VALID_PARENT_PHONE, VALID_PARENT_EMAIL,
                         VALID_APPOINTMENT_START,
@@ -223,7 +233,7 @@ public class JsonAdaptedPersonTest {
     @Test
     public void toModelType_invalidPaymentDueDate_throwsIllegalValueException() {
         JsonAdaptedPerson person =
-                new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
+                makeJsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
                         VALID_TAGS, VALID_ACADEMICS,
                         VALID_PARENT_NAME, VALID_PARENT_PHONE, VALID_PARENT_EMAIL,
                         VALID_APPOINTMENT_START,
@@ -236,7 +246,7 @@ public class JsonAdaptedPersonTest {
     @Test
     public void toModelType_invalidPaymentRecurrence_throwsIllegalValueException() {
         JsonAdaptedPerson person =
-                new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
+                makeJsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
                         VALID_TAGS, VALID_ACADEMICS,
                         VALID_PARENT_NAME, VALID_PARENT_PHONE, VALID_PARENT_EMAIL,
                         VALID_APPOINTMENT_START,
@@ -247,22 +257,36 @@ public class JsonAdaptedPersonTest {
     }
 
     @Test
-    public void toModelType_invalidTutionFee_throwsIllegalArgumentException() {
+    public void toModelType_invalidTutionFee_throwsIllegalValueException() {
         JsonAdaptedPerson person =
-                new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
+                makeJsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
                         VALID_TAGS, VALID_ACADEMICS,
                         VALID_PARENT_NAME, VALID_PARENT_PHONE, VALID_PARENT_EMAIL,
                         VALID_APPOINTMENT_START,
                         VALID_PAYMENT_DATES, VALID_PAYMENT_DUE_DATE,
                         VALID_PAYMENT_RECURRENCE, INVALID_TUITION_FEE,
                         List.of(VALID_ATTENDANCE_ENTRY));
-        assertThrows(IllegalArgumentException.class, person::toModelType);
+        assertThrows(IllegalValueException.class, person::toModelType);
     }
+
+    @Test
+    public void toModelType_infinityTutionFee_throwsIllegalValueException() {
+        JsonAdaptedPerson person =
+                makeJsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
+                        VALID_TAGS, VALID_ACADEMICS,
+                        VALID_PARENT_NAME, VALID_PARENT_PHONE, VALID_PARENT_EMAIL,
+                        VALID_APPOINTMENT_START,
+                        VALID_PAYMENT_DATES, VALID_PAYMENT_DUE_DATE,
+                        VALID_PAYMENT_RECURRENCE, Double.POSITIVE_INFINITY,
+                        List.of(VALID_ATTENDANCE_ENTRY));
+        assertThrows(IllegalValueException.class, person::toModelType);
+    }
+
 
     @Test
     public void toModelType_invalidAttendanceHistory_throwsIllegalValueException() {
         JsonAdaptedPerson person =
-                new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
+                makeJsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
                         VALID_TAGS, VALID_ACADEMICS,
                         VALID_PARENT_NAME, VALID_PARENT_PHONE, VALID_PARENT_EMAIL,
                         VALID_APPOINTMENT_START,
@@ -274,7 +298,7 @@ public class JsonAdaptedPersonTest {
 
     @Test
     public void toModelType_validAttendanceHistory_usesAttendanceHistory() throws Exception {
-        JsonAdaptedPerson person = new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
+        JsonAdaptedPerson person = makeJsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
                 VALID_TAGS, VALID_ACADEMICS,
                 VALID_PARENT_NAME, VALID_PARENT_PHONE, VALID_PARENT_EMAIL,
                 VALID_APPOINTMENT_START,
@@ -282,14 +306,14 @@ public class JsonAdaptedPersonTest {
                 VALID_PAYMENT_RECURRENCE, VALID_TUITION_FEE,
                 VALID_ATTENDANCE_HISTORY);
 
-        assertEquals(2, person.toModelType().getAttendance().getHistory().size());
-        assertEquals(LocalDateTime.parse(VALID_ATTENDANCE_ENTRY),
-                person.toModelType().getLastAttendance().orElseThrow());
+        assertEquals(2, person.toModelType().getAttendance().getRecords().size());
+        assertEquals(LocalDate.parse("2026-01-29"),
+                person.toModelType().getAttendance().getLastRecord().orElseThrow().getRecordedDate());
     }
 
     @Test
     public void toModelType_attendanceHistory_roundTripsSuccessfully() throws Exception {
-        JsonAdaptedPerson person = new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
+        JsonAdaptedPerson person = makeJsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
                 VALID_TAGS, VALID_ACADEMICS,
                 VALID_PARENT_NAME, VALID_PARENT_PHONE, VALID_PARENT_EMAIL,
                 VALID_APPOINTMENT_START,
@@ -297,9 +321,9 @@ public class JsonAdaptedPersonTest {
                 VALID_PAYMENT_RECURRENCE, VALID_TUITION_FEE,
                 VALID_ATTENDANCE_HISTORY);
 
-        assertEquals(2, person.toModelType().getAttendance().getHistory().size());
-        assertEquals(LocalDateTime.parse(VALID_ATTENDANCE_ENTRY),
-                person.toModelType().getLastAttendance().orElseThrow());
+        assertEquals(2, person.toModelType().getAttendance().getRecords().size());
+        assertEquals(LocalDate.parse("2026-01-29"),
+                person.toModelType().getAttendance().getLastRecord().orElseThrow().getRecordedDate());
     }
 
     @Test
@@ -312,7 +336,7 @@ public class JsonAdaptedPersonTest {
         invalidSubjects.add(new JsonAdaptedSubject("Math", "@Invalid"));
 
         JsonAdaptedPerson person =
-                new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
+                makeJsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
                         VALID_TAGS, new JsonAdaptedAcademics(invalidSubjects),
                         VALID_PARENT_NAME, VALID_PARENT_PHONE, VALID_PARENT_EMAIL,
                         VALID_APPOINTMENT_START,
@@ -326,7 +350,7 @@ public class JsonAdaptedPersonTest {
     @Test
     public void toModelType_invalidParentName_throwsIllegalValueException() {
         JsonAdaptedPerson person =
-                new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
+                makeJsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
                         VALID_TAGS, VALID_ACADEMICS,
                         INVALID_NAME, VALID_PARENT_PHONE, VALID_PARENT_EMAIL,
                         VALID_APPOINTMENT_START,
@@ -340,7 +364,7 @@ public class JsonAdaptedPersonTest {
     @Test
     public void toModelType_invalidParentPhone_throwsIllegalValueException() {
         JsonAdaptedPerson person =
-                new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
+                makeJsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
                         VALID_TAGS, VALID_ACADEMICS,
                         VALID_PARENT_NAME, INVALID_PHONE, VALID_PARENT_EMAIL,
                         VALID_APPOINTMENT_START,
@@ -354,7 +378,7 @@ public class JsonAdaptedPersonTest {
     @Test
     public void toModelType_invalidParentEmail_throwsIllegalValueException() {
         JsonAdaptedPerson person =
-                new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
+                makeJsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
                         VALID_TAGS, VALID_ACADEMICS,
                         VALID_PARENT_NAME, VALID_PARENT_PHONE, INVALID_EMAIL,
                         VALID_APPOINTMENT_START,
@@ -379,7 +403,7 @@ public class JsonAdaptedPersonTest {
         Academics invalidAcademics = new Academics((new HashSet<Subject>()));
 
         JsonAdaptedPerson person =
-                new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
+                makeJsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,
                         VALID_TAGS, new JsonAdaptedAcademics(invalidAcademics),
                         VALID_PARENT_NAME, VALID_PARENT_PHONE, VALID_PARENT_EMAIL,
                         VALID_APPOINTMENT_START,

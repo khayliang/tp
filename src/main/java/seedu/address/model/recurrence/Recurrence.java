@@ -1,26 +1,44 @@
 package seedu.address.model.recurrence;
 
+import static java.util.Objects.requireNonNull;
+
+import java.time.LocalDate;
+
 /**
  * Recurrence schedule options for recurring dates.
  */
 public enum Recurrence {
-    WEEKLY(7),
-    BIWEEKLY(14),
-    MONTHLY(30),
-    NONE(0);
-
-    private final int days;
+    WEEKLY {
+        @Override
+        public LocalDate next(LocalDate from) {
+            requireNonNull(from);
+            return from.plusWeeks(1);
+        }
+    },
+    BIWEEKLY {
+        @Override
+        public LocalDate next(LocalDate from) {
+            requireNonNull(from);
+            return from.plusWeeks(2);
+        }
+    },
+    MONTHLY {
+        @Override
+        public LocalDate next(LocalDate from) {
+            requireNonNull(from);
+            return from.plusMonths(1);
+        }
+    },
+    NONE {
+        @Override
+        public LocalDate next(LocalDate from) {
+            requireNonNull(from);
+            return from;
+        }
+    };
 
     /**
-     * Creates a {@code Recurrence} object with specified days
-     *      to next schedule
-     * @param days A valid integer
+     * Returns the next scheduled date according to this recurrence.
      */
-    Recurrence(int days) {
-        this.days = days;
-    }
-
-    public int getDays() {
-        return days;
-    }
+    public abstract LocalDate next(LocalDate from);
 }

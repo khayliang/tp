@@ -1,14 +1,12 @@
 package seedu.address.model.person;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
 import seedu.address.model.academic.Academics;
 import seedu.address.model.billing.Billing;
-import seedu.address.model.session.Attendance;
+import seedu.address.model.session.Appointment;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -23,8 +21,7 @@ public class PersonBuilder {
     private Set<Tag> tags;
     private Academics academics;
     private Optional<Guardian> guardian;
-    private Set<LocalDateTime> appointmentStarts;
-    private Attendance attendance;
+    private Optional<Appointment> appointment;
     private Billing billing;
 
     /**
@@ -39,8 +36,7 @@ public class PersonBuilder {
         this.tags = new HashSet<>(tags);
         this.academics = new Academics();
         this.guardian = Optional.empty();
-        this.appointmentStarts = new HashSet<>();
-        this.attendance = Attendance.EMPTY;
+        this.appointment = Optional.empty();
         this.billing = Billing.defaultBilling();
     }
 
@@ -55,8 +51,7 @@ public class PersonBuilder {
         this.tags = new HashSet<>(personToCopy.getTags());
         this.academics = personToCopy.getAcademics();
         this.guardian = personToCopy.getGuardian();
-        this.appointmentStarts = new HashSet<>(personToCopy.getAppointmentStarts());
-        this.attendance = personToCopy.getAttendance();
+        this.appointment = personToCopy.getAppointment();
         this.billing = personToCopy.getBilling();
     }
 
@@ -139,13 +134,13 @@ public class PersonBuilder {
     }
 
     /**
-     * Replaces all appointment start times of the {@code Person} being built.
+     * Replaces the appointment of the {@code Person} being built.
      *
-     * @param appointmentStarts the new appointment start times
+     * @param appointment the new appointment
      * @return this {@code PersonBuilder} instance for method chaining
      */
-    public PersonBuilder withAppointmentStarts(LocalDateTime... appointmentStarts) {
-        this.appointmentStarts = new HashSet<>(Arrays.asList(appointmentStarts));
+    public PersonBuilder withAppointment(Appointment appointment) {
+        this.appointment = Optional.ofNullable(appointment);
         return this;
     }
 
@@ -156,16 +151,6 @@ public class PersonBuilder {
      */
     public PersonBuilder withBilling(Billing billing) {
         this.billing = billing;
-        return this;
-    }
-
-    /**
-     * Sets the attendance history of the {@code Person} being built.
-     * @param attendance attendance history value object
-     * @return this {@code PersonBuilder} instance for method chaining
-     */
-    public PersonBuilder withAttendance(Attendance attendance) {
-        this.attendance = attendance;
         return this;
     }
 
@@ -181,8 +166,7 @@ public class PersonBuilder {
                 tags,
                 academics,
                 guardian,
-                appointmentStarts,
-                billing,
-                attendance);
+                appointment,
+                billing);
     }
 }

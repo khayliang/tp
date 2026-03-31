@@ -4,11 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DATE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_DESCRIPTION;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_LEVEL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PARENT_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_RECURRENCE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_SUBJECT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 import static seedu.address.testutil.Assert.assertThrows;
@@ -51,9 +53,12 @@ public class CommandTestUtil {
     public static final String VALID_SUBJECT_MATH_STRONG = "Math:strong";
     public static final String VALID_SUBJECT_SCIENCE_BASIC = "Science:basic";
     public static final String VALID_APPOINTMENT_START = "2026-01-13T08:00:00";
+    public static final String VALID_APPOINTMENT_DESCRIPTION = "Weekly algebra practice";
+    public static final String VALID_APPOINTMENT_RECURRENCE = "WEEKLY";
     public static final String VALID_PAYMENT_DATE = "2026-02-03";
     public static final String VALID_PAYMENT_AMOUNT = "25";
     public static final String VALID_LAST_ATTENDANCE = "2026-01-29T08:00:00";
+    public static final String VALID_ATTENDANCE_DATE = "2026-01-29";
 
     public static final String NAME_DESC_AMY = " " + PREFIX_NAME + VALID_NAME_AMY;
     public static final String NAME_DESC_BOB = " " + PREFIX_NAME + VALID_NAME_BOB;
@@ -81,7 +86,10 @@ public class CommandTestUtil {
                     + " " + PREFIX_SUBJECT + VALID_SUBJECT_SCIENCE
                     + " " + PREFIX_LEVEL + VALID_LEVEL_BASIC;
     public static final String APPOINTMENT_START_DESC = " " + PREFIX_DATE + VALID_APPOINTMENT_START;
+    public static final String APPOINTMENT_DESCRIPTION_DESC = " " + PREFIX_DESCRIPTION + VALID_APPOINTMENT_DESCRIPTION;
+    public static final String APPOINTMENT_RECURRENCE_DESC = " " + PREFIX_RECURRENCE + VALID_APPOINTMENT_RECURRENCE;
     public static final String LAST_ATTENDANCE_DESC = " " + PREFIX_DATE + VALID_LAST_ATTENDANCE;
+    public static final String ATTENDANCE_DATE_DESC = " " + PREFIX_DATE + VALID_ATTENDANCE_DATE;
 
     public static final String INVALID_NAME_DESC = " " + PREFIX_NAME + "James&"; // '&' not allowed in names
     public static final String INVALID_PHONE_DESC = " " + PREFIX_PHONE + "911a"; // 'a' not allowed in phones
@@ -99,7 +107,10 @@ public class CommandTestUtil {
                     + " " + PREFIX_LEVEL + VALID_LEVEL_BASIC;
     public static final String INVALID_SUBJECT_DESC = " s/@@@";
     public static final String INVALID_APPOINTMENT_START_DESC = " " + PREFIX_DATE + "not-a-date";
+    public static final String INVALID_APPOINTMENT_RECURRENCE_DESC = " " + PREFIX_RECURRENCE + "YEARLY";
+    public static final String INVALID_APPOINTMENT_DESCRIPTION_DESC = " " + PREFIX_DESCRIPTION;
     public static final String INVALID_LAST_ATTENDANCE_DESC = " " + PREFIX_DATE + "invalid-attendance";
+    public static final String INVALID_ATTENDANCE_DATE_DESC = " " + PREFIX_DATE + "invalid-date";
 
     public static final String PREAMBLE_WHITESPACE = "\t  \r  \n";
     public static final String PREAMBLE_NON_EMPTY = "NonEmptyPreamble";

@@ -9,11 +9,11 @@ import java.util.Comparator;
 public final class PersonComparators {
 
     /**
-     * Orders persons by earliest appointment start date-time, then by name.
+     * Orders persons by next appointment date-time, then by name.
      * Persons without an appointment are ordered last.
      */
     public static final Comparator<Person> APPOINTMENT_ORDER =
-            Comparator.comparing((Person person) -> person.getAppointmentStart().orElse(LocalDateTime.MAX))
+            Comparator.comparing((Person person) -> person.getAppointmentNext().orElse(LocalDateTime.MAX))
                     .thenComparing(person -> person.getName().fullName.toLowerCase());
 
     private PersonComparators() {}

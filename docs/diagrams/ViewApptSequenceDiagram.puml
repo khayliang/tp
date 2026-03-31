@@ -1,0 +1,82 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":ViewApptCommandParser" as ViewApptCommandParser LOGIC_COLOR
+participant "c:ViewApptCommand" as ViewApptCommand LOGIC_COLOR
+participant ":AppointmentInWeekPredicate" as AppointmentInWeekPredicate LOGIC_COLOR
+participant "r:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant "m:Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute("viewappt d/2026-02-13")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand(commandText)
+activate AddressBookParser
+
+create ViewApptCommandParser
+AddressBookParser -> ViewApptCommandParser
+activate ViewApptCommandParser
+
+ViewApptCommandParser --> AddressBookParser
+deactivate ViewApptCommandParser
+
+AddressBookParser -> ViewApptCommandParser : parse(" d/2026-02-13")
+activate ViewApptCommandParser
+
+create ViewApptCommand
+ViewApptCommandParser -> ViewApptCommand : ViewApptCommand(targetDate)
+activate ViewApptCommand
+
+create AppointmentInWeekPredicate
+ViewApptCommand -> AppointmentInWeekPredicate : AppointmentInWeekPredicate(targetDate)
+activate AppointmentInWeekPredicate
+AppointmentInWeekPredicate --> ViewApptCommand
+deactivate AppointmentInWeekPredicate
+
+ViewApptCommand --> ViewApptCommandParser : c
+deactivate ViewApptCommand
+
+ViewApptCommandParser --> AddressBookParser : c
+deactivate ViewApptCommandParser
+
+AddressBookParser --> LogicManager : c
+deactivate AddressBookParser
+
+LogicManager -> ViewApptCommand : execute(m)
+activate ViewApptCommand
+
+ViewApptCommand -> Model : updateFilteredPersonList(predicate)
+activate Model
+Model --> ViewApptCommand
+deactivate Model
+
+ViewApptCommand -> Model : setListDisplayMode(APPOINTMENT)
+activate Model
+Model --> ViewApptCommand
+deactivate Model
+
+ViewApptCommand -> Model : getFilteredPersonList()
+activate Model
+Model --> ViewApptCommand : matching students
+deactivate Model
+
+create CommandResult
+ViewApptCommand -> CommandResult : CommandResult(feedback)
+activate CommandResult
+CommandResult --> ViewApptCommand : r
+deactivate CommandResult
+
+ViewApptCommand --> LogicManager : r
+deactivate ViewApptCommand
+
+[<-- LogicManager
+deactivate LogicManager
+@enduml

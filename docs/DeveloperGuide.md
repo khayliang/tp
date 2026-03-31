@@ -155,6 +155,120 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 
 This section describes some noteworthy details on how certain features are implemented.
 
+### Edit command
+
+The `edit` family uses subcommand dispatch. To keep the diagrams readable, the flow is split into two smaller sequence diagrams using `edit student 1 p/98765432` as the representative example.
+
+The two class diagrams below split the `edit` feature into its command hierarchy and parser-dispatch structure. This keeps the overview readable while still generalizing the shared pattern across edit subcommands.
+
+<img src="images/EditCommandHierarchyClassDiagram.png" width="520" />
+
+<img src="images/EditCommandParserClassDiagram.png" width="720" />
+
+The first diagram shows how `AddressBookParser` routes the input to `EditCommandParser`, which then delegates to the concrete subcommand parser.
+
+<img src="images/EditCommandParsingSequenceDiagram.png" width="700" />
+
+The second diagram shows the successful execution path after parsing. Error paths such as invalid indices and duplicate students are omitted to keep the diagram compact.
+
+<img src="images/EditCommandExecutionSequenceDiagram.png" width="760" />
+
+How the `edit` command works:
+
+1. `AddressBookParser` recognizes `edit` as the command word and forwards the remaining input to `EditCommandParser`.
+1. `EditCommandParser` dispatches by subcommand name (`student`, `appt`, `attd`, `payment`, etc.) and invokes the matching concrete parser.
+1. The concrete parser validates the index and prefixed arguments, then constructs the corresponding `Edit...Command`.
+1. During execution, the command resolves the target student from the currently displayed list, builds the edited `Person`, and checks any command-specific constraints.
+1. The command updates the `Model`, which replaces the target `Person` in the `AddressBook` while preserving the active filter.
+1. `LogicManager` detects that the address book changed and persists the updated state through `Storage`.
+
+
+### Find command
+
+The `find` family uses subcommand dispatch similar to `edit`. To keep the diagrams readable, the flow is split into smaller diagrams using `find tag t/JC` as the representative example.
+
+The class diagram below shows the `find` command hierarchy. All concrete find commands share the same top-level command word `find`, while each subcommand encapsulates its own filtering logic.
+
+<img src="images/FindCommandHierachyClassDiagram.png" width="520" />
+
+The following diagram shows the parser structure for `find`. `AddressBookParser` identifies `find` as the command word and forwards the remaining input to `FindCommandParser`, which uses a dispatcher to route to the appropriate subcommand parser.
+
+<img src="images/FindCommandParserHierachyClassDiagram.png" width="720" />
+
+The next diagram illustrates how parsing is performed. `FindCommandParser` delegates to the appropriate concrete parser (e.g., `FindTagCommandParser`) based on the subcommand.
+
+<img src="images/FindTagCommandParsingSequenceDiagram.png" width="700" />
+
+The final diagram shows the successful execution path after parsing. Error paths such as invalid formats or missing prefixes are omitted to keep the diagram compact.
+
+<img src="images/FindTagCommandExecutionSequenceDiagram.png" width="760" />
+
+How the `find` command works:
+
+1. `AddressBookParser` recognizes `find` as the command word and forwards the remaining input to `FindCommandParser`.
+1. `FindCommandParser` uses a dispatcher to route the input by subcommand name (`person`, `tag`, `subject`, `payment`, etc.) to the appropriate concrete parser.
+1. The concrete parser validates the input arguments and constructs the corresponding `Find...Command` with an appropriate predicate.
+1. During execution, the command applies the predicate to the `Model` using `updateFilteredPersonList(...)`, which updates the currently displayed list.
+1. The command also updates the list display mode (e.g., `PERSON`) to ensure the UI reflects the correct view.
+1. `LogicManager` checks whether the underlying `AddressBook` has changed. Since `find` only modifies transient model state (filtered list and display mode), no changes are detected in the `AddressBook`, and the storage step is therefore skipped.
+
+### View appointments command
+
+The `viewappt` command is simpler than `edit`, so a single sequence diagram is enough. The example below uses `viewappt d/2026-02-13`.
+
+<img src="images/ViewApptSequenceDiagram.png" width="760" />
+
+How the `viewappt` command works:
+
+1. `AddressBookParser` recognizes `viewappt` and delegates the arguments to `ViewApptCommandParser`.
+1. `ViewApptCommandParser` parses the optional `d/DATE` value. If the date is omitted, it uses the current local date instead.
+1. `ViewApptCommand` constructs an `AppointmentInWeekPredicate`, which computes the Monday-Sunday week containing the target date.
+1. During execution, the command updates the filtered person list using that predicate so that only students with appointments in the target week remain visible.
+1. The command switches the `Model` display mode to `APPOINTMENT`, allowing the UI to show appointment details for the filtered students.
+1. The command returns a `CommandResult` containing the number of matching appointments and the computed week range.
+1. Unlike `edit`, `viewappt` does not modify the address book, so `LogicManager` does not save any data to storage after execution.
+
+### Subject-related commands
+
+The subject-related feature is centered on `edit acad`, which parses subject and level tokens into an academic profile and assigns that profile to a student.
+
+The first class diagram shows the command and parser side of the feature.
+
+<img src="images/SubjectCommandClassDiagram.png" width="720" />
+
+The second class diagram shows the academic model objects used by that command.
+
+<img src="images/AcademicModelClassDiagram.png" width="600" />
+
+How the subject-related feature works:
+
+1. `EditAcademicsCommandParser` reads `s/` subject tokens and optional `l/` level tokens from `edit acad`.
+1. The parser validates subject names, enforces that a level must follow a subject, and rejects duplicate subject names.
+1. The parsed subjects are wrapped in an `Academics` object.
+1. `EditAcademicsCommand` applies that `Academics` object to the selected student by rebuilding the `Person` with updated academics.
+1. Each `Subject` stores a mandatory name and an optional `Level`, while `Academics` stores the set of subjects for that student.
+
+### Payment and billing commands
+
+The payment and billing feature covers two related workflows:
+`edit payment`, which records a payment and updates billing data, and `find payment`, which filters students by billing due month.
+
+The first class diagram shows the command and parser structure for these workflows.
+
+<img src="images/PaymentBillingCommandClassDiagram.png" width="720" />
+
+The second class diagram shows the billing model objects used by those commands.
+
+<img src="images/BillingModelClassDiagram.png" width="620" />
+
+How the payment and billing feature works:
+
+1. `EditPaymentCommandParser` parses a required `d/DATE` and an optional `a/AMOUNT` from `edit payment`.
+1. `EditPaymentCommand` updates the selected student's `Billing` by recording the payment date, advancing the next due date, and optionally changing the tuition fee.
+1. `FindPaymentCommandParser` parses `d/YYYY-MM` and creates a `PaymentDueMonthPredicate`.
+1. `FindPaymentCommand` applies that predicate to the displayed list so only students with matching billing due months remain visible.
+1. `Billing` stores the recurrence schedule, current due date, tuition fee, and `PaymentHistory`, while `PaymentHistory` stores the set of recorded paid dates.
+
 ### \[Proposed\] Undo/redo feature
 
 #### Proposed Implementation

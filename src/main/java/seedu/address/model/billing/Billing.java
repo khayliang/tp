@@ -14,7 +14,6 @@ import seedu.address.model.recurrence.Recurrence;
 public class Billing {
 
     private static final double DEFAULT_TUITION_FEE = 0.0;
-    private static final LocalDate DEFAULT_PAYMENT_DUE_DATE = LocalDate.now().withDayOfMonth(1);
 
     private final Recurrence recurrence;
     private final LocalDate paymentDueDate;
@@ -25,7 +24,7 @@ public class Billing {
      * Creates a billing record with a tuition fee
      * @param tuitionFee A non-negative amount
      */
-    public Billing(Recurrence recurrence, LocalDate paymentDueDate, Double tuitionfee, PaymentHistory paymentHistory) {
+    public Billing(Recurrence recurrence, LocalDate paymentDueDate, double tuitionfee, PaymentHistory paymentHistory) {
         requireNonNull(recurrence);
         requireNonNull(paymentDueDate);
         requireNonNull(paymentHistory);
@@ -43,7 +42,7 @@ public class Billing {
     public static Billing defaultBilling() {
         return new Billing(
                 Recurrence.MONTHLY,
-                DEFAULT_PAYMENT_DUE_DATE,
+                LocalDate.now().withDayOfMonth(1),
                 DEFAULT_TUITION_FEE,
                 PaymentHistory.EMPTY);
     }
@@ -56,7 +55,7 @@ public class Billing {
         return paymentDueDate;
     }
 
-    public Double getTuitionFee() {
+    public double getTuitionFee() {
         return tuitionFee;
     }
 
@@ -67,18 +66,16 @@ public class Billing {
     /**
      * Returns a new {@code Billing} object with updated tuition fees
      * @return {@code Billing} object with updated tuition fees
+     * @throws IllegalArgumentException if {@code newTuitionFees} is negative
      */
-    public Billing updateRate(Double newTuitionFees) {
+    public Billing updateRate(double newTuitionFees) {
         checkArgument(newTuitionFees >= 0, "Tuition fees must be non-negative");
         return new Billing(
                 getRecurrence(), getCurrentDueDate(), newTuitionFees, getPaymentHistory());
     }
 
     public LocalDate getNextDueDate() {
-        if (recurrence == Recurrence.MONTHLY) {
-            return paymentDueDate.plusMonths(1);
-        }
-        return paymentDueDate.plusDays(recurrence.getDays());
+        return recurrence.next(paymentDueDate);
     }
 
     /**

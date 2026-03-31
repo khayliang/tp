@@ -30,6 +30,7 @@ public class ParserUtilTest {
     private static final String INVALID_TAG = "#friend";
     private static final String INVALID_DATE = "2026-13-40";
     private static final String INVALID_APPOINTMENT_START = "2026-13-40T25:00:00";
+    private static final String INVALID_AMOUNT = "-10";
 
     private static final String VALID_NAME = "Rachel Walker";
     private static final String VALID_PHONE = "123456";
@@ -40,6 +41,7 @@ public class ParserUtilTest {
     private static final String VALID_APPOINTMENT_START_NO_SECONDS = "2026-01-13T08:00";
     private static final String VALID_APPOINTMENT_START_WITH_SECONDS = "2026-01-13T08:00:59";
     private static final String VALID_APPOINTMENT_START_WITH_NANOSECONDS = "2026-01-13T08:00:59.123456";
+    private static final String VALID_AMOUNT = "25.50";
     private static final String VALID_TAG_1 = "friend";
     private static final String VALID_TAG_2 = "neighbour";
 
@@ -218,6 +220,34 @@ public class ParserUtilTest {
         String valueWithWhitespace = WHITESPACE + VALID_DATE + WHITESPACE;
         LocalDate expectedDate = LocalDate.parse(VALID_DATE);
         assertEquals(expectedDate, ParserUtil.parseIsoDate(valueWithWhitespace));
+    }
+
+    @Test
+    public void parseAmount_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseAmount(null));
+    }
+
+    @Test
+    public void parseAmount_invalidValue_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseAmount(INVALID_AMOUNT));
+        assertThrows(ParseException.class, () -> ParserUtil.parseAmount("-1"));
+    }
+
+    @Test
+    public void parseAmount_infiniteValue_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseAmount("-Infinity"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseAmount("Infinity"));
+    }
+
+    @Test
+    public void parseAmount_nanValue_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseAmount("NaN"));
+    }
+
+    @Test
+    public void parseAmount_validValueWithWhitespace_returnsAmount() throws Exception {
+        String valueWithWhitespace = WHITESPACE + VALID_AMOUNT + WHITESPACE;
+        assertEquals(Double.parseDouble(VALID_AMOUNT), ParserUtil.parseAmount(valueWithWhitespace));
     }
 
     @Test

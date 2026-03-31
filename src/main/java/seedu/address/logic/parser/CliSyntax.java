@@ -17,5 +17,7 @@ public class CliSyntax {
     public static final Prefix PREFIX_PARENT_PHONE = new Prefix("pp/");
     public static final Prefix PREFIX_PARENT_EMAIL = new Prefix("pe/");
     public static final Prefix PREFIX_DATE = new Prefix("d/");
+    public static final Prefix PREFIX_RECURRENCE = new Prefix("r/");
+    public static final Prefix PREFIX_DESCRIPTION = new Prefix("dsc/");
     public static final Prefix PREFIX_AMOUNT = new Prefix("a/");
 }
