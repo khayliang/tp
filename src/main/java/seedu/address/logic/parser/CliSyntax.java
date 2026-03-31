@@ -13,9 +13,11 @@ public class CliSyntax {
     public static final Prefix PREFIX_TAG = new Prefix("t/");
     public static final Prefix PREFIX_SUBJECT = new Prefix("s/");
     public static final Prefix PREFIX_LEVEL = new Prefix("l/");
-    public static final Prefix PREFIX_PARENT_NAME = new Prefix("pn/");
-    public static final Prefix PREFIX_PARENT_PHONE = new Prefix("pp/");
-    public static final Prefix PREFIX_PARENT_EMAIL = new Prefix("pe/");
+    public static final Prefix PREFIX_PARENT_NAME = PREFIX_NAME;
+    public static final Prefix PREFIX_PARENT_PHONE = PREFIX_PHONE;
+    public static final Prefix PREFIX_PARENT_EMAIL = PREFIX_EMAIL;
     public static final Prefix PREFIX_DATE = new Prefix("d/");
+    public static final Prefix PREFIX_RECURRENCE = new Prefix("r/");
+    public static final Prefix PREFIX_DESCRIPTION = new Prefix("dsc/");
     public static final Prefix PREFIX_AMOUNT = new Prefix("a/");
 }

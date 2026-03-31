@@ -5,6 +5,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_DATE;
 
 import java.time.LocalDate;
 
+import seedu.address.commons.util.AppClock;
 import seedu.address.logic.commands.ViewApptCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 
@@ -17,7 +18,7 @@ public class ViewApptCommandParser implements Parser<ViewApptCommand> {
     public ViewApptCommand parse(String args) throws ParseException {
         String trimmedArgs = args.trim();
         if (trimmedArgs.isEmpty()) {
-            return new ViewApptCommand(LocalDate.now());
+            return new ViewApptCommand(LocalDate.now(AppClock.getClock()));
         }
 
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(" " + trimmedArgs, PREFIX_DATE);

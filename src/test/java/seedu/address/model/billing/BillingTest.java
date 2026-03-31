@@ -91,6 +91,67 @@ public class BillingTest {
     }
 
     @Test
+    public void deleteRecordedPayment_latestDate_rollsBackDueDateAndRemovesDate() {
+        PaymentHistory history = new PaymentHistory(
+                LocalDate.of(2026, 3, 1),
+                LocalDate.of(2026, 4, 1));
+        Billing original = new Billing(Recurrence.MONTHLY, DUE_DATE, 100.0, history);
+
+        Billing updated = original.deleteRecordedPayment(LocalDate.of(2026, 4, 1));
+
+        assertEquals(DUE_DATE.minusMonths(1), updated.getCurrentDueDate());
+        assertFalse(updated.getPaymentHistory().hasPaidOn(LocalDate.of(2026, 4, 1)));
+        assertTrue(updated.getPaymentHistory().hasPaidOn(LocalDate.of(2026, 3, 1)));
+    }
+
+    @Test
+    public void deleteRecordedPayment_nonLatestDate_keepsDueDateAndRemovesDate() {
+        PaymentHistory history = new PaymentHistory(
+                LocalDate.of(2026, 3, 1),
+                LocalDate.of(2026, 4, 1));
+        Billing original = new Billing(Recurrence.MONTHLY, DUE_DATE, 100.0, history);
+
+        Billing updated = original.deleteRecordedPayment(LocalDate.of(2026, 3, 1));
+
+        assertEquals(DUE_DATE, updated.getCurrentDueDate());
+        assertFalse(updated.getPaymentHistory().hasPaidOn(LocalDate.of(2026, 3, 1)));
+        assertTrue(updated.getPaymentHistory().hasPaidOn(LocalDate.of(2026, 4, 1)));
+    }
+
+    @Test
+    public void deleteRecordedPayment_weeklyLatestDate_rollsBackBySevenDays() {
+        PaymentHistory history = new PaymentHistory(
+                LocalDate.of(2026, 3, 1),
+                LocalDate.of(2026, 3, 8));
+        Billing original = new Billing(Recurrence.WEEKLY, DUE_DATE, 100.0, history);
+
+        Billing updated = original.deleteRecordedPayment(LocalDate.of(2026, 3, 8));
+
+        assertEquals(DUE_DATE.minusDays(7), updated.getCurrentDueDate());
+        assertFalse(updated.getPaymentHistory().hasPaidOn(LocalDate.of(2026, 3, 8)));
+        assertTrue(updated.getPaymentHistory().hasPaidOn(LocalDate.of(2026, 3, 1)));
+    }
+
+    @Test
+    public void deleteRecordedPayment_noneLatestDate_keepsDueDateUnchanged() {
+        PaymentHistory history = new PaymentHistory(LocalDate.of(2026, 3, 1));
+        Billing original = new Billing(Recurrence.NONE, DUE_DATE, 100.0, history);
+
+        Billing updated = original.deleteRecordedPayment(LocalDate.of(2026, 3, 1));
+
+        assertEquals(DUE_DATE, updated.getCurrentDueDate());
+        assertFalse(updated.getPaymentHistory().hasPaidOn(LocalDate.of(2026, 3, 1)));
+    }
+
+    @Test
+    public void deleteRecordedPayment_missingDate_throwsIllegalArgumentException() {
+        Billing original = new Billing(Recurrence.MONTHLY, DUE_DATE, 100.0,
+                new PaymentHistory(LocalDate.of(2026, 4, 1)));
+        assertThrows(IllegalArgumentException.class, () ->
+                original.deleteRecordedPayment(LocalDate.of(2026, 5, 1)));
+    }
+
+    @Test
     public void equals_sameObject_returnsTrue() {
         Billing billing = new Billing(Recurrence.MONTHLY, DUE_DATE, 50.0, DEFAULT_PAYMENT_HISTORY);
         assertTrue(billing.equals(billing));

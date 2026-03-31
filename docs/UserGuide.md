@@ -108,22 +108,19 @@ Shows a list of all persons in the address book.
 
 Format: `list`
 
-### Editing a person : `edit`
+### Editing a student : `edit student`
 
-Edits an existing person in the address book.
+Edits an existing student in the address book.
 
-Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`
+Format: `edit student INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS]`
 
 * Edits the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, …​
 * At least one of the optional fields must be provided.
 * Existing values will be updated to the input values.
-* When editing tags, the existing tags of the person will be removed i.e adding of tags is not cumulative.
-* You can remove all the person’s tags by typing `t/` without
-    specifying any tags after it.
 
 Examples:
-*  `edit 1 p/91234567 e/johndoe@example.com` Edits the phone number and email address of the 1st person to be `91234567` and `johndoe@example.com` respectively.
-*  `edit 2 n/Betsy Crower t/` Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
+* `edit student 1 p/91234567 e/johndoe@example.com` edits the phone number and email address of the 1st person.
+* `edit student 2 n/Betsy Crower` edits the name of the 2nd person.
 
 ### Editing billing amount : `edit billing`
 
@@ -138,42 +135,44 @@ Format: `edit billing INDEX a/AMOUNT`
 Examples:
 * `edit billing 1 a/250`
 
-### Recording last attendance : `edit attd`
+### Adding an appointment : `add appt`
 
-Records the last attendance date-time for an existing student contact.
+Adds an appointment to an existing student contact.
 
-Format: `edit attd INDEX [d/DATETIME]`
+Format: `add appt INDEX d/DATETIME [r/RECURRENCE] dsc/DESCRIPTION`
+
+* Adds the appointment to the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, ...
+* `d/` accepts ISO 8601 local date-time.
+* `r/` is optional. Supported values are `NONE`, `WEEKLY`, `BIWEEKLY`, and `MONTHLY`. If omitted, `NONE` is used.
+* `dsc/` is required and stores a short appointment description.
+* Adding a new appointment replaces any existing appointment for that student.
+
+Examples:
+* `add appt 1 d/2026-01-29T08:00:00 dsc/Weekly algebra practice`
+* `add appt 2 d/2026-02-02T15:30:00 r/WEEKLY dsc/Physics consultation`
+
+### Recording appointment attendance : `add attd`
+
+Records attendance for the current appointment of an existing student contact.
+
+Format: `add attd INDEX [y|n] [d/DATE]`
 
 * Records attendance for the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, ...
-* If `d/` is omitted, the current local date-time is used.
-* `d/` accepts ISO 8601 local date-time.
-* Reduced precision without seconds is accepted (e.g., `2026-01-29T08:00`) and will be interpreted as seconds `:00`.
-* Leading and trailing whitespaces around the date-time value are ignored.
-* Invalid date-time values are rejected with an error asking for a valid date-time.
-* The recorded attendance is shown in the GUI for each student as `Attendance: ...`.
+* If `y` or `n` is omitted, `y` is assumed.
+* `y` records that the student attended the current appointment.
+* `n` records that the student was absent for the current appointment.
+* If `d/DATE` is omitted, the current appointment date is taken from the appointment's `next` date.
+* `d/DATE` is only allowed together with `y`.
+* `d/DATE` must be in ISO local date format (`YYYY-MM-DD`).
+* Attendance cannot be recorded for a future date.
+* This command only works when the student currently has an appointment.
+* Non-recurring appointments can only have attendance recorded once.
 
 Examples:
-* `edit attd 1 d/2026-01-29T08:00:00`
-* `edit attd 1`
-
-### Recording an appointment : `edit appt`
-
-Records the lesson start date-time for an existing student contact.
-
-Format: `edit appt INDEX d/DATETIME`
-
-* Records the appointment for the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, ...
-* Exactly one `d/` prefix must be provided.
-* `d/` accepts ISO 8601 local date-time.
-* Reduced precision without seconds is accepted (e.g., `2026-01-13T08:00`) and will be interpreted as seconds `:00`.
-* Leading and trailing whitespaces around the date-time value are ignored.
-* Appointment times are stored to minute precision, so any supplied seconds are dropped.
-* Recording a new appointment replaces any existing appointment recorded for that student.
-* The recorded appointment is shown in the GUI for each student as `Appt: ...`.
-
-Examples:
-* `edit appt 1 d/2026-01-13T08:00:00`
-* `edit appt 2 d/2026-01-13T08:00`
+* `add attd 1`
+* `add attd 1 y`
+* `add attd 1 y d/2026-01-29`
+* `add attd 1 n`
 
 ### Locating persons by name: `find person`
 
@@ -254,19 +253,38 @@ Examples:
 * `viewappt`
 * `viewappt d/2026-02-13`
 
-### Deleting a person : `delete`
+### Deleting a person : `delete student`
 
 Deletes the specified person from the address book.
 
-Format: `delete INDEX`
+Format: `delete student INDEX`
 
 * Deletes the person at the specified `INDEX`.
 * The index refers to the index number shown in the displayed person list.
 * The index **must be a positive integer** 1, 2, 3, …​
 
 Examples:
-* `list` followed by `delete 2` deletes the 2nd person in the address book.
-* `find person Betsy` followed by `delete 1` deletes the 1st person in the results of the `find` command.
+* `list` followed by `delete student 2` deletes the 2nd person in the address book.
+* `find person Betsy` followed by `delete student 1` deletes the 1st person in the results of the `find` command.
+
+### Deleting a recorded payment date : `delete payment`
+
+Deletes a recorded payment date for an existing student contact.
+
+Format: `delete payment INDEX d/DATE`
+
+* Deletes the payment date for the person at the specified `INDEX`.
+* The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, ...
+* Exactly one `d/` prefix must be provided.
+* `DATE` must be in ISO 8601 local date format (`YYYY-MM-DD`).
+* The date cannot be later than today.
+* If the date is not recorded for the student, the command fails with an error.
+* If the deleted date is the latest recorded payment date, the billing due date is rolled back by one recurrence cycle.
+* If the deleted date is not the latest recorded payment date, the billing due date remains unchanged.
+
+Examples:
+* `delete payment 1 d/2026-03-01`
+* `delete payment 2 d/2025-12-15`
 
 ### Clearing all entries : `clear`
 
@@ -318,13 +336,14 @@ _Details coming soon ..._
 Action | Format, Examples
 --------|------------------
 **Add** | `add student n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​` <br> e.g., `add student n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague`
+**Add Appointment** | `add appt INDEX d/ISO8601_DATETIME [r/RECURRENCE] dsc/DESCRIPTION`<br> e.g., `add appt 1 d/2026-01-29T08:00:00 dsc/Weekly algebra practice`
+**Add Attendance** | `add attd INDEX [y\|n] [d/DATE]`<br> e.g., `add attd 1`, `add attd 1 n`, `add attd 1 d/2026-01-29`
 **Add Payment** | `add payment INDEX d/ISO8601_DATE`<br> e.g., `add payment 1 d/2026-03-05`
 **Clear** | `clear`
-**Delete** | `delete INDEX`<br> e.g., `delete 3`
-**Edit** | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
+**Delete Student** | `delete student INDEX`<br> e.g., `delete student 3`
+**Delete Payment** | `delete payment INDEX d/ISO8601_DATE`<br> e.g., `delete payment 1 d/2026-03-01`
+**Edit Student** | `edit student INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS]`<br> e.g., `edit student 2 n/James Lee e/jameslee@example.com`
 **Edit Billing** | `edit billing INDEX a/AMOUNT`<br> e.g., `edit billing 1 a/250`
-**Edit Appointment** | `edit appt INDEX d/ISO8601_DATETIME`<br> e.g., `edit appt 1 d/2026-01-13T08:00:00`
-**Edit Attendance** | `edit attd INDEX [d/ISO8601_DATETIME]`<br> e.g., `edit attd 1 d/2026-01-29T08:00:00`, `edit attd 1`
 **Find** | `find person KEYWORD [MORE_KEYWORDS]`<br> e.g., `find person James Jake`
 **Find Payment** | `find payment d/YYYY-MM`<br> e.g., `find payment d/2026-03`
 **View Appointments** | `viewappt [d/DATE]`<br> e.g., `viewappt d/2026-02-13`

@@ -21,6 +21,9 @@ public class DeletePersonCommand extends DeleteCommand {
 
     public static final String MESSAGE_DELETE_PERSON_SUCCESS = "Deleted Student: %1$s";
 
+    /**
+     * @param index of the person in the filtered person list to delete
+     */
     public DeletePersonCommand(Index index) {
         super(index);
     }

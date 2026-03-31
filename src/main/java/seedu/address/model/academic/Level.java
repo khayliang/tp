@@ -1,5 +1,7 @@
 package seedu.address.model.academic;
 
+import seedu.address.model.util.StringUtil;
+
 /**
  * Represents the level of a Subject.
  */
@@ -9,6 +11,6 @@ public enum Level {
 
     @Override
     public String toString() {
-        return name().toLowerCase();
+        return StringUtil.toTitleCase(name());
     }
 }

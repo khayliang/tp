@@ -3,30 +3,23 @@ package seedu.address.logic.parser;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.commands.CommandTestUtil.ADDRESS_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.ADDRESS_DESC_BOB;
-import static seedu.address.logic.commands.CommandTestUtil.APPOINTMENT_START_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.EMAIL_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.EMAIL_DESC_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_ADDRESS_DESC;
-import static seedu.address.logic.commands.CommandTestUtil.INVALID_APPOINTMENT_START_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_EMAIL_DESC;
-import static seedu.address.logic.commands.CommandTestUtil.INVALID_LAST_ATTENDANCE_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_NAME_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_PHONE_DESC;
-import static seedu.address.logic.commands.CommandTestUtil.LAST_ATTENDANCE_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.NAME_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.PHONE_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.PHONE_DESC_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_ADDRESS_AMY;
-import static seedu.address.logic.commands.CommandTestUtil.VALID_APPOINTMENT_START;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_AMY;
-import static seedu.address.logic.commands.CommandTestUtil.VALID_LAST_ATTENDANCE;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PAYMENT_AMOUNT;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_BOB;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_AMOUNT;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_DATE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
@@ -35,14 +28,10 @@ import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_THIRD_PERSON;
 
-import java.time.LocalDateTime;
-
 import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
-import seedu.address.logic.commands.EditApptCommand;
-import seedu.address.logic.commands.EditAttdCommand;
 import seedu.address.logic.commands.EditBillingCommand;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditPersonCommand;
@@ -60,10 +49,6 @@ public class EditCommandParserTest {
 
     private static final String MESSAGE_INVALID_PERSON_FORMAT =
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditPersonCommand.MESSAGE_USAGE);
-    private static final String MESSAGE_INVALID_APPT_FORMAT =
-            String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditApptCommand.MESSAGE_USAGE);
-    private static final String MESSAGE_INVALID_ATTD_FORMAT =
-            String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditAttdCommand.MESSAGE_USAGE);
     private static final String MESSAGE_INVALID_BILLING_FORMAT =
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditBillingCommand.MESSAGE_USAGE);
 
@@ -77,18 +62,11 @@ public class EditCommandParserTest {
         // valid subcommand but no index specified
         assertParseFailure(parser, "student " + VALID_NAME_AMY, MESSAGE_INVALID_PERSON_FORMAT);
 
-        // attd subcommand with no index
-        assertParseFailure(parser, "attd" + LAST_ATTENDANCE_DESC, MESSAGE_INVALID_ATTD_FORMAT);
-
         // valid subcommand but no field specified
         assertParseFailure(parser, "student 1", EditCommand.MESSAGE_NOT_EDITED);
 
-        // valid appt subcommand but no field specified
-        assertParseFailure(parser, "appt 1", EditCommand.MESSAGE_NOT_EDITED);
-
         // valid billing subcommand but no field specified
         assertParseFailure(parser, "billing 1", EditCommand.MESSAGE_NOT_EDITED);
-
         // no input at all
         assertParseFailure(parser, "", MESSAGE_INVALID_FORMAT);
     }
@@ -106,18 +84,6 @@ public class EditCommandParserTest {
 
         // invalid prefix being parsed as preamble
         assertParseFailure(parser, "student 1 i/ string", MESSAGE_INVALID_PERSON_FORMAT);
-
-        // invalid prefix being parsed as preamble for appt
-        assertParseFailure(parser, "appt 1 i/ string", MESSAGE_INVALID_APPT_FORMAT);
-
-        // invalid prefix being parsed as preamble for attd
-        assertParseFailure(parser, "attd 1 i/ string", MESSAGE_INVALID_ATTD_FORMAT);
-
-        // zero index for attd
-        assertParseFailure(parser, "attd 0" + LAST_ATTENDANCE_DESC, MESSAGE_INVALID_ATTD_FORMAT);
-
-        // negative index for attd
-        assertParseFailure(parser, "attd -1" + LAST_ATTENDANCE_DESC, MESSAGE_INVALID_ATTD_FORMAT);
 
         // invalid prefix being parsed as preamble for billing
         assertParseFailure(parser, "billing 1 i/ string", MESSAGE_INVALID_BILLING_FORMAT);
@@ -141,13 +107,6 @@ public class EditCommandParserTest {
                 "student 1" + INVALID_NAME_DESC + INVALID_EMAIL_DESC + VALID_ADDRESS_AMY + VALID_PHONE_AMY,
                 Name.MESSAGE_CONSTRAINTS);
 
-        // invalid appointment start
-        assertParseFailure(parser, "appt 1" + INVALID_APPOINTMENT_START_DESC,
-                ParserUtil.MESSAGE_INVALID_DATE_TIME);
-
-        // invalid attendance date-time
-        assertParseFailure(parser, "attd 1" + INVALID_LAST_ATTENDANCE_DESC,
-                ParserUtil.MESSAGE_INVALID_DATE_TIME);
     }
 
     @Test
@@ -203,18 +162,6 @@ public class EditCommandParserTest {
         expectedCommand = new EditPersonCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
 
-        // appointment start
-        userInput = "appt " + targetIndex.getOneBased() + APPOINTMENT_START_DESC;
-        EditApptCommand expectedApptCommand = new EditApptCommand(targetIndex,
-                LocalDateTime.parse(VALID_APPOINTMENT_START));
-        assertParseSuccess(parser, userInput, expectedApptCommand);
-
-        // attendance with explicit date-time
-        userInput = "attd " + targetIndex.getOneBased() + LAST_ATTENDANCE_DESC;
-        EditAttdCommand expectedAttdCommand = new EditAttdCommand(targetIndex,
-                LocalDateTime.parse(VALID_LAST_ATTENDANCE));
-        assertParseSuccess(parser, userInput, expectedAttdCommand);
-
         // billing amount
         userInput = "billing " + targetIndex.getOneBased() + " " + PREFIX_AMOUNT + VALID_PAYMENT_AMOUNT;
         EditBillingCommand expectedBillingCommand = new EditBillingCommand(targetIndex,
@@ -229,14 +176,6 @@ public class EditCommandParserTest {
         String personInput = "StUdEnT " + targetIndex.getOneBased() + NAME_DESC_AMY;
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withName(VALID_NAME_AMY).build();
         assertParseSuccess(parser, personInput, new EditPersonCommand(targetIndex, descriptor));
-
-        String apptInput = "ApPt " + targetIndex.getOneBased() + APPOINTMENT_START_DESC;
-        assertParseSuccess(parser, apptInput,
-                new EditApptCommand(targetIndex, LocalDateTime.parse(VALID_APPOINTMENT_START)));
-
-        String attdInput = "AtTd " + targetIndex.getOneBased() + LAST_ATTENDANCE_DESC;
-        assertParseSuccess(parser, attdInput,
-                new EditAttdCommand(targetIndex, LocalDateTime.parse(VALID_LAST_ATTENDANCE)));
 
         String billingInput = "BiLlInG " + targetIndex.getOneBased() + " a/25";
         assertParseSuccess(parser, billingInput, new EditBillingCommand(targetIndex, 25.0));
@@ -273,16 +212,6 @@ public class EditCommandParserTest {
 
         assertParseFailure(parser, userInput,
                 Messages.getErrorMessageForDuplicatePrefixes(PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS));
-
-        // duplicate appointment start
-        userInput = "appt " + targetIndex.getOneBased() + APPOINTMENT_START_DESC + APPOINTMENT_START_DESC;
-        assertParseFailure(parser, userInput,
-                Messages.getErrorMessageForDuplicatePrefixes(PREFIX_DATE));
-
-        // duplicate attendance date-time
-        userInput = "attd " + targetIndex.getOneBased() + LAST_ATTENDANCE_DESC + LAST_ATTENDANCE_DESC;
-        assertParseFailure(parser, userInput,
-                Messages.getErrorMessageForDuplicatePrefixes(PREFIX_DATE));
 
         // duplicate billing amount
         userInput = "billing " + targetIndex.getOneBased() + " a/20 a/30";

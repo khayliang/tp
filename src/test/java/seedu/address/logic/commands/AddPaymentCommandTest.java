@@ -26,7 +26,11 @@ import seedu.address.model.person.Person;
 import seedu.address.testutil.PersonBuilder;
 
 /**
+<<<<<<< HEAD:src/test/java/seedu/address/logic/commands/AddPaymentCommandTest.java
  * Contains integration tests (interaction with the Model) and unit tests for AddPaymentCommand.
+=======
+ * Contains integration tests (interaction with the Model) and unit tests for EditPaymentCommand.
+>>>>>>> master:src/test/java/seedu/address/logic/commands/EditPaymentCommandTest.java
  */
 public class AddPaymentCommandTest {
 

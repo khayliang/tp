@@ -5,6 +5,7 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
 
 import java.time.LocalDate;
 
+import seedu.address.commons.util.AppClock;
 import seedu.address.model.recurrence.Recurrence;
 
 /**
@@ -42,7 +43,7 @@ public class Billing {
     public static Billing defaultBilling() {
         return new Billing(
                 Recurrence.MONTHLY,
-                LocalDate.now().withDayOfMonth(1),
+                AppClock.today().withDayOfMonth(1),
                 DEFAULT_TUITION_FEE,
                 PaymentHistory.EMPTY);
     }
@@ -75,10 +76,7 @@ public class Billing {
     }
 
     public LocalDate getNextDueDate() {
-        if (recurrence == Recurrence.MONTHLY) {
-            return paymentDueDate.plusMonths(1);
-        }
-        return paymentDueDate.plusDays(recurrence.getDays());
+        return recurrence.next(paymentDueDate);
     }
 
     /**
@@ -108,6 +106,28 @@ public class Billing {
     public Billing recordTuitionPaid(LocalDate paymentDate) {
         PaymentHistory updatedPaymentHistory = paymentHistory.recordPayment(paymentDate);
         return new Billing(recurrence, paymentDueDate, tuitionFee, updatedPaymentHistory);
+    }
+
+    /**
+     * Deletes a previously recorded payment date and conditionally rolls back due date
+     * Rolls back one recurrence cycle only when deleting the latest chronological payment date
+     * @param paymentDate a valid {@code LocalDate}
+     * @return new {@code Billing} with updated payment history (and due date when applicable)
+     * @throws IllegalArgumentException if payment date is not recorded
+     */
+    public Billing deleteRecordedPayment(LocalDate paymentDate) {
+        requireNonNull(paymentDate);
+        boolean shouldRollbackDueDate = paymentHistory.getLatestPaidDate()
+                .map(paymentDate::equals)
+                .orElse(false);
+
+        PaymentHistory updatedPaymentHistory = paymentHistory.removePayment(paymentDate);
+        LocalDate updatedDueDate = shouldRollbackDueDate ? getPreviousDueDate() : paymentDueDate;
+        return new Billing(recurrence, updatedDueDate, tuitionFee, updatedPaymentHistory);
+    }
+
+    private LocalDate getPreviousDueDate() {
+        return recurrence.previous(paymentDueDate);
     }
 
     @Override

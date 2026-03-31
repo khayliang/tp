@@ -5,13 +5,17 @@ import static java.util.Objects.requireNonNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import seedu.address.model.academic.Subject;
+import seedu.address.model.attendance.Attendance;
 import seedu.address.model.person.Person;
+import seedu.address.model.tag.Tag;
 
 /**
  * Panel that displays detailed information for the selected person.
@@ -113,13 +117,15 @@ public class PersonDetailPanel extends UiPart<Region> {
             noTagsLabel.getStyleClass().add("detail-field-value");
             tagsFlowPane.getChildren().add(noTagsLabel);
         } else {
-            person.getTags().stream()
-                    .sorted((left, right) -> left.tagName.compareTo(right.tagName))
-                    .forEach(tag -> {
-                        Label tagLabel = new Label(tag.tagName);
-                        tagLabel.getStyleClass().add("detail-tag");
-                        tagsFlowPane.getChildren().add(tagLabel);
-                    });
+            List<Tag> sortedTags = person.getSortedTags();
+
+            for (int i = 0; i < sortedTags.size(); i++) {
+                Tag tag = sortedTags.get(i);
+
+                Label tagLabel = new Label((i + 1) + ". " + tag.tagName);
+                tagLabel.getStyleClass().add("detail-tag");
+                tagsFlowPane.getChildren().add(tagLabel);
+            }
         }
 
         if (person.getAcademics().getSubjects().isEmpty()) {
@@ -127,13 +133,15 @@ public class PersonDetailPanel extends UiPart<Region> {
             noSubjectsLabel.getStyleClass().add("detail-field-value");
             subjectsFlowPane.getChildren().add(noSubjectsLabel);
         } else {
-            person.getAcademics().getSubjects().stream()
-                    .sorted(java.util.Comparator.comparing(seedu.address.model.academic.Subject::getName))
-                    .forEach(subject -> {
-                        Label subjectLabel = new Label(subject.toString());
-                        subjectLabel.getStyleClass().add("detail-subject-tag");
-                        subjectsFlowPane.getChildren().add(subjectLabel);
-                    });
+            List<Subject> sortedSubjects = person.getAcademics().getSortedSubjects();
+
+            for (int i = 0; i < sortedSubjects.size(); i++) {
+                Subject subject = sortedSubjects.get(i);
+
+                Label subjectLabel = new Label((i + 1) + ". " + subject.toString());
+                subjectLabel.getStyleClass().add("detail-subject-tag");
+                subjectsFlowPane.getChildren().add(subjectLabel);
+            }
         }
 
         // Display payment history
@@ -156,11 +164,12 @@ public class PersonDetailPanel extends UiPart<Region> {
             noAttendanceLabel.getStyleClass().add("detail-field-value");
             attendanceHistoryFlowPane.getChildren().add(noAttendanceLabel);
         } else {
-            person.getAttendance().getHistoryDescending().forEach(attendanceDateTime -> {
-                Label attendanceLabel = new Label(formatDateTime(attendanceDateTime));
+            java.util.List<Attendance> attendanceRecords = person.getAttendance().getRecords();
+            for (int index = attendanceRecords.size() - 1; index >= 0; index--) {
+                Label attendanceLabel = new Label(formatAttendance(attendanceRecords.get(index)));
                 attendanceLabel.getStyleClass().add("detail-attendance-date");
                 attendanceHistoryFlowPane.getChildren().add(attendanceLabel);
-            });
+            }
         }
 
         contentContainer.setManaged(true);
@@ -196,5 +205,10 @@ public class PersonDetailPanel extends UiPart<Region> {
 
     private String formatAmount(double amount) {
         return String.format("$%.2f", amount);
+    }
+
+    private String formatAttendance(Attendance attendance) {
+        String status = attendance.hasAttended() ? "Present" : "Absent";
+        return status + ": " + formatDate(attendance.getRecordedDate());
     }
 }

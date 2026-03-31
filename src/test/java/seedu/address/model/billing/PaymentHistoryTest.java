@@ -11,7 +11,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-public class PaymentTest {
+public class PaymentHistoryTest {
 
     private static final LocalDate DATE_1 = LocalDate.of(2026, 1, 1);
     private static final LocalDate DATE_2 = LocalDate.of(2026, 2, 1);
@@ -68,6 +68,33 @@ public class PaymentTest {
         PaymentHistory payment = new PaymentHistory(DATE_1);
         PaymentHistory updated = payment.recordPayment(DATE_1);
         assertEquals(1, updated.getPaidDates().size());
+    }
+
+    @Test
+    public void removePayment_existingDate_returnsNewPaymentWithoutDate() {
+        PaymentHistory original = new PaymentHistory(DATE_1, DATE_2);
+        PaymentHistory updated = original.removePayment(DATE_2);
+        assertTrue(original.getPaidDates().contains(DATE_2));
+        assertFalse(updated.getPaidDates().contains(DATE_2));
+        assertEquals(1, updated.getPaidDates().size());
+    }
+
+    @Test
+    public void removePayment_missingDate_throwsIllegalArgumentException() {
+        PaymentHistory payment = new PaymentHistory(DATE_1);
+        assertThrows(IllegalArgumentException.class, () -> payment.removePayment(DATE_2));
+    }
+
+    @Test
+    public void getLatestPaidDate_nonEmptyHistory_returnsLatest() {
+        PaymentHistory payment = new PaymentHistory(DATE_1, DATE_3, DATE_2);
+        assertEquals(DATE_3, payment.getLatestPaidDate().get());
+    }
+
+    @Test
+    public void getLatestPaidDate_emptyHistory_returnsEmpty() {
+        PaymentHistory payment = PaymentHistory.EMPTY;
+        assertTrue(payment.getLatestPaidDate().isEmpty());
     }
 
     @Test

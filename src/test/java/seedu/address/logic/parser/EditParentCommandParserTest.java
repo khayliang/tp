@@ -58,4 +58,23 @@ public class EditParentCommandParserTest {
         EditParentCommand expectedCommand = new EditParentCommand(targetIndex, expectedDescriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
     }
+
+    @Test
+    public void parse_shortPrefixes_success() {
+        Index targetIndex = INDEX_FIRST_PERSON;
+        String userInput = targetIndex.getOneBased() + " n/" + VALID_NAME
+                + " p/" + VALID_PHONE + " e/" + VALID_EMAIL;
+
+        Optional<Name> expectedName = Optional.of(new Name(VALID_NAME));
+        Optional<Phone> expectedPhone = Optional.of(new Phone(VALID_PHONE));
+        Optional<Email> expectedEmail = Optional.of(new Email(VALID_EMAIL));
+
+        EditParentDescriptor expectedDescriptor = new EditParentDescriptor();
+        expectedName.ifPresent(expectedDescriptor::setParentName);
+        expectedPhone.ifPresent(expectedDescriptor::setParentPhone);
+        expectedEmail.ifPresent(expectedDescriptor::setParentEmail);
+
+        EditParentCommand expectedCommand = new EditParentCommand(targetIndex, expectedDescriptor);
+        assertParseSuccess(parser, userInput, expectedCommand);
+    }
 }

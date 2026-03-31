@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.model.billing.Billing;
 import seedu.address.model.billing.PaymentHistory;
+import seedu.address.model.recurrence.Recurrence;
 import seedu.address.model.tag.Tag;
 import seedu.address.testutil.PersonBuilder;
 
@@ -54,9 +55,9 @@ public class PersonTest {
 
         // optionals default
         assertTrue(person.getGuardian().isEmpty());
+        assertTrue(person.getAppointment().isEmpty());
         assertTrue(person.getAppointmentStart().isEmpty());
         assertTrue(person.getAttendance().isEmpty());
-        assertTrue(person.getLastAttendance().isEmpty());
     }
 
     @Test
@@ -136,18 +137,23 @@ public class PersonTest {
     }
 
     @Test
-    public void getAppointmentStarts_modifySet_throwsUnsupportedOperationException() {
-        Person person = new PersonBuilder().withAppointmentStart("2026-01-13T08:00:00").build();
-        assertThrows(UnsupportedOperationException.class, () -> person.getAppointmentStarts()
-                .add(LocalDateTime.parse("2026-01-14T08:00:00")));
+    public void getAppointment_present_returnsStoredAppointment() {
+        Person person = new PersonBuilder()
+                .withAppointment("2026-01-13T08:00:00", "Algebra", Recurrence.NONE)
+                .build();
+        assertEquals(LocalDateTime.parse("2026-01-13T08:00:00"), person.getAppointmentStart().orElseThrow());
+        assertEquals(LocalDateTime.parse("2026-01-13T08:00:00"), person.getAppointmentNext().orElseThrow());
+        assertEquals("Algebra", person.getAppointmentDescription().orElseThrow());
     }
 
     @Test
-    public void getAppointmentStart_multipleAppointments_returnsEarliest() {
+    public void getAttendance_withAppointment_returnsAppointmentAttendance() {
         Person person = new PersonBuilder(ALICE)
-                .withAppointmentStart("2026-01-15T08:00:00", "2026-01-13T08:00:00")
+                .withAppointment("2026-01-13T08:00:00", "Algebra", Recurrence.NONE)
+                .addAttendance("2026-01-29T08:00:00")
                 .build();
-        assertEquals(LocalDateTime.parse("2026-01-13T08:00:00"), person.getAppointmentStart().orElseThrow());
+        assertEquals(LocalDate.parse("2026-01-29"),
+                person.getAttendance().getLastRecord().orElseThrow().getRecordedDate());
     }
 
     @Test
@@ -201,7 +207,9 @@ public class PersonTest {
         editedAlice = new PersonBuilder(ALICE).withTags(VALID_TAG_JC).build();
         assertFalse(ALICE.equals(editedAlice));
 
-        editedAlice = new PersonBuilder(ALICE).withAppointmentStart("2026-01-13T08:00:00").build();
+        editedAlice = new PersonBuilder(ALICE)
+                .withAppointment("2026-01-13T08:00:00", "Algebra", Recurrence.NONE)
+                .build();
         assertFalse(ALICE.equals(editedAlice));
 
         LocalDate differentPaymentDate = LocalDate.parse("2026-01-13");
@@ -214,7 +222,10 @@ public class PersonTest {
         editedAlice = new PersonBuilder(ALICE).withBilling(updatedBilling).build();
         assertFalse(ALICE.equals(editedAlice));
 
-        editedAlice = new PersonBuilder(ALICE).addAttendance("2026-01-29T08:00:00").build();
+        editedAlice = new PersonBuilder(ALICE)
+                .withAppointment("2026-01-13T08:00:00", "Algebra", Recurrence.NONE)
+                .addAttendance("2026-01-29T08:00:00")
+                .build();
         assertFalse(ALICE.equals(editedAlice));
     }
 
@@ -228,10 +239,8 @@ public class PersonTest {
                 + ", tags=" + ALICE.getTags()
                 + ", academics=" + ALICE.getAcademics()
                 + ", guardian=" + ALICE.getGuardian().orElse(null)
-                + ", appointmentStart=" + ALICE.getAppointmentStart()
-                + ", appointmentStarts=" + ALICE.getAppointmentStarts()
+                + ", appointment=" + ALICE.getAppointment().orElse(null)
                 + ", billing=" + ALICE.getBilling()
-                + ", attendance=" + ALICE.getAttendance()
                 + "}";
 
         assertEquals(expected, ALICE.toString());

@@ -6,6 +6,8 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
 import java.util.Objects;
 import java.util.Optional;
 
+import seedu.address.model.util.StringUtil;
+
 /**
  * Represents a Subject with an optional level.
  * Guarantees: immutable; name is valid; level is optional.
@@ -13,9 +15,9 @@ import java.util.Optional;
 public class Subject {
 
     public static final String MESSAGE_CONSTRAINTS =
-            "Subject names should be alphanumeric";
+            "Subject names should be alphanumeric and may contain spaces between words";
 
-    public static final String VALIDATION_REGEX = "\\p{Alnum}+";
+    public static final String VALIDATION_REGEX = "[\\p{Alnum}]+( [\\p{Alnum}]+)*";
 
     private final String name;
     private final Level level; // nullable
@@ -28,8 +30,14 @@ public class Subject {
      */
     public Subject(String name, Level level) {
         requireNonNull(name);
-        checkArgument(isValidSubjectName(name), MESSAGE_CONSTRAINTS);
-        this.name = name;
+
+        String trimmed = name.trim();
+        checkArgument(!trimmed.isEmpty(), MESSAGE_CONSTRAINTS);
+
+        String normalized = StringUtil.toTitleCase(trimmed);
+        checkArgument(isValidSubjectName(normalized), MESSAGE_CONSTRAINTS);
+
+        this.name = normalized;
         this.level = level;
     }
 
