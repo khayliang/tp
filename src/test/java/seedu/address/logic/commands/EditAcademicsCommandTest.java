@@ -35,11 +35,15 @@ public class EditAcademicsCommandTest {
 
     @Test
     public void execute_clearAcademics_success() {
-        Person personInList = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Person personInList = model.getFilteredPersonList()
+                .get(INDEX_FIRST_PERSON.getZeroBased());
 
-        Academics academics = new Academics(new HashSet<>()); // clear
+        EditAcademicsCommand.EditAcademicsDescriptor descriptor =
+                new EditAcademicsCommand.EditAcademicsDescriptor();
+        descriptor.setSubjects(new HashSet<>()); // clear
 
-        EditAcademicsCommand editCommand = new EditAcademicsCommand(INDEX_FIRST_PERSON, academics);
+        EditAcademicsCommand editCommand =
+                new EditAcademicsCommand(INDEX_FIRST_PERSON, descriptor);
 
         Person editedPerson = new PersonBuilder(personInList)
                 .withAcademics(new Academics(new HashSet<>()))
@@ -49,65 +53,110 @@ public class EditAcademicsCommandTest {
                 EditAcademicsCommand.MESSAGE_EDIT_ACADEMICS_SUCCESS,
                 Messages.format(editedPerson));
 
-        Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
+        Model expectedModel = new ModelManager(
+                new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setPerson(personInList, editedPerson);
 
-        CommandResult expectedCommandResult = new CommandResult(expectedMessage, editedPerson);
+        CommandResult expectedCommandResult =
+                new CommandResult(expectedMessage, editedPerson);
+
         assertCommandSuccess(editCommand, model, expectedCommandResult, expectedModel);
     }
 
     @Test
+    public void execute_editNoteOnly_success() {
+        Person personInList = model.getFilteredPersonList()
+                .get(INDEX_FIRST_PERSON.getZeroBased());
+
+        EditAcademicsCommand.EditAcademicsDescriptor descriptor =
+                new EditAcademicsCommand.EditAcademicsDescriptor();
+        descriptor.setNote("Good progress");
+
+        EditAcademicsCommand editCommand =
+                new EditAcademicsCommand(INDEX_FIRST_PERSON, descriptor);
+
+        Person editedPerson = new PersonBuilder(personInList)
+                .withAcademics(new Academics(
+                        personInList.getAcademics().getSubjects(),
+                        java.util.Optional.of("Good progress")))
+                .build();
+
+        Model expectedModel = new ModelManager(
+                new AddressBook(model.getAddressBook()), new UserPrefs());
+        expectedModel.setPerson(personInList, editedPerson);
+
+        assertCommandSuccess(editCommand, model,
+                new CommandResult(String.format(
+                        EditAcademicsCommand.MESSAGE_EDIT_ACADEMICS_SUCCESS,
+                        Messages.format(editedPerson)), editedPerson),
+                expectedModel);
+    }
+
+    @Test
     public void execute_invalidPersonIndexUnfilteredList_failure() {
-        Index outOfBoundIndex = Index.fromOneBased(model.getFilteredPersonList().size() + 1);
+        Index outOfBoundIndex = Index.fromOneBased(
+                model.getFilteredPersonList().size() + 1);
 
-        Academics academics = new Academics(Set.of(new Subject("Math", Level.STRONG)));
+        EditAcademicsCommand.EditAcademicsDescriptor descriptor =
+                new EditAcademicsCommand.EditAcademicsDescriptor();
+        descriptor.setSubjects(Set.of(new Subject("Math", Level.STRONG)));
 
-        EditAcademicsCommand editCommand = new EditAcademicsCommand(outOfBoundIndex, academics);
+        EditAcademicsCommand editCommand =
+                new EditAcademicsCommand(outOfBoundIndex, descriptor);
 
-        assertCommandFailure(editCommand, model, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+        assertCommandFailure(editCommand, model,
+                Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
     }
 
     @Test
     public void equals() {
-        Academics academics = new Academics(Set.of(new Subject("Math", Level.STRONG)));
+        EditAcademicsCommand.EditAcademicsDescriptor descriptor1 =
+                new EditAcademicsCommand.EditAcademicsDescriptor();
+        descriptor1.setSubjects(Set.of(new Subject("Math", Level.STRONG)));
+
+        EditAcademicsCommand.EditAcademicsDescriptor descriptor2 =
+                new EditAcademicsCommand.EditAcademicsDescriptor();
+        descriptor2.setSubjects(Set.of(new Subject("Physics", Level.BASIC)));
 
         final EditAcademicsCommand standardCommand =
-                new EditAcademicsCommand(INDEX_FIRST_PERSON, academics);
+                new EditAcademicsCommand(INDEX_FIRST_PERSON, descriptor1);
 
-        // same values -> returns true
-        Academics copyAcademics = new Academics(Set.of(new Subject("Math", Level.STRONG)));
+        // same values
         EditAcademicsCommand commandWithSameValues =
-                new EditAcademicsCommand(INDEX_FIRST_PERSON, copyAcademics);
+                new EditAcademicsCommand(INDEX_FIRST_PERSON, descriptor1);
         assertTrue(standardCommand.equals(commandWithSameValues));
 
-        // same object -> returns true
+        // same object
         assertTrue(standardCommand.equals(standardCommand));
 
-        // null -> returns false
+        // null
         assertFalse(standardCommand.equals(null));
 
-        // different types -> returns false
+        // different type
         assertFalse(standardCommand.equals(new ClearCommand()));
 
-        // different index -> returns false
+        // different index
         assertFalse(standardCommand.equals(
-                new EditAcademicsCommand(INDEX_SECOND_PERSON, academics)));
+                new EditAcademicsCommand(INDEX_SECOND_PERSON, descriptor1)));
 
-        // different academics -> returns false
-        Academics differentAcademics = new Academics(Set.of(new Subject("Physics", Level.BASIC)));
+        // different descriptor
         assertFalse(standardCommand.equals(
-                new EditAcademicsCommand(INDEX_FIRST_PERSON, differentAcademics)));
+                new EditAcademicsCommand(INDEX_FIRST_PERSON, descriptor2)));
     }
 
     @Test
     public void toStringMethod() {
         Index index = Index.fromOneBased(1);
-        Academics academics = new Academics(Set.of(new Subject("Math", Level.STRONG)));
 
-        EditAcademicsCommand command = new EditAcademicsCommand(index, academics);
+        EditAcademicsCommand.EditAcademicsDescriptor descriptor =
+                new EditAcademicsCommand.EditAcademicsDescriptor();
+        descriptor.setSubjects(Set.of(new Subject("Math", Level.STRONG)));
+
+        EditAcademicsCommand command =
+                new EditAcademicsCommand(index, descriptor);
 
         String expected = EditAcademicsCommand.class.getCanonicalName()
-                + "{index=" + index + ", academics=" + academics + "}";
+                + "{index=" + index + ", descriptor=" + descriptor + "}";
 
         assertEquals(expected, command.toString());
     }

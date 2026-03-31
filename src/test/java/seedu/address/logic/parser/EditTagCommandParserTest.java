@@ -6,6 +6,7 @@ import static seedu.address.logic.commands.CommandTestUtil.TAG_DESC_GROUP1;
 import static seedu.address.logic.commands.CommandTestUtil.TAG_DESC_JC;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_GROUP1;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_JC;
+import static seedu.address.logic.commands.EditCommand.MESSAGE_NOT_EDITED;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
@@ -92,9 +93,9 @@ public class EditTagCommandParserTest {
     }
 
     @Test
-    public void parse_resetTags_success() {
+    public void parse_clearTags_success() {
         Index targetIndex = INDEX_FIRST_PERSON;
-        String userInput = targetIndex.getOneBased() + "";
+        String userInput = targetIndex.getOneBased() + " t/";
 
         Set<Tag> tags = Set.of();
 
@@ -104,10 +105,19 @@ public class EditTagCommandParserTest {
     }
 
     @Test
-    public void parse_emptyTag_failure() {
+    public void parse_noFields_failure() {
         Index targetIndex = INDEX_FIRST_PERSON;
-        String userInput = targetIndex.getOneBased() + TAG_EMPTY;
+        String userInput = String.valueOf(targetIndex.getOneBased());
 
-        assertParseFailure(parser, userInput, Tag.MESSAGE_CONSTRAINTS);
+        assertParseFailure(parser, userInput, MESSAGE_NOT_EDITED);
+    }
+
+    @Test
+    public void parse_multipleEmptyTags_failure() {
+        Index targetIndex = INDEX_FIRST_PERSON;
+        String userInput = targetIndex.getOneBased() + " t/ t/";
+
+        assertParseFailure(parser, userInput,
+                "Multiple empty tag prefixes are not allowed.");
     }
 }

@@ -71,7 +71,7 @@ public class DeleteAcadCommand extends DeleteCommand {
             deletedSubjects.setLength(deletedSubjects.length() - 2);
         }
 
-        Academics updatedAcademics = new Academics(updatedSubjects, academics.getNotes());
+        Academics updatedAcademics = new Academics(updatedSubjects, academics.getDescription());
 
         Person editedPerson = new PersonBuilder(personToEdit)
                 .withAcademics(updatedAcademics)

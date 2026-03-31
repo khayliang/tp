@@ -19,7 +19,7 @@ public class AcademicsTest {
     }
 
     @Test
-    public void constructor_nullNotes_throwsNullPointerException() {
+    public void constructor_nullDescription_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> new Academics(new HashSet<>(), null));
     }
 
@@ -31,19 +31,19 @@ public class AcademicsTest {
         Academics academics = new Academics(subjects, Optional.of("Good progress"));
 
         assertEquals(1, academics.getSubjects().size());
-        assertTrue(academics.getNotes().isPresent());
-        assertEquals("Good progress", academics.getNotes().get());
+        assertTrue(academics.getDescription().isPresent());
+        assertEquals("Good progress", academics.getDescription().get());
     }
 
     @Test
-    public void constructor_subjectsOnly_notesEmpty() {
+    public void constructor_subjectsOnly_descriptionEmpty() {
         Set<Subject> subjects = new HashSet<>();
         subjects.add(new Subject("Math", null));
 
         Academics academics = new Academics(subjects);
 
         assertEquals(1, academics.getSubjects().size());
-        assertTrue(academics.getNotes().isEmpty());
+        assertTrue(academics.getDescription().isEmpty());
     }
 
     @Test
@@ -51,7 +51,7 @@ public class AcademicsTest {
         Academics academics = new Academics();
 
         assertTrue(academics.getSubjects().isEmpty());
-        assertTrue(academics.getNotes().isEmpty());
+        assertTrue(academics.getDescription().isEmpty());
     }
 
     @Test

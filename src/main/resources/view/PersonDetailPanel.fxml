@@ -40,6 +40,13 @@
         <Label text="Tags" styleClass="detail-section-title" />
         <FlowPane fx:id="tagsFlowPane" hgap="6" vgap="6" prefWrapLength="320" />
       </VBox>
+    </VBox>
+
+    <!-- Academics Section -->
+    <VBox spacing="4">
+      <Label text="Academics" styleClass="detail-group-title" />
+
+      <!-- Subjects -->
       <VBox spacing="6">
         <VBox.margin>
           <Insets top="4" />
@@ -47,6 +54,16 @@
         <Label text="Subjects" styleClass="detail-section-title" />
         <FlowPane fx:id="subjectsFlowPane" hgap="6" vgap="6" prefWrapLength="320" />
       </VBox>
+
+      <!-- Notes -->
+      <HBox spacing="10">
+        <Label text="Description" styleClass="detail-field-label" />
+        <Label fx:id="academicsNotesLabel"
+               styleClass="detail-field-value"
+               text="-"
+               wrapText="true"
+               HBox.hgrow="ALWAYS" />
+      </HBox>
     </VBox>
 
     <!-- Parent Details Section -->

@@ -51,7 +51,7 @@ public class PersonTest {
 
         // academics default
         assertTrue(person.getAcademics().getSubjects().isEmpty());
-        assertTrue(person.getAcademics().getNotes().isEmpty());
+        assertTrue(person.getAcademics().getDescription().isEmpty());
 
         // optionals default
         assertTrue(person.getGuardian().isEmpty());

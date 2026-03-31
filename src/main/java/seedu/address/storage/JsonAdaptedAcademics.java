@@ -21,7 +21,7 @@ class JsonAdaptedAcademics {
     public static final String MISSING_FIELD_MESSAGE_FORMAT = "Academics' %s field is missing!";
 
     private final List<JsonAdaptedSubject> subjects = new ArrayList<>();
-    private final String notes;
+    private final String description;
 
     /**
      * Constructs a {@code JsonAdaptedAcademics} with the given details.
@@ -29,12 +29,12 @@ class JsonAdaptedAcademics {
     @JsonCreator
     public JsonAdaptedAcademics(
             @JsonProperty("subjects") List<JsonAdaptedSubject> subjects,
-            @JsonProperty("notes") String notes) {
+            @JsonProperty("description") String description) {
 
         if (subjects != null) {
             this.subjects.addAll(subjects);
         }
-        this.notes = notes;
+        this.description = description;
     }
 
     /**
@@ -44,7 +44,7 @@ class JsonAdaptedAcademics {
         subjects.addAll(source.getSubjects().stream()
                 .map(JsonAdaptedSubject::new)
                 .toList());
-        notes = source.getNotes().orElse(null);
+        description = source.getDescription().orElse(null);
     }
 
     /**
@@ -54,7 +54,7 @@ class JsonAdaptedAcademics {
         if (subjects != null) {
             this.subjects.addAll(subjects);
         }
-        this.notes = null;
+        this.description = null;
     }
 
     /**
@@ -69,6 +69,6 @@ class JsonAdaptedAcademics {
 
         final Set<Subject> subjectSet = new HashSet<>(modelSubjects);
 
-        return new Academics(subjectSet, Optional.ofNullable(notes));
+        return new Academics(subjectSet, Optional.ofNullable(description));
     }
 }

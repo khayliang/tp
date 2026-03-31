@@ -45,7 +45,7 @@ public class DeleteAcadCommandTest {
                 oldAcademics.getSubjects().stream()
                         .filter(s -> !s.equals(subjectToDelete))
                         .collect(java.util.stream.Collectors.toSet()),
-                oldAcademics.getNotes());
+                oldAcademics.getDescription());
 
         Person expectedPerson = new PersonBuilder(personToEdit)
                 .withAcademics(expectedAcademics)
@@ -72,7 +72,7 @@ public class DeleteAcadCommandTest {
 
         Academics academics = new Academics(
                 Set.of(math, physics),
-                personToEdit.getAcademics().getNotes()
+                personToEdit.getAcademics().getDescription()
         );
 
         // update person with subjects
@@ -94,7 +94,7 @@ public class DeleteAcadCommandTest {
         // expected result: empty subjects
         Academics expectedAcademics = new Academics(
                 Set.of(),
-                target.getAcademics().getNotes()
+                target.getAcademics().getDescription()
         );
 
         Person expectedPerson = new PersonBuilder(target)
@@ -120,7 +120,7 @@ public class DeleteAcadCommandTest {
 
         Academics academics = new Academics(
                 Set.of(math, physics),
-                personToEdit.getAcademics().getNotes()
+                personToEdit.getAcademics().getDescription()
         );
 
         Person updatedPerson = new PersonBuilder(personToEdit)
@@ -147,7 +147,7 @@ public class DeleteAcadCommandTest {
 
         Academics academics = new Academics(
                 Set.of(math),
-                personToEdit.getAcademics().getNotes()
+                personToEdit.getAcademics().getDescription()
         );
 
         Person updatedPerson = new PersonBuilder(personToEdit)
@@ -171,7 +171,7 @@ public class DeleteAcadCommandTest {
 
         Academics academics = new Academics(
                 Set.of(math),
-                personToEdit.getAcademics().getNotes()
+                personToEdit.getAcademics().getDescription()
         );
 
         Person updatedPerson = new PersonBuilder(personToEdit)

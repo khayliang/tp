@@ -74,6 +74,9 @@ public class PersonDetailPanel extends UiPart<Region> {
     @FXML
     private FlowPane subjectsFlowPane;
 
+    @FXML
+    private Label academicsNotesLabel;
+
     /**
      * Creates a {@code PersonDetailPanel}.
      */
@@ -128,6 +131,7 @@ public class PersonDetailPanel extends UiPart<Region> {
             }
         }
 
+        // Academics
         if (person.getAcademics().getSubjects().isEmpty()) {
             Label noSubjectsLabel = new Label("-");
             noSubjectsLabel.getStyleClass().add("detail-field-value");
@@ -143,6 +147,9 @@ public class PersonDetailPanel extends UiPart<Region> {
                 subjectsFlowPane.getChildren().add(subjectLabel);
             }
         }
+
+        String description = person.getAcademics().getDescription().orElse("");
+        academicsNotesLabel.setText(description.isEmpty() ? "-" : description);
 
         // Display payment history
         if (person.getPaymentHistory().getPaidDates().isEmpty()) {

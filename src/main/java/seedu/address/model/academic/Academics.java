@@ -14,7 +14,7 @@ import java.util.Set;
  * Represents a student's academic profile.
  *
  * An {@code Academics} object encapsulates a set of {@link Subject}s
- * and optional notes describing the student's academic progress or remarks.
+ * and optional description describing the student's academic progress or remarks.
  *
  * This abstraction allows future extensions such as grades, performance tracking,
  * or historical academic data without modifying the {@code Person} class.
@@ -22,27 +22,27 @@ import java.util.Set;
 public class Academics {
 
     private final Set<Subject> subjects;
-    private final Optional<String> notes;
+    private final Optional<String> description;
 
     /**
-     * Constructs an {@code Academics} object with subjects and optional notes.
+     * Constructs an {@code Academics} object with subjects and optional description.
      */
-    public Academics(Set<Subject> subjects, Optional<String> notes) {
+    public Academics(Set<Subject> subjects, Optional<String> description) {
         requireNonNull(subjects);
-        requireNonNull(notes);
+        requireNonNull(description);
         this.subjects = new HashSet<>(subjects);
-        this.notes = notes;
+        this.description = description;
     }
 
     /**
-     * Constructs an {@code Academics} object with subjects and no notes.
+     * Constructs an {@code Academics} object with subjects and no description.
      */
     public Academics(Set<Subject> subjects) {
         this(subjects, Optional.empty());
     }
 
     /**
-     * Constructs an {@code Academics} object with empty subjects and no notes.
+     * Constructs an {@code Academics} object with empty subjects and no description.
      */
     public Academics() {
         this(new HashSet<>(), Optional.empty());
@@ -52,14 +52,14 @@ public class Academics {
         return Collections.unmodifiableSet(subjects);
     }
 
+    public Optional<String> getDescription() {
+        return description;
+    }
+
     public List<Subject> getSortedSubjects() {
         return subjects.stream()
                 .sorted(Comparator.comparing(s -> s.getName().toLowerCase()))
                 .toList();
-    }
-
-    public Optional<String> getNotes() {
-        return notes;
     }
 
     @Override
@@ -67,11 +67,11 @@ public class Academics {
         return other == this
                 || (other instanceof Academics
                 && subjects.equals(((Academics) other).subjects)
-                && notes.equals(((Academics) other).notes));
+                && description.equals(((Academics) other).description));
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(subjects, notes);
+        return Objects.hash(subjects, description);
     }
 }
