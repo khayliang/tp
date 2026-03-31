@@ -56,14 +56,15 @@ public class AddCommandParserTest {
     }
 
     @Test
-<<<<<<< HEAD
     public void parse_validPaymentSubcommand_delegatesToPaymentParser() throws Exception {
         AddPaymentCommandParser addPaymentParser = new AddPaymentCommandParser();
         String paymentDetails = INDEX_FIRST_PERSON.getOneBased() + " " + PREFIX_DATE + VALID_PAYMENT_DATE;
         String userInput = AddPaymentCommand.SUB_COMMAND_WORD + " " + paymentDetails;
 
         assertParseSuccess(parser, userInput, addPaymentParser.parse(paymentDetails));
-=======
+    }
+
+    @Test
     public void parse_validAppointmentSubcommand_delegatesToAppointmentParser() throws Exception {
         AddApptCommandParser addApptParser = new AddApptCommandParser();
         String appointmentDetails = INDEX_FIRST_PERSON.getOneBased()
@@ -80,6 +81,5 @@ public class AddCommandParserTest {
         String userInput = AddAttdCommand.SUB_COMMAND_WORD + " " + attendanceDetails;
 
         assertParseSuccess(parser, userInput, addAttdParser.parse(attendanceDetails));
->>>>>>> master
     }
 }
