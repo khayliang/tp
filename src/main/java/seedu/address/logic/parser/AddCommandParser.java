@@ -3,6 +3,7 @@ package seedu.address.logic.parser;
 import java.util.HashMap;
 import java.util.Map;
 
+import seedu.address.logic.commands.AddAcademicsCommand;
 import seedu.address.logic.commands.AddApptCommand;
 import seedu.address.logic.commands.AddAttdCommand;
 import seedu.address.logic.commands.AddCommand;
@@ -24,6 +25,7 @@ public class AddCommandParser implements Parser<AddCommand> {
         parsers.put(AddPersonCommand.SUB_COMMAND_WORD, new AddPersonCommandParser());
         parsers.put(AddApptCommand.SUB_COMMAND_WORD, new AddApptCommandParser());
         parsers.put(AddAttdCommand.SUB_COMMAND_WORD, new AddAttdCommandParser());
+        parsers.put(AddAcademicsCommand.SUB_COMMAND_WORD, new AddAcademicsCommandParser());
         this.dispatcher = new SubcommandDispatcherParser<>(parsers, AddCommand.MESSAGE_USAGE);
     }
 
