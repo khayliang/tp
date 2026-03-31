@@ -1,5 +1,8 @@
 package seedu.address.storage;
 
+import static java.util.Objects.requireNonNull;
+
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -15,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import seedu.address.commons.exceptions.IllegalValueException;
+import seedu.address.commons.util.AppClock;
 import seedu.address.model.academic.Academics;
 import seedu.address.model.attendance.Attendance;
 import seedu.address.model.attendance.AttendanceRecords;
@@ -43,6 +47,8 @@ class JsonAdaptedPerson {
             "Attendance history date-time must be in ISO 8601 local format, e.g. 2026-01-29T08:00:00";
     private static final String PAYMENT_DATE_MESSAGE_CONSTRAINTS =
             "Payment date must be in ISO 8601 local date format, e.g. 2026-01-13";
+    private static final String PAYMENT_DATE_AFTER_TODAY_MESSAGE_CONSTRAINTS =
+            "Payment date cannot be later than today.";
     private static final String PAYMENT_DUE_DATE_MESSAGE_CONSTRAINTS =
             "Payment due date must be in ISO 8601 local date format, e.g. 2026-01-13";
     private static final String TUITION_FEE_MESSAGE_CONSTRAINTS =
@@ -176,6 +182,17 @@ class JsonAdaptedPerson {
      * @throws IllegalValueException if there were any data constraints violated in the adapted person.
      */
     public Person toModelType() throws IllegalValueException {
+        return toModelType(AppClock.getClock());
+    }
+
+    /**
+     * Converts this Jackson-friendly adapted person object into the model's {@code Person} object
+     * using the provided {@code clock} as the source of "today" for date validation.
+     *
+     * @throws IllegalValueException if there were any data constraints violated in the adapted person.
+     */
+    public Person toModelType(Clock clock) throws IllegalValueException {
+        requireNonNull(clock);
 
         // ---------- Validate core fields ----------
         if (name == null) {
@@ -292,10 +309,15 @@ class JsonAdaptedPerson {
 
         // ---------- Payment ----------
         Set<LocalDate> modelPaidDates = new java.util.LinkedHashSet<>();
+        LocalDate today = LocalDate.now(clock);
         if (paymentDates != null) {
             for (String dateString : paymentDates) {
                 try {
-                    modelPaidDates.add(LocalDate.parse(dateString, DATE_FORMATTER));
+                    LocalDate parsedPaymentDate = LocalDate.parse(dateString, DATE_FORMATTER);
+                    if (parsedPaymentDate.isAfter(today)) {
+                        throw new IllegalValueException(PAYMENT_DATE_AFTER_TODAY_MESSAGE_CONSTRAINTS);
+                    }
+                    modelPaidDates.add(parsedPaymentDate);
                 } catch (DateTimeParseException e) {
                     throw new IllegalValueException(PAYMENT_DATE_MESSAGE_CONSTRAINTS);
                 }
@@ -304,7 +326,7 @@ class JsonAdaptedPerson {
 
         PaymentHistory modelPayment;
         if (!modelPaidDates.isEmpty()) {
-            modelPayment = new PaymentHistory(modelPaidDates.toArray(new LocalDate[0]));
+            modelPayment = new PaymentHistory(modelPaidDates.toArray(LocalDate[]::new));
         } else {
             modelPayment = PaymentHistory.EMPTY;
         }
@@ -320,7 +342,7 @@ class JsonAdaptedPerson {
             }
         }
 
-        LocalDate modelPaymentDueDate = LocalDate.now().withDayOfMonth(1);
+        LocalDate modelPaymentDueDate = LocalDate.now(clock).withDayOfMonth(1);
         if (paymentDueDate != null) {
             try {
                 modelPaymentDueDate = LocalDate.parse(paymentDueDate, DATE_FORMATTER);

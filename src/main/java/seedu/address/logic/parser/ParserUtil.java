@@ -3,6 +3,7 @@ package seedu.address.logic.parser;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -30,6 +31,8 @@ public class ParserUtil {
     public static final String MESSAGE_INVALID_INDEX = "Index is not a non-zero unsigned integer.";
     public static final String MESSAGE_INVALID_DATE =
             "Date must be in ISO 8601 local date format, e.g. 2026-01-13";
+    public static final String MESSAGE_DATE_AFTER_TODAY =
+            "Date cannot be later than today.";
     public static final String MESSAGE_INVALID_DATE_TIME =
             "Date-time must be in ISO 8601 local format, e.g. 2026-01-13T08:00:00";
     public static final String MESSAGE_INVALID_AMOUNT = "Amount must be a non-negative number.";
@@ -215,6 +218,22 @@ public class ParserUtil {
         } catch (IllegalArgumentException e) {
             throw new ParseException(MESSAGE_INVALID_RECURRENCE);
         }
+    }
+
+    /**
+     * Parses a {@code String date} into a {@code LocalDate} and validates that it
+     * does not occur after today in the provided {@code clock}'s local date.
+     *
+     * @throws ParseException if the given {@code date} is invalid or after today.
+     */
+    public static LocalDate parseIsoDateNotAfterToday(String date, Clock clock) throws ParseException {
+        requireNonNull(clock);
+        LocalDate parsedDate = parseIsoDate(date);
+        LocalDate today = LocalDate.now(clock);
+        if (parsedDate.isAfter(today)) {
+            throw new ParseException(MESSAGE_DATE_AFTER_TODAY);
+        }
+        return parsedDate;
     }
 
     /**

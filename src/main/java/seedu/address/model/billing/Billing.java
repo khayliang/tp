@@ -5,6 +5,7 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
 
 import java.time.LocalDate;
 
+import seedu.address.commons.util.AppClock;
 import seedu.address.model.recurrence.Recurrence;
 
 /**
@@ -42,7 +43,7 @@ public class Billing {
     public static Billing defaultBilling() {
         return new Billing(
                 Recurrence.MONTHLY,
-                LocalDate.now().withDayOfMonth(1),
+                AppClock.today().withDayOfMonth(1),
                 DEFAULT_TUITION_FEE,
                 PaymentHistory.EMPTY);
     }
