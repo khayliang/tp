@@ -122,18 +122,37 @@ Examples:
 * `edit student 1 p/91234567 e/johndoe@example.com` edits the phone number and email address of the 1st person.
 * `edit student 2 n/Betsy Crower` edits the name of the 2nd person.
 
-### Editing billing amount : `edit billing`
+### Editing billing details : `edit billing`
 
-Updates tuition fee amount for an existing student contact.
+Updates billing details for an existing student contact.
 
-Format: `edit billing INDEX a/AMOUNT`
+Format: `edit billing INDEX [a/AMOUNT] [d/DATE]`
 
-* Updates billing amount for the person at the specified `INDEX`.
+* Updates tuition fee and/or payment due date for the person at the specified `INDEX`.
+* At least one of `a/` or `d/` must be provided.
 * `a/` must be a non-negative number.
-* This command updates tuition fee only and does not change payment history.
+* `d/` accepts ISO 8601 local date (`YYYY-MM-DD`).
+* This command records payment history and advances the billing due date based on recurrence.
+
+Examples:
+* `edit billing 1 d/2026-03-05`
+
+### Editing billing details : `edit billing`
+
+Updates billing details for an existing student contact.
+
+Format: `edit billing INDEX [a/AMOUNT] [d/DATE]`
+
+* Updates tuition fee and/or payment due date for the person at the specified `INDEX`.
+* At least one of `a/` or `d/` must be provided.
+* `a/` must be a non-negative number.
+* `d/` accepts ISO 8601 local date (`YYYY-MM-DD`).
+* This command updates billing configuration only and does not change payment history.
 
 Examples:
 * `edit billing 1 a/250`
+* `edit billing 1 d/2026-03-20`
+* `edit billing 1 a/250 d/2026-03-20`
 
 ### Adding an appointment : `add appt`
 
@@ -343,7 +362,7 @@ Action | Format, Examples
 **Delete Student** | `delete student INDEX`<br> e.g., `delete student 3`
 **Delete Payment** | `delete payment INDEX d/ISO8601_DATE`<br> e.g., `delete payment 1 d/2026-03-01`
 **Edit Student** | `edit student INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS]`<br> e.g., `edit student 2 n/James Lee e/jameslee@example.com`
-**Edit Billing** | `edit billing INDEX a/AMOUNT`<br> e.g., `edit billing 1 a/250`
+**Edit Billing** | `edit billing INDEX [a/AMOUNT] [d/ISO8601_DATE]`<br> e.g., `edit billing 1 a/250 d/2026-03-20`
 **Find** | `find person KEYWORD [MORE_KEYWORDS]`<br> e.g., `find person James Jake`
 **Find Payment** | `find payment d/YYYY-MM`<br> e.g., `find payment d/2026-03`
 **View Appointments** | `viewappt [d/DATE]`<br> e.g., `viewappt d/2026-02-13`

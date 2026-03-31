@@ -42,7 +42,7 @@ public class DeletePaymentCommandParserTest {
     @Test
     public void parse_futureDate_failure() {
         String futureDate = LocalDate.now().plusDays(1).toString();
-        assertParseFailure(parser, "1 " + PREFIX_DATE + futureDate, ParserUtil.MESSAGE_DATE_AFTER_TODAY);
+        assertParseFailure(parser, "1 " + PREFIX_DATE + futureDate, ParserUtil.MESSAGE_INVALID_DATE_AFTER_TODAY);
     }
 
     @Test

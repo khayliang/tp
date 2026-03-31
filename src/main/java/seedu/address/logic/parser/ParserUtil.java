@@ -31,7 +31,7 @@ public class ParserUtil {
     public static final String MESSAGE_INVALID_INDEX = "Index is not a non-zero unsigned integer.";
     public static final String MESSAGE_INVALID_DATE =
             "Date must be in ISO 8601 local date format, e.g. 2026-01-13";
-    public static final String MESSAGE_DATE_AFTER_TODAY =
+    public static final String MESSAGE_INVALID_DATE_AFTER_TODAY =
             "Date cannot be later than today.";
     public static final String MESSAGE_INVALID_DATE_TIME =
             "Date-time must be in ISO 8601 local format, e.g. 2026-01-13T08:00:00";
@@ -231,7 +231,7 @@ public class ParserUtil {
         LocalDate parsedDate = parseIsoDate(date);
         LocalDate today = LocalDate.now(clock);
         if (parsedDate.isAfter(today)) {
-            throw new ParseException(MESSAGE_DATE_AFTER_TODAY);
+            throw new ParseException(MESSAGE_INVALID_DATE_AFTER_TODAY);
         }
         return parsedDate;
     }
