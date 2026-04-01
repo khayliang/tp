@@ -5,6 +5,7 @@ import java.util.Map;
 
 import seedu.address.logic.commands.FindAcadCommand;
 import seedu.address.logic.commands.FindCommand;
+import seedu.address.logic.commands.FindParentCommand;
 import seedu.address.logic.commands.FindPaymentCommand;
 import seedu.address.logic.commands.FindPersonCommand;
 import seedu.address.logic.commands.FindTagCommand;
@@ -26,6 +27,7 @@ public class FindCommandParser implements Parser<FindCommand> {
         parsers.put(FindTagCommand.SUB_COMMAND_WORD, new FindTagCommandParser());
         parsers.put(FindAcadCommand.SUB_COMMAND_WORD, new FindAcadCommandParser());
         parsers.put(FindPaymentCommand.SUB_COMMAND_WORD, new FindPaymentCommandParser());
+        parsers.put(FindParentCommand.SUB_COMMAND_WORD, new FindParentCommandParser());
         this.dispatcher = new SubcommandDispatcherParser<>(parsers, FindCommand.MESSAGE_USAGE);
     }
 
