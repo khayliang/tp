@@ -92,13 +92,4 @@ public interface Model {
      */
     void updateFilteredPersonListWithAnd(Predicate<Person> predicate);
 
-    /**
-     * Returns the current list display mode.
-     */
-    ListDisplayMode getListDisplayMode();
-
-    /**
-     * Sets the current list display mode.
-     */
-    void setListDisplayMode(ListDisplayMode listDisplayMode);
 }

@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
 import seedu.address.model.AddressBook;
-import seedu.address.model.ListDisplayMode;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
@@ -70,7 +69,7 @@ public class AddApptCommandTest {
     }
 
     @Test
-    public void execute_validIndexAppointmentDisplayMode_success() {
+    public void execute_validIndexFilteredAppointmentResults_success() {
         Person laterAppointmentPerson = new PersonBuilder().withName("Later Appointment")
                 .withPhone("90000001").withEmail("later@example.com").withAddress("Later Street 1")
                 .withAppointment("2026-01-20T10:00:00", "Later lesson", Recurrence.NONE).build();
@@ -83,13 +82,13 @@ public class AddApptCommandTest {
         addressBook.addPerson(earlierAppointmentPerson);
 
         model = new ModelManager(addressBook, new UserPrefs());
-        model.setListDisplayMode(ListDisplayMode.APPOINTMENT);
+        model.updateFilteredPersonList(new AppointmentInWeekPredicate(LocalDate.of(2026, 1, 20)));
 
         LocalDateTime newAppointmentStart = LocalDateTime.parse(VALID_APPOINTMENT_START);
         AddApptCommand addCommand = new AddApptCommand(INDEX_FIRST_PERSON, newAppointmentStart,
                 Recurrence.NONE, VALID_APPOINTMENT_DESCRIPTION);
 
-        Person editedPerson = new PersonBuilder(earlierAppointmentPerson)
+        Person editedPerson = new PersonBuilder(laterAppointmentPerson)
                 .addAppointment(new Appointment(Recurrence.NONE, newAppointmentStart, newAppointmentStart,
                         AttendanceRecords.EMPTY, VALID_APPOINTMENT_DESCRIPTION))
                 .build();
@@ -97,18 +96,17 @@ public class AddApptCommandTest {
                 Messages.format(editedPerson), newAppointmentStart.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
 
         Model expectedModel = new ModelManager(new AddressBook(addressBook), new UserPrefs());
-        expectedModel.setListDisplayMode(ListDisplayMode.APPOINTMENT);
-        expectedModel.setPerson(earlierAppointmentPerson, editedPerson);
+        expectedModel.updateFilteredPersonList(new AppointmentInWeekPredicate(LocalDate.of(2026, 1, 20)));
+        expectedModel.setPerson(laterAppointmentPerson, editedPerson);
 
         CommandResult expectedCommandResult = new CommandResult(expectedMessage, editedPerson);
         assertCommandSuccess(addCommand, model, expectedCommandResult, expectedModel);
     }
 
     @Test
-    public void execute_validIndexFilteredListPersonDisplayMode_success() {
+    public void execute_validIndexSingleItemFilteredList_success() {
         model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
         showPersonAtIndex(model, INDEX_SECOND_PERSON);
-        model.setListDisplayMode(ListDisplayMode.PERSON);
 
         Person personToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         LocalDateTime appointmentStart = LocalDateTime.parse(VALID_APPOINTMENT_START);
@@ -123,7 +121,6 @@ public class AddApptCommandTest {
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         showPersonAtIndex(expectedModel, INDEX_SECOND_PERSON);
-        expectedModel.setListDisplayMode(ListDisplayMode.PERSON);
         expectedModel.setPerson(personToEdit, editedPerson);
 
         CommandResult expectedCommandResult = new CommandResult(expectedMessage, editedPerson);
@@ -131,7 +128,7 @@ public class AddApptCommandTest {
     }
 
     @Test
-    public void execute_validIndexFilteredListAppointmentDisplayMode_success() {
+    public void execute_validIndexAppointmentFilteredList_success() {
         Person laterAppointmentPerson = new PersonBuilder().withName("Later Appointment")
                 .withPhone("90000101").withEmail("later2@example.com").withAddress("Later Street 2")
                 .withAppointment("2026-01-20T10:00:00", "Later lesson", Recurrence.NONE).build();
@@ -150,13 +147,12 @@ public class AddApptCommandTest {
         AppointmentInWeekPredicate targetWeekPredicate = new AppointmentInWeekPredicate(LocalDate.of(2026, 1, 20));
         model = new ModelManager(addressBook, new UserPrefs());
         model.updateFilteredPersonList(targetWeekPredicate);
-        model.setListDisplayMode(ListDisplayMode.APPOINTMENT);
 
         LocalDateTime newAppointmentStart = LocalDateTime.parse("2026-01-22T08:00:00");
         AddApptCommand addCommand = new AddApptCommand(INDEX_FIRST_PERSON, newAppointmentStart,
                 Recurrence.NONE, VALID_APPOINTMENT_DESCRIPTION);
 
-        Person editedPerson = new PersonBuilder(earlierAppointmentPerson)
+        Person editedPerson = new PersonBuilder(laterAppointmentPerson)
                 .addAppointment(new Appointment(Recurrence.NONE, newAppointmentStart, newAppointmentStart,
                         AttendanceRecords.EMPTY, VALID_APPOINTMENT_DESCRIPTION))
                 .build();
@@ -165,8 +161,7 @@ public class AddApptCommandTest {
 
         Model expectedModel = new ModelManager(new AddressBook(addressBook), new UserPrefs());
         expectedModel.updateFilteredPersonList(targetWeekPredicate);
-        expectedModel.setListDisplayMode(ListDisplayMode.APPOINTMENT);
-        expectedModel.setPerson(earlierAppointmentPerson, editedPerson);
+        expectedModel.setPerson(laterAppointmentPerson, editedPerson);
 
         CommandResult expectedCommandResult = new CommandResult(expectedMessage, editedPerson);
         assertCommandSuccess(addCommand, model, expectedCommandResult, expectedModel);

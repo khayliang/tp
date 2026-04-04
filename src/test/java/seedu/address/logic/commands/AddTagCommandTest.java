@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Test;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
 import seedu.address.model.AddressBook;
-import seedu.address.model.ListDisplayMode;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
@@ -157,8 +156,8 @@ public class AddTagCommandTest {
     }
 
     @Test
-    public void execute_validIndexDifferentDisplayMode_success() {
-        model.setListDisplayMode(ListDisplayMode.APPOINTMENT);
+    public void execute_validIndexSingleItemFilteredList_success() {
+        showPersonAtIndex(model, INDEX_FIRST_PERSON);
 
         Person personToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
 
@@ -178,7 +177,7 @@ public class AddTagCommandTest {
                 Messages.format(editedPerson));
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
-        expectedModel.setListDisplayMode(ListDisplayMode.APPOINTMENT);
+        showPersonAtIndex(expectedModel, INDEX_FIRST_PERSON);
         expectedModel.setPerson(personToEdit, editedPerson);
 
         CommandResult expectedCommandResult = new CommandResult(expectedMessage, editedPerson);

@@ -16,7 +16,6 @@ import seedu.address.logic.Logic;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.ListDisplayMode;
 
 /**
  * The Main Window. Provides the basic application layout containing
@@ -190,9 +189,6 @@ public class MainWindow extends UiPart<Stage> {
             CommandResult commandResult = logic.execute(commandText);
             logger.info("Result: " + commandResult.getFeedbackToUser());
             resultDisplay.setFeedbackToUser(commandResult.getFeedbackToUser());
-
-            boolean isApptMode = logic.getListDisplayMode() == ListDisplayMode.APPOINTMENT;
-            personListPanel.setShowAppointments(isApptMode);
 
             if (commandResult.getViewIndex() != null) {
                 personListPanel.selectIndex(commandResult.getViewIndex().getZeroBased());

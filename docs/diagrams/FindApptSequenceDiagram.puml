@@ -1,0 +1,91 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":FindCommandParser" as FindCommandParser LOGIC_COLOR
+participant ":FindApptCommandParser" as FindApptCommandParser LOGIC_COLOR
+participant "c:FindApptCommand" as FindApptCommand LOGIC_COLOR
+participant ":AppointmentInWeekPredicate" as AppointmentInWeekPredicate LOGIC_COLOR
+participant "r:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant "m:Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute("find appt d/2026-02-13")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand(commandText)
+activate AddressBookParser
+
+create FindCommandParser
+AddressBookParser -> FindCommandParser
+activate FindCommandParser
+
+FindCommandParser --> AddressBookParser
+deactivate FindCommandParser
+
+AddressBookParser -> FindCommandParser : parse(" appt d/2026-02-13")
+activate FindCommandParser
+
+create FindApptCommandParser
+FindCommandParser -> FindApptCommandParser
+activate FindApptCommandParser
+
+FindApptCommandParser --> FindCommandParser
+deactivate FindApptCommandParser
+
+FindCommandParser -> FindApptCommandParser : parse("d/2026-02-13")
+activate FindApptCommandParser
+
+create FindApptCommand
+FindApptCommandParser -> FindApptCommand : FindApptCommand(targetDate)
+activate FindApptCommand
+
+create AppointmentInWeekPredicate
+FindApptCommand -> AppointmentInWeekPredicate : AppointmentInWeekPredicate(targetDate)
+activate AppointmentInWeekPredicate
+AppointmentInWeekPredicate --> FindApptCommand
+deactivate AppointmentInWeekPredicate
+
+FindApptCommand --> FindApptCommandParser : c
+deactivate FindApptCommand
+
+FindApptCommandParser --> FindCommandParser : c
+deactivate FindApptCommandParser
+
+FindCommandParser --> AddressBookParser : c
+deactivate FindCommandParser
+
+AddressBookParser --> LogicManager : c
+deactivate AddressBookParser
+
+LogicManager -> FindApptCommand : execute(m)
+activate FindApptCommand
+
+FindApptCommand -> Model : updateFilteredPersonList(predicate)
+activate Model
+Model --> FindApptCommand
+deactivate Model
+
+FindApptCommand -> Model : getFilteredPersonList()
+activate Model
+Model --> FindApptCommand : matching students
+deactivate Model
+
+create CommandResult
+FindApptCommand -> CommandResult : CommandResult(feedback)
+activate CommandResult
+CommandResult --> FindApptCommand : r
+deactivate CommandResult
+
+FindApptCommand --> LogicManager : r
+deactivate FindApptCommand
+
+[<-- LogicManager
+deactivate LogicManager
+@enduml

@@ -209,24 +209,21 @@ How the `find` command works:
 1. `FindCommandParser` uses a dispatcher to route the input by subcommand name (`person`, `tag`, `subject`, `payment`, etc.) to the appropriate concrete parser.
 1. The concrete parser validates the input arguments and constructs the corresponding `Find...Command` with an appropriate predicate.
 1. During execution, the command applies the predicate to the `Model` using `updateFilteredPersonList(...)`, which updates the currently displayed list.
-1. The command also updates the list display mode (e.g., `PERSON`) to ensure the UI reflects the correct view.
-1. `LogicManager` checks whether the underlying `AddressBook` has changed. Since `find` only modifies transient model state (filtered list and display mode), no changes are detected in the `AddressBook`, and the storage step is therefore skipped.
+1. `LogicManager` checks whether the underlying `AddressBook` has changed. Since `find` only modifies transient model state (the filtered list), no changes are detected in the `AddressBook`, and the storage step is therefore skipped.
 
-### View appointments command
+### Find appointments command
 
-The `viewappt` command is simpler than `edit`, so a single sequence diagram is enough. The example below uses `viewappt d/2026-02-13`.
+The `find appt` command is simpler than `edit`, so a single sequence diagram is enough. The example below uses `find appt d/2026-02-13`. The PlantUML source is in `docs/diagrams/FindApptSequenceDiagram.puml`.
 
-<img src="images/ViewApptSequenceDiagram.png" width="760" />
+How the `find appt` command works:
 
-How the `viewappt` command works:
-
-1. `AddressBookParser` recognizes `viewappt` and delegates the arguments to `ViewApptCommandParser`.
-1. `ViewApptCommandParser` parses the optional `d/DATE` value. If the date is omitted, it uses the current local date instead.
-1. `ViewApptCommand` constructs an `AppointmentInWeekPredicate`, which computes the Monday-Sunday week containing the target date.
+1. `AddressBookParser` recognizes `find` and delegates the remaining input to `FindCommandParser`.
+1. `FindCommandParser` dispatches the `appt` subcommand to `FindApptCommandParser`.
+1. `FindApptCommandParser` parses the optional `d/DATE` value. If omitted, it uses the current local date.
+1. `FindApptCommand` constructs an `AppointmentInWeekPredicate`, which computes the Monday-Sunday week containing the target date.
 1. During execution, the command updates the filtered person list using that predicate so that only students with appointments in the target week remain visible.
-1. The command switches the `Model` display mode to `APPOINTMENT`, allowing the UI to show appointment details for the filtered students.
 1. The command returns a `CommandResult` containing the number of matching appointments and the computed week range.
-1. Unlike `edit`, `viewappt` does not modify the address book, so `LogicManager` does not save any data to storage after execution.
+1. Unlike `edit`, `find appt` does not modify the address book, so `LogicManager` does not save any data to storage after execution.
 
 ### Subject-related commands
 

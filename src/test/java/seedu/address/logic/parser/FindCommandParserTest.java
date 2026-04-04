@@ -4,10 +4,12 @@ import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.address.logic.commands.FindApptCommand;
 import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.commands.FindPersonCommand;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
@@ -37,6 +39,18 @@ public class FindCommandParserTest {
         FindPersonCommand expectedFindCommand =
                 new FindPersonCommand(new NameContainsKeywordsPredicate(Arrays.asList("Alice", "Bob")));
         assertParseSuccess(parser, "StUdEnT Alice Bob", expectedFindCommand);
+    }
+
+    @Test
+    public void parse_validApptArgs_returnsFindApptCommand() {
+        FindApptCommand expectedFindCommand = new FindApptCommand(LocalDate.parse("2026-02-13"));
+        assertParseSuccess(parser, "appt d/2026-02-13", expectedFindCommand);
+    }
+
+    @Test
+    public void parse_emptyApptArgs_returnsFindApptCommandWithCurrentDate() {
+        FindApptCommand expectedFindCommand = new FindApptCommand(seedu.address.commons.util.AppClock.today());
+        assertParseSuccess(parser, "appt", expectedFindCommand);
     }
 
 }

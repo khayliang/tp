@@ -432,21 +432,21 @@ Examples:
 * `delete appt 1 1` deletes the 1st appointment of the 1st student.
 * `delete appt 2 3` deletes the 3rd appointment of the 2nd student.
 
-### Viewing appointments for a week : `viewappt`
+### Finding students with appointments for a week : `find appt`
 
 Shows all students whose next appointment date falls within the Monday-to-Sunday week containing the given date.
 
-Format: `viewappt [d/DATE]`
+Format: `find appt [d/DATE]`
 
 * If `d/DATE` is omitted, the current local date is used.
 * `DATE` must be in ISO format (`YYYY-MM-DD`).
 * At most one `d/` prefix may be provided.
 * Text outside the optional `d/` prefix is invalid.
-* The displayed list switches to appointment view and shows the recorded appointment for each matching student.
+* The standard student list remains in use; only the displayed students are filtered.
 
 Examples:
-* `viewappt` shows appointments for the current week.
-* `viewappt d/2026-02-13` shows appointments for the week containing 13 February 2026.
+* `find appt` shows students with appointments in the current week.
+* `find appt d/2026-02-13` shows students with appointments in the week containing 13 February 2026.
 
 ### Recording appointment attendance : `add attd`
 
@@ -585,7 +585,7 @@ Action | Format | Example
 -------|--------|--------
 **Add appointment** | `add appt INDEX d/DATETIME [r/RECURRENCE] dsc/DESCRIPTION` | `add appt 1 d/2026-01-29T08:00:00 dsc/Weekly algebra practice`
 **Delete appointment** | `delete appt PERSON_INDEX APPT_INDEX` | `delete appt 1 2`
-**View weekly appointments** | `viewappt [d/DATE]` | `viewappt d/2026-02-13`
+**Find weekly appointments** | `find appt [d/DATE]` | `find appt d/2026-02-13`
 **Add attendance** | `add attd PERSON_INDEX APPT_INDEX [y\|n] [d/DATE]` | `add attd 1 2 y d/2026-01-29`
 
 ### General

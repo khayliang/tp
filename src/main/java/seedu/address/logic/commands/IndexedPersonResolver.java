@@ -7,10 +7,8 @@ import java.util.List;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
-import seedu.address.model.ListDisplayMode;
 import seedu.address.model.Model;
 import seedu.address.model.person.Person;
-import seedu.address.model.person.PersonComparators;
 
 /**
  * Shared helper for resolving a target person from the currently displayed list by index.
@@ -39,11 +37,6 @@ final class IndexedPersonResolver {
      * Returns persons in the same order as currently displayed in the UI.
      */
     private static List<Person> getDisplayedPersonList(Model model) {
-        if (model.getListDisplayMode() == ListDisplayMode.APPOINTMENT) {
-            return model.getFilteredPersonList().stream()
-                    .sorted(PersonComparators.APPOINTMENT_ORDER)
-                    .toList();
-        }
         return model.getFilteredPersonList();
     }
 }

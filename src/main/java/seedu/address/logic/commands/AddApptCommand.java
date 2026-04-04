@@ -10,12 +10,10 @@ import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
-import seedu.address.model.ListDisplayMode;
 import seedu.address.model.Model;
 import seedu.address.model.attendance.AttendanceRecords;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.PersonBuilder;
-import seedu.address.model.person.PersonComparators;
 import seedu.address.model.recurrence.Recurrence;
 import seedu.address.model.session.Appointment;
 
@@ -72,7 +70,7 @@ public class AddApptCommand extends AddCommand {
 
     private Person getTargetPerson(Model model) throws CommandException {
         requireNonNull(model);
-        List<Person> lastShownList = getDisplayedPersonList(model);
+        List<Person> lastShownList = model.getFilteredPersonList();
 
         if (index.getZeroBased() >= lastShownList.size()) {
             throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
@@ -80,16 +78,6 @@ public class AddApptCommand extends AddCommand {
 
         return lastShownList.get(index.getZeroBased());
     }
-
-    private List<Person> getDisplayedPersonList(Model model) {
-        if (model.getListDisplayMode() == ListDisplayMode.APPOINTMENT) {
-            return model.getFilteredPersonList().stream()
-                    .sorted(PersonComparators.APPOINTMENT_ORDER)
-                    .toList();
-        }
-        return model.getFilteredPersonList();
-    }
-
     @Override
     public boolean equals(Object other) {
         if (other == this) {
