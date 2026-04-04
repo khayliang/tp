@@ -186,36 +186,36 @@ Examples:
 
 Deletes one or more tags from a student by their tag index numbers.
 
-Format: `delete tag INDEX t/TAG_INDEX [t/TAG_INDEX]…​`
+Format: `delete appt INDEX s/SESSION_INDEX [s/SESSION_INDEX]…`
 
-* Deletes tag(s) from the student at the specified `INDEX`. The index refers to the index number shown in the displayed student list. The index **must be a positive integer** 1, 2, 3, …​
-* `TAG_INDEX` refers to the numbered position of the tag as shown in the student's tag list in the app. The index **must be a positive integer** 1, 2, 3, …​
-* At least one `t/` prefix must be provided.
+* Deletes one or more sessions (`s/SESSION_INDEX`) for the student at `INDEX`.
+* `INDEX` refers to the index number shown in the displayed student list.
+* `SESSION_INDEX` refers to the numbered appointment shown for that student in the app.
 * All specified tag indices must be valid (i.e. within the student's tag list).
 
 Examples:
-* `delete tag 1 t/2` deletes the 2nd tag from student 1.
-* `delete tag 1 t/2 t/3` deletes the 2nd and 3rd tags from student 1.
+* `delete appt 1 s/1` deletes the 1st appointment of the 1st student.
+* `delete appt 2 s/1 s/3` deletes appointments 1 and 3 of the 2nd student.
 
 ### Locating students by tag : `find tag`
 
 Finds students whose tags match any of the given keywords.
 
-Format: `find tag t/TAG [t/MORE_TAGS]…​`
+Format: `find appt [d/DATE]`
 
 * At least one `t/` prefix must be provided.
 * Multiple `t/` prefixes are allowed.
-* Tags can contain spaces (e.g. `t/Upper Sec`, `t/JC Year 1`).
-* The search is case-insensitive.
+* `find appt` shows appointments for the current week.
+* `find appt d/2026-02-13` shows appointments for the week containing 13 February 2026.
 * Partial matching is supported (e.g. `t/math` matches `Mathematics`).
 * Students matching **at least one** tag keyword will be returned (i.e. `OR` search).
 * The displayed list is updated to show only matching students.
 
 Examples:
-* `find tag t/JC` returns all students tagged with any tag containing `JC`.
+Format: `add attd INDEX s/SESSION_INDEX [y|n] [d/DATE]`
 * `find tag t/JC t/Sec1` returns all students with a tag matching `JC` or `Sec1`.
-
---------------------------------------------------------------------------------------------------------------------
+* Records attendance for the student at the specified `INDEX`. The index refers to the index number shown in the displayed student list. The index **must be a positive integer** 1, 2, 3, …​
+* `SESSION_INDEX` refers to the numbered appointment shown for that student in the app. The index **must be a positive integer** 1, 2, 3, …​
 
 ## Academic Management
 
@@ -223,15 +223,15 @@ Commands for managing a student's academic subjects and performance notes.
 
 ### Adding subjects to a student : `add acad`
 
-Adds one or more subjects to an existing student's academics. Existing subjects are kept.
-
-Format: `add acad INDEX s/SUBJECT [l/LEVEL] [s/SUBJECT [l/LEVEL]]…​`
-
+* `add attd 1 s/1` records attendance (present) for the 1st appointment of student 1.
+* `add attd 1 s/2 y` same as above but explicit.
+* `add attd 1 s/2 y d/2026-01-29` records attendance on a specific date.
+* `add attd 1 s/3 n` records an absence for the 3rd appointment of student 1.
 * Adds subject(s) to the student at the specified `INDEX`. The index refers to the index number shown in the displayed student list. The index **must be a positive integer** 1, 2, 3, …​
 * At least one `s/` prefix must be provided.
-* `l/LEVEL` is optional and indicates the student's proficiency level for the subject (e.g. `Strong`, `Average`, `Weak`).
-* Subjects that already exist for the student will not be duplicated.
-
+**Delete appointment** | `delete appt INDEX s/SESSION_INDEX [s/SESSION_INDEX]…` | `delete appt 1 s/2 s/3`
+**Find weekly appointments** | `find appt [d/DATE]` | `find appt d/2026-02-13`
+**Add attendance** | `add attd INDEX s/SESSION_INDEX [y\|n] [d/DATE]` | `add attd 1 s/2 y d/2026-01-29`
 Examples:
 * `add acad 1 s/Math l/Strong` adds Math (Strong) to student 1.
 * `add acad 1 s/Math l/Strong s/Science` adds Math (Strong) and Science to student 1.
