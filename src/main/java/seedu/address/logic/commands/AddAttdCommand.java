@@ -66,7 +66,7 @@ public class AddAttdCommand extends AddCommand {
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
-        Person personToEdit = getTargetPerson(model);
+        Person personToEdit = getTargetPerson(model, personIndex);
         Appointment appointment = getTargetAppointment(personToEdit);
         if (appointment.getRecurrence() == Recurrence.NONE && !appointment.getAttendance().isEmpty()) {
             throw new CommandException(MESSAGE_NON_RECURRING_ATTENDANCE_ALREADY_RECORDED);
@@ -99,17 +99,6 @@ public class AddAttdCommand extends AddCommand {
         return recordedAt.format(ATTENDANCE_DATE_TIME_FORMATTER);
     }
 
-    private Person getTargetPerson(Model model) throws CommandException {
-        requireNonNull(model);
-        List<Person> lastShownList = model.getFilteredPersonList();
-
-        if (personIndex.getZeroBased() >= lastShownList.size()) {
-            throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
-        }
-
-        return lastShownList.get(personIndex.getZeroBased());
-    }
-
     private Appointment getTargetAppointment(Person person) throws CommandException {
         requireNonNull(person);
         List<Appointment> appointments = person.getAppointments();
@@ -119,6 +108,7 @@ public class AddAttdCommand extends AddCommand {
 
         return appointments.get(appointmentIndex.getZeroBased());
     }
+
     @Override
     public boolean equals(Object other) {
         if (other == this) {

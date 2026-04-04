@@ -4,7 +4,6 @@ import static java.util.Objects.requireNonNull;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.ToStringBuilder;
@@ -55,7 +54,7 @@ public class AddApptCommand extends AddCommand {
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
-        Person personToEdit = getTargetPerson(model);
+        Person personToEdit = getTargetPerson(model, index);
         Appointment appointment = new Appointment(recurrence, appointmentStart, appointmentStart,
                 AttendanceRecords.EMPTY, description);
         Person editedPerson = new PersonBuilder(personToEdit)
@@ -68,16 +67,6 @@ public class AddApptCommand extends AddCommand {
                 Messages.format(editedPerson), formattedStart), editedPerson);
     }
 
-    private Person getTargetPerson(Model model) throws CommandException {
-        requireNonNull(model);
-        List<Person> lastShownList = model.getFilteredPersonList();
-
-        if (index.getZeroBased() >= lastShownList.size()) {
-            throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
-        }
-
-        return lastShownList.get(index.getZeroBased());
-    }
     @Override
     public boolean equals(Object other) {
         if (other == this) {
