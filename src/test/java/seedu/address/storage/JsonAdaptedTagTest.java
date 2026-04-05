@@ -19,8 +19,8 @@ public class JsonAdaptedTagTest {
     }
 
     @Test
-    public void toModelType_invalidTagName_throwsIllegalValueException() {
-        JsonAdaptedTag tag = new JsonAdaptedTag(INVALID_TAG);
+    public void toModelType_nullTagName_throwsIllegalValueException() {
+        JsonAdaptedTag tag = new JsonAdaptedTag((String) null);
         String expectedMessage = Tag.MESSAGE_CONSTRAINTS;
         assertThrows(IllegalValueException.class, expectedMessage, tag::toModelType);
     }
