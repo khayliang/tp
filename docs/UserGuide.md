@@ -186,36 +186,31 @@ Examples:
 
 Deletes one or more tags from a student by their tag index numbers.
 
-Format: `delete appt INDEX s/SESSION_INDEX [s/SESSION_INDEX]…`
+Format: `delete tag INDEX t/TAG_INDEX [t/TAG_INDEX]…`
 
-* Deletes one or more sessions (`s/SESSION_INDEX`) for the student at `INDEX`.
+* Deletes one or more tags (`t/TAG_INDEX`) for the student at `INDEX`.
 * `INDEX` refers to the index number shown in the displayed student list.
-* `SESSION_INDEX` refers to the numbered appointment shown for that student in the app.
+* `TAG_INDEX` refers to the numbered tag shown for that student in the app.
 * All specified tag indices must be valid (i.e. within the student's tag list).
 
 Examples:
-* `delete appt 1 s/1` deletes the 1st appointment of the 1st student.
-* `delete appt 2 s/1 s/3` deletes appointments 1 and 3 of the 2nd student.
+* `delete tag 1 t/1` deletes the 1st tag of the 1st student.
+* `delete tag 2 t/1 t/3` deletes tags 1 and 3 of the 2nd student.
 
 ### Locating students by tag : `find tag`
 
 Finds students whose tags match any of the given keywords.
 
-Format: `find appt [d/DATE]`
+Format: `find tag t/TAG [t/MORE_TAGS]…`
 
 * At least one `t/` prefix must be provided.
 * Multiple `t/` prefixes are allowed.
-* `find appt` shows appointments for the current week.
-* `find appt d/2026-02-13` shows appointments for the week containing 13 February 2026.
 * Partial matching is supported (e.g. `t/math` matches `Mathematics`).
 * Students matching **at least one** tag keyword will be returned (i.e. `OR` search).
 * The displayed list is updated to show only matching students.
 
 Examples:
-Format: `add attd INDEX s/SESSION_INDEX [y|n] [d/DATE]`
 * `find tag t/JC t/Sec1` returns all students with a tag matching `JC` or `Sec1`.
-* Records attendance for the student at the specified `INDEX`. The index refers to the index number shown in the displayed student list. The index **must be a positive integer** 1, 2, 3, …​
-* `SESSION_INDEX` refers to the numbered appointment shown for that student in the app. The index **must be a positive integer** 1, 2, 3, …​
 
 ## Academic Management
 
@@ -223,15 +218,13 @@ Commands for managing a student's academic subjects and performance notes.
 
 ### Adding subjects to a student : `add acad`
 
-* `add attd 1 s/1` records attendance (present) for the 1st appointment of student 1.
-* `add attd 1 s/2 y` same as above but explicit.
-* `add attd 1 s/2 y d/2026-01-29` records attendance on a specific date.
-* `add attd 1 s/3 n` records an absence for the 3rd appointment of student 1.
+Adds one or more subjects to an existing student. Existing subjects are kept.
+
+Format: `add acad INDEX s/SUBJECT [l/LEVEL] [s/SUBJECT [l/LEVEL]]…​`
+
 * Adds subject(s) to the student at the specified `INDEX`. The index refers to the index number shown in the displayed student list. The index **must be a positive integer** 1, 2, 3, …​
 * At least one `s/` prefix must be provided.
-**Delete appointment** | `delete appt INDEX s/SESSION_INDEX [s/SESSION_INDEX]…` | `delete appt 1 s/2 s/3`
-**Find weekly appointments** | `find appt [d/DATE]` | `find appt d/2026-02-13`
-**Add attendance** | `add attd INDEX s/SESSION_INDEX [y\|n] [d/DATE]` | `add attd 1 s/2 y d/2026-01-29`
+
 Examples:
 * `add acad 1 s/Math l/Strong` adds Math (Strong) to student 1.
 * `add acad 1 s/Math l/Strong s/Science` adds Math (Strong) and Science to student 1.
@@ -469,16 +462,16 @@ Examples:
 
 Records attendance for a selected appointment of an existing student.
 
-Format: `add attd PERSON_INDEX APPT_INDEX [y|n] [d/DATE]`
+Format: `add attd INDEX s/SESSION_INDEX [y|n] [d/DATE_OR_DATE_TIME]`
 
-* Records attendance for the student at the specified `PERSON_INDEX`. The index refers to the index number shown in the displayed student list. The index **must be a positive integer** 1, 2, 3, …​
-* `APPT_INDEX` refers to the numbered appointment shown for that student in the app. The index **must be a positive integer** 1, 2, 3, …​
+* Records attendance for the student at the specified `INDEX`. The index refers to the index number shown in the displayed student list. The index **must be a positive integer** 1, 2, 3, …​
+* `SESSION_INDEX` refers to the numbered appointment shown for that student in the app. The index **must be a positive integer** 1, 2, 3, …​
 * If `y` or `n` is omitted, `y` (attended) is assumed.
 * `y` records that the student attended the selected appointment.
 * `n` records that the student was absent for the selected appointment.
-* If `d/DATE` is omitted, the selected appointment's `next` date is used.
-* `d/DATE` is only allowed together with `y`.
-* `d/DATE` must be in ISO local date format (`YYYY-MM-DD`).
+* If `d/DATE_OR_DATE_TIME` is omitted, the selected appointment's `next` date is used.
+* `d/DATE_OR_DATE_TIME` is only allowed together with `y`.
+* `d/DATE_OR_DATE_TIME` must be in ISO local date (`YYYY-MM-DD`) or date-time (`YYYY-MM-DDTHH:MM:SS`) format.
 * Attendance cannot be recorded for a future date.
 * Non-recurring appointments can only have attendance recorded once.
 
@@ -618,9 +611,11 @@ Action | Format | Example
 Action | Format | Example
 -------|--------|--------
 **Add appointment** | `add appt INDEX d/DATETIME [r/RECURRENCE] dsc/DESCRIPTION` | `add appt 1 d/2026-01-29T08:00:00 dsc/Weekly algebra practice`
-**Delete appointment** | `delete appt PERSON_INDEX APPT_INDEX` | `delete appt 1 2`
+**Delete appointment** | `delete appt INDEX s/SESSION_INDEX [s/SESSION_INDEX]…` | `delete appt 1 s/2 s/3`
+**Edit appointment** | `edit appt INDEX s/SESSION_INDEX [d/DATETIME] [r/RECURRENCE] [dsc/DESCRIPTION]` | `edit appt 1 s/2 r/MONTHLY dsc/Physics consultation`
 **Find weekly appointments** | `find appt [d/DATE]` | `find appt d/2026-02-13`
-**Add attendance** | `add attd PERSON_INDEX APPT_INDEX [y\|n] [d/DATE]` | `add attd 1 2 y d/2026-01-29`
+**Add attendance** | `add attd INDEX s/SESSION_INDEX [y\|n] [d/DATE_OR_DATE_TIME]` | `add attd 1 s/2 y d/2026-01-29`
+**Delete attendance** | `delete attd INDEX s/SESSION_INDEX d/DATE_OR_DATE_TIME` | `delete attd 1 s/2 d/2026-01-29T08:00:00`
 
 ### General
 
