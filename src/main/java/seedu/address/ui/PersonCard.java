@@ -1,6 +1,5 @@
 package seedu.address.ui;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javafx.fxml.FXML;
@@ -8,10 +7,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
 import seedu.address.model.academic.Subject;
 import seedu.address.model.person.Person;
-import seedu.address.model.session.Appointment;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -47,30 +44,15 @@ public class PersonCard extends UiPart<Region> {
     private FlowPane tags;
     @FXML
     private FlowPane subjects;
-    @FXML
-    private VBox appointmentList;
 
     /**
      * Creates a {@code PersonCode} with the given {@code Person} and index to display.
      */
-    public PersonCard(Person person, int displayedIndex, boolean showAppointments) {
+    public PersonCard(Person person, int displayedIndex) {
         super(FXML);
         this.person = person;
         id.setText(displayedIndex + ". ");
         name.setText(person.getName().fullName);
-
-        if (showAppointments && !person.getAppointments().isEmpty()) {
-            for (int index = 0; index < person.getAppointments().size(); index++) {
-                Appointment appointment = person.getAppointments().get(index);
-                Label appointmentLabel = new Label(formatAppointment(index + 1, appointment));
-                appointmentLabel.getStyleClass().add("cell_small_label");
-                appointmentLabel.setWrapText(true);
-                appointmentList.getChildren().add(appointmentLabel);
-            }
-        } else {
-            appointmentList.setVisible(false);
-            appointmentList.setManaged(false);
-        }
 
         phone.setText(person.getPhone().value);
         address.setText(person.getAddress().value);
@@ -91,10 +73,5 @@ public class PersonCard extends UiPart<Region> {
             subjectLabel.getStyleClass().add("tag");
             subjects.getChildren().add(subjectLabel);
         }
-    }
-
-    private String formatAppointment(int appointmentIndex, Appointment appointment) {
-        String formattedTime = appointment.getNext().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        return "Appt " + appointmentIndex + ": " + formattedTime + " - " + appointment.getDescription();
     }
 }

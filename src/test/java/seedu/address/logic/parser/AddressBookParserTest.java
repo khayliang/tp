@@ -27,11 +27,11 @@ import seedu.address.logic.commands.EditPersonCommand;
 import seedu.address.logic.commands.EditPersonCommand.EditPersonDescriptor;
 import seedu.address.logic.commands.EditTagCommand;
 import seedu.address.logic.commands.ExitCommand;
+import seedu.address.logic.commands.FindApptCommand;
 import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.commands.FindPersonCommand;
 import seedu.address.logic.commands.HelpCommand;
 import seedu.address.logic.commands.ListCommand;
-import seedu.address.logic.commands.ViewApptCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.person.Person;
@@ -155,10 +155,10 @@ public class AddressBookParserTest {
     }
 
     @Test
-    public void parseCommand_viewAppt() throws Exception {
-        ViewApptCommand command = (ViewApptCommand) parser.parseCommand(
-                ViewApptCommand.COMMAND_WORD + " d/2026-02-13");
-        assertEquals(new ViewApptCommand(LocalDate.parse("2026-02-13")), command);
+    public void parseCommand_findAppt() throws Exception {
+        FindApptCommand command = (FindApptCommand) parser.parseCommand(
+                FindCommand.COMMAND_WORD + " " + FindApptCommand.SUB_COMMAND_WORD + " d/2026-02-13");
+        assertEquals(new FindApptCommand(LocalDate.parse("2026-02-13")), command);
     }
 
     @Test

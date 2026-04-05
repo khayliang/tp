@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
 import seedu.address.model.AddressBook;
-import seedu.address.model.ListDisplayMode;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
@@ -88,8 +87,8 @@ public class DeleteApptCommandTest {
     }
 
     @Test
-    public void execute_validIndexesAppointmentDisplayMode_success() {
-        model.setListDisplayMode(ListDisplayMode.APPOINTMENT);
+    public void execute_validIndexesSingleItemFilteredList_success() {
+        showPersonAtIndex(model, INDEX_FIRST_PERSON);
 
         Person personToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         DeleteApptCommand deleteCommand = new DeleteApptCommand(INDEX_FIRST_PERSON, INDEX_SECOND_PERSON);
@@ -101,7 +100,7 @@ public class DeleteApptCommandTest {
                 Messages.format(editedPerson), "2026-01-20T10:00:00");
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
-        expectedModel.setListDisplayMode(ListDisplayMode.APPOINTMENT);
+        showPersonAtIndex(expectedModel, INDEX_FIRST_PERSON);
         expectedModel.setPerson(personToEdit, editedPerson);
 
         CommandResult expectedCommandResult = new CommandResult(expectedMessage, editedPerson);

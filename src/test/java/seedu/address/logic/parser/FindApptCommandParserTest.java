@@ -9,19 +9,19 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.util.AppClock;
-import seedu.address.logic.commands.ViewApptCommand;
+import seedu.address.logic.commands.FindApptCommand;
 
-public class ViewApptCommandParserTest {
-    private final ViewApptCommandParser parser = new ViewApptCommandParser();
-
-    @Test
-    public void parse_emptyArgs_returnsCommandWithCurrentDate() {
-        assertParseSuccess(parser, "   ", new ViewApptCommand(AppClock.today()));
-    }
+public class FindApptCommandParserTest {
+    private final FindApptCommandParser parser = new FindApptCommandParser();
 
     @Test
     public void parse_validDate_success() {
-        assertParseSuccess(parser, " d/2026-02-13", new ViewApptCommand(LocalDate.parse("2026-02-13")));
+        assertParseSuccess(parser, " d/2026-02-13", new FindApptCommand(LocalDate.parse("2026-02-13")));
+    }
+
+    @Test
+    public void parse_emptyArgs_returnsCommandWithCurrentDate() {
+        assertParseSuccess(parser, "   ", new FindApptCommand(AppClock.today()));
     }
 
     @Test
@@ -31,7 +31,7 @@ public class ViewApptCommandParserTest {
 
     @Test
     public void parse_preamble_failure() {
-        String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, ViewApptCommand.MESSAGE_USAGE);
+        String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindApptCommand.MESSAGE_USAGE);
         assertParseFailure(parser, " randomText d/2026-02-13", expectedMessage);
     }
 }

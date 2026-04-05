@@ -4,7 +4,6 @@ import static java.util.Objects.requireNonNull;
 
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
-import seedu.address.model.ListDisplayMode;
 import seedu.address.model.Model;
 import seedu.address.model.tag.TagContainsKeywordsPredicate;
 
@@ -42,7 +41,6 @@ public class FindTagCommand extends FindCommand {
     public CommandResult execute(Model model) {
         requireNonNull(model);
         model.updateFilteredPersonListWithAnd(predicate);
-        model.setListDisplayMode(ListDisplayMode.PERSON); // same as FindPerson
         return new CommandResult(
                 String.format(Messages.MESSAGE_PERSONS_LISTED_OVERVIEW,
                         model.getFilteredPersonList().size()));

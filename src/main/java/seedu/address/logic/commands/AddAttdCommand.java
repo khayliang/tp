@@ -13,13 +13,11 @@ import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
-import seedu.address.model.ListDisplayMode;
 import seedu.address.model.Model;
 import seedu.address.model.attendance.Attendance;
 import seedu.address.model.attendance.AttendanceRecords;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.PersonBuilder;
-import seedu.address.model.person.PersonComparators;
 import seedu.address.model.recurrence.Recurrence;
 import seedu.address.model.session.Appointment;
 
@@ -68,7 +66,7 @@ public class AddAttdCommand extends AddCommand {
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
-        Person personToEdit = getTargetPerson(model);
+        Person personToEdit = getTargetPerson(model, personIndex);
         Appointment appointment = getTargetAppointment(personToEdit);
         if (appointment.getRecurrence() == Recurrence.NONE && !appointment.getAttendance().isEmpty()) {
             throw new CommandException(MESSAGE_NON_RECURRING_ATTENDANCE_ALREADY_RECORDED);
@@ -101,17 +99,6 @@ public class AddAttdCommand extends AddCommand {
         return recordedAt.format(ATTENDANCE_DATE_TIME_FORMATTER);
     }
 
-    private Person getTargetPerson(Model model) throws CommandException {
-        requireNonNull(model);
-        List<Person> lastShownList = getDisplayedPersonList(model);
-
-        if (personIndex.getZeroBased() >= lastShownList.size()) {
-            throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
-        }
-
-        return lastShownList.get(personIndex.getZeroBased());
-    }
-
     private Appointment getTargetAppointment(Person person) throws CommandException {
         requireNonNull(person);
         List<Appointment> appointments = person.getAppointments();
@@ -120,15 +107,6 @@ public class AddAttdCommand extends AddCommand {
         }
 
         return appointments.get(appointmentIndex.getZeroBased());
-    }
-
-    private List<Person> getDisplayedPersonList(Model model) {
-        if (model.getListDisplayMode() == ListDisplayMode.APPOINTMENT) {
-            return model.getFilteredPersonList().stream()
-                    .sorted(PersonComparators.APPOINTMENT_ORDER)
-                    .toList();
-        }
-        return model.getFilteredPersonList();
     }
 
     @Override

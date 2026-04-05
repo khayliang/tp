@@ -26,8 +26,6 @@ public class ModelManager implements Model {
     private final FilteredList<Person> filteredPersons;
     private Predicate<Person> currentFilterPredicate;
     private final Set<Person> preservedPersons;
-    private ListDisplayMode listDisplayMode;
-
     /**
      * Initializes a ModelManager with the given addressBook and userPrefs.
      */
@@ -41,7 +39,6 @@ public class ModelManager implements Model {
         filteredPersons = new FilteredList<>(this.addressBook.getPersonList());
         currentFilterPredicate = PREDICATE_SHOW_ALL_PERSONS;
         preservedPersons = new HashSet<>();
-        listDisplayMode = ListDisplayMode.PERSON;
     }
 
     public ModelManager() {
@@ -168,17 +165,6 @@ public class ModelManager implements Model {
     }
 
     @Override
-    public ListDisplayMode getListDisplayMode() {
-        return listDisplayMode;
-    }
-
-    @Override
-    public void setListDisplayMode(ListDisplayMode listDisplayMode) {
-        requireNonNull(listDisplayMode);
-        this.listDisplayMode = listDisplayMode;
-    }
-
-    @Override
     public boolean equals(Object other) {
         if (other == this) {
             return true;
@@ -192,8 +178,7 @@ public class ModelManager implements Model {
         ModelManager otherModelManager = (ModelManager) other;
         return addressBook.equals(otherModelManager.addressBook)
                 && userPrefs.equals(otherModelManager.userPrefs)
-                && filteredPersons.equals(otherModelManager.filteredPersons)
-                && listDisplayMode == otherModelManager.listDisplayMode;
+                && filteredPersons.equals(otherModelManager.filteredPersons);
     }
 
     private boolean hasActiveFilter() {

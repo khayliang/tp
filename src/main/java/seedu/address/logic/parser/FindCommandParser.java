@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import seedu.address.logic.commands.FindAcadCommand;
+import seedu.address.logic.commands.FindApptCommand;
 import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.commands.FindParentCommand;
 import seedu.address.logic.commands.FindPaymentCommand;
@@ -24,6 +25,7 @@ public class FindCommandParser implements Parser<FindCommand> {
     public FindCommandParser() {
         Map<String, Parser<? extends FindCommand>> parsers = new HashMap<>();
         parsers.put(FindPersonCommand.SUB_COMMAND_WORD, new FindPersonCommandParser());
+        parsers.put(FindApptCommand.SUB_COMMAND_WORD, new FindApptCommandParser());
         parsers.put(FindTagCommand.SUB_COMMAND_WORD, new FindTagCommandParser());
         parsers.put(FindAcadCommand.SUB_COMMAND_WORD, new FindAcadCommandParser());
         parsers.put(FindPaymentCommand.SUB_COMMAND_WORD, new FindPaymentCommandParser());

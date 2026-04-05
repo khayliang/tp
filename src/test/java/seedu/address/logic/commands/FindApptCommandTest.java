@@ -13,7 +13,6 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.model.AddressBook;
-import seedu.address.model.ListDisplayMode;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
@@ -22,9 +21,9 @@ import seedu.address.model.person.Person;
 import seedu.address.testutil.PersonBuilder;
 
 /**
- * Contains integration tests (interaction with the Model) for {@code ViewApptCommand}.
+ * Contains integration tests (interaction with the Model) for {@code FindApptCommand}.
  */
-public class ViewApptCommandTest {
+public class FindApptCommandTest {
     private static final LocalDate TARGET_DATE = LocalDate.parse("2026-02-13");
 
     private Model model = buildModelWithAppointments();
@@ -32,12 +31,11 @@ public class ViewApptCommandTest {
 
     @Test
     public void execute_validDate_success() {
-        ViewApptCommand command = new ViewApptCommand(TARGET_DATE);
+        FindApptCommand command = new FindApptCommand(TARGET_DATE);
         AppointmentInWeekPredicate predicate = new AppointmentInWeekPredicate(TARGET_DATE);
         expectedModel.updateFilteredPersonList(predicate);
-        expectedModel.setListDisplayMode(ListDisplayMode.APPOINTMENT);
 
-        String expectedMessage = String.format(ViewApptCommand.MESSAGE_SUCCESS,
+        String expectedMessage = String.format(FindApptCommand.MESSAGE_SUCCESS,
                 expectedModel.getFilteredPersonList().size(), "2026-02-09", "2026-02-15");
         CommandResult expectedResult = new CommandResult(expectedMessage);
         assertCommandSuccess(command, model, expectedResult, expectedModel);
@@ -46,11 +44,11 @@ public class ViewApptCommandTest {
 
     @Test
     public void equals() {
-        ViewApptCommand firstCommand = new ViewApptCommand(LocalDate.parse("2026-02-13"));
-        ViewApptCommand secondCommand = new ViewApptCommand(LocalDate.parse("2026-03-13"));
+        FindApptCommand firstCommand = new FindApptCommand(LocalDate.parse("2026-02-13"));
+        FindApptCommand secondCommand = new FindApptCommand(LocalDate.parse("2026-03-13"));
 
         assertTrue(firstCommand.equals(firstCommand));
-        assertTrue(firstCommand.equals(new ViewApptCommand(LocalDate.parse("2026-02-13"))));
+        assertTrue(firstCommand.equals(new FindApptCommand(LocalDate.parse("2026-02-13"))));
         assertFalse(firstCommand.equals(1));
         assertFalse(firstCommand.equals(null));
         assertFalse(firstCommand.equals(secondCommand));
@@ -58,8 +56,8 @@ public class ViewApptCommandTest {
 
     @Test
     public void toStringMethod() {
-        ViewApptCommand command = new ViewApptCommand(TARGET_DATE);
-        String expected = ViewApptCommand.class.getCanonicalName() + "{targetDate=" + TARGET_DATE + "}";
+        FindApptCommand command = new FindApptCommand(TARGET_DATE);
+        String expected = FindApptCommand.class.getCanonicalName() + "{targetDate=" + TARGET_DATE + "}";
         assertEquals(expected, command.toString());
     }
 

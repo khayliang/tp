@@ -27,11 +27,6 @@ activate Model
 Model --> FindTagCommand
 deactivate Model
 
-FindTagCommand -> Model : setListDisplayMode(PERSON)
-activate Model
-Model --> FindTagCommand
-deactivate Model
-
 create CommandResult
 FindTagCommand -> CommandResult : CommandResult(...)
 activate CommandResult
