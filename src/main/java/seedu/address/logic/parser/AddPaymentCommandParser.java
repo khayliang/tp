@@ -8,6 +8,7 @@ import java.time.Clock;
 import java.time.LocalDate;
 
 import seedu.address.commons.core.index.Index;
+import seedu.address.commons.util.AppClock;
 import seedu.address.logic.commands.AddPaymentCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 
@@ -19,7 +20,7 @@ public class AddPaymentCommandParser implements Parser<AddPaymentCommand> {
     private final Clock clock;
 
     public AddPaymentCommandParser() {
-        this(Clock.systemDefaultZone());
+        this(AppClock.getClock());
     }
 
     AddPaymentCommandParser(Clock clock) {
