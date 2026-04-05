@@ -40,6 +40,8 @@ public class PaymentHistory {
      */
     public PaymentHistory recordPayment(LocalDate date) {
         requireNonNull(date);
+        checkArgument(!paidDates.contains(date), "Payment date is already present");
+
         Set<LocalDate> next = new LinkedHashSet<>(paidDates);
         next.add(date);
         return new PaymentHistory(next.toArray(LocalDate[]::new));

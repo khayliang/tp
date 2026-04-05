@@ -64,10 +64,9 @@ public class PaymentHistoryTest {
     }
 
     @Test
-    public void recordPayment_duplicateDate_ignoresDuplicate() {
+    public void recordPayment_duplicateDate_throwsIllegalArgumentException() {
         PaymentHistory payment = new PaymentHistory(DATE_1);
-        PaymentHistory updated = payment.recordPayment(DATE_1);
-        assertEquals(1, updated.getPaidDates().size());
+        assertThrows(IllegalArgumentException.class, () -> payment.recordPayment(DATE_1));
     }
 
     @Test
