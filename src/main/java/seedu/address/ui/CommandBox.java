@@ -3,6 +3,8 @@ package seedu.address.ui;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
@@ -17,6 +19,7 @@ public class CommandBox extends UiPart<Region> {
     private static final String FXML = "CommandBox.fxml";
 
     private final CommandExecutor commandExecutor;
+    private final CommandHistory commandHistory = new CommandHistory();
 
     @FXML
     private TextField commandTextField;
@@ -29,6 +32,7 @@ public class CommandBox extends UiPart<Region> {
         this.commandExecutor = commandExecutor;
         // calls #setStyleToDefault() whenever there is a change to the text of the command box.
         commandTextField.textProperty().addListener((unused1, unused2, unused3) -> setStyleToDefault());
+        commandTextField.addEventFilter(KeyEvent.KEY_PRESSED, this::handleHistoryNavigation);
     }
 
     /**
@@ -41,6 +45,7 @@ public class CommandBox extends UiPart<Region> {
             return;
         }
 
+        commandHistory.record(commandText);
         try {
             commandExecutor.execute(commandText);
             commandTextField.setText("");
@@ -67,6 +72,32 @@ public class CommandBox extends UiPart<Region> {
         }
 
         styleClass.add(ERROR_STYLE_CLASS);
+    }
+
+    private void handleHistoryNavigation(KeyEvent event) {
+        if (hasModifierKey(event)) {
+            return;
+        }
+
+        if (event.getCode() == KeyCode.UP) {
+            commandHistory.getPrevious(commandTextField.getText()).ifPresent(this::replaceCommandText);
+            event.consume();
+            return;
+        }
+
+        if (event.getCode() == KeyCode.DOWN) {
+            commandHistory.getNext().ifPresent(this::replaceCommandText);
+            event.consume();
+        }
+    }
+
+    private boolean hasModifierKey(KeyEvent event) {
+        return event.isAltDown() || event.isControlDown() || event.isMetaDown() || event.isShiftDown();
+    }
+
+    private void replaceCommandText(String commandText) {
+        commandTextField.setText(commandText);
+        commandTextField.positionCaret(commandText.length());
     }
 
     /**
