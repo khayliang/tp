@@ -416,11 +416,11 @@ Examples:
 * `delete payment 1 d/2026-03-01`
 * `delete payment 2 d/2025-12-15`
 
-### Finding students by payment due month : `find payment`
+### Finding students by payment due date : `find billing`
 
 Finds students in the current list whose payment due date falls in a given month.
 
-Format: `find payment d/YYYY-MM`
+Format: `find billing d/YYYY-MM`
 
 Details:
 * Exactly one `d/` prefix must be provided.
@@ -428,8 +428,8 @@ Details:
 * Matching ignores the day of the month.
 
 Examples:
-* `find payment d/2026-03`
-* `find payment d/2025-12`
+* `find billing d/2026-03` returns all students in the currently displayed list with payment due dates in March 2026.
+* `find billing d/2025-12` returns students with due dates in December 2025.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -613,7 +613,7 @@ Action | Format | Example
 **Edit billing** | `edit billing INDEX [a/AMOUNT] [d/DATE]` | `edit billing 1 a/250 d/2026-03-20`
 **Add payment** | `add payment INDEX d/DATE` | `add payment 1 d/2026-03-05`
 **Delete payment** | `delete payment INDEX d/DATE` | `delete payment 1 d/2026-03-01`
-**Find by due month** | `find payment d/YYYY-MM` | `find payment d/2026-03`
+**Find by payment due** | `find billing d/YYYY-MM` | `find billing d/2026-03`
 
 ### Appointment & Attendance Management
 

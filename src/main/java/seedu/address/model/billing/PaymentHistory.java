@@ -37,9 +37,12 @@ public class PaymentHistory {
      * Record payment made on {@code date}
      * @param date A valid date
      * @return {@code PaymentHistory} object with updated payment history
+     * @throws IllegalArgumentException if {@code date} is already in payment history
      */
     public PaymentHistory recordPayment(LocalDate date) {
         requireNonNull(date);
+        checkArgument(!paidDates.contains(date), "Payment date is already present");
+
         Set<LocalDate> next = new LinkedHashSet<>(paidDates);
         next.add(date);
         return new PaymentHistory(next.toArray(LocalDate[]::new));

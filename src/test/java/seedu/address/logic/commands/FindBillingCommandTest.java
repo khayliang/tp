@@ -22,9 +22,9 @@ import seedu.address.model.recurrence.Recurrence;
 import seedu.address.testutil.PersonBuilder;
 
 /**
- * Contains integration tests (interaction with the Model) for {@code FindPaymentCommand}.
+ * Contains integration tests (interaction with the Model) for {@code FindBillingCommand}.
  */
-public class FindPaymentCommandTest {
+public class FindBillingCommandTest {
 
     private Model model = new ModelManager(new seedu.address.model.AddressBook(), new UserPrefs());
     private Model expectedModel = new ModelManager(new seedu.address.model.AddressBook(), new UserPrefs());
@@ -36,14 +36,14 @@ public class FindPaymentCommandTest {
         PaymentDueMonthPredicate secondPredicate =
                 new PaymentDueMonthPredicate(YearMonth.of(2020, 2));
 
-        FindPaymentCommand findFirstCommand = new FindPaymentCommand(firstPredicate);
-        FindPaymentCommand findSecondCommand = new FindPaymentCommand(secondPredicate);
+        FindBillingCommand findFirstCommand = new FindBillingCommand(firstPredicate);
+        FindBillingCommand findSecondCommand = new FindBillingCommand(secondPredicate);
 
         // same object -> true
         assertTrue(findFirstCommand.equals(findFirstCommand));
 
         // same values -> true
-        FindPaymentCommand findFirstCommandCopy = new FindPaymentCommand(firstPredicate);
+        FindBillingCommand findFirstCommandCopy = new FindBillingCommand(firstPredicate);
         assertTrue(findFirstCommand.equals(findFirstCommandCopy));
 
         // different types -> false
@@ -75,7 +75,7 @@ public class FindPaymentCommandTest {
         expectedModel.addPerson(personC);
 
         PaymentDueMonthPredicate predicate = new PaymentDueMonthPredicate(YearMonth.of(2020, 1));
-        FindPaymentCommand command = new FindPaymentCommand(predicate);
+        FindBillingCommand command = new FindBillingCommand(predicate);
 
         expectedModel.updateFilteredPersonList(predicate);
 
@@ -94,7 +94,7 @@ public class FindPaymentCommandTest {
         expectedModel.addPerson(person);
 
         PaymentDueMonthPredicate predicate = new PaymentDueMonthPredicate(YearMonth.of(1999, 12));
-        FindPaymentCommand command = new FindPaymentCommand(predicate);
+        FindBillingCommand command = new FindBillingCommand(predicate);
 
         expectedModel.updateFilteredPersonList(predicate);
 
@@ -107,9 +107,9 @@ public class FindPaymentCommandTest {
     @Test
     public void toStringMethod() {
         PaymentDueMonthPredicate predicate = new PaymentDueMonthPredicate(YearMonth.of(2020, 1));
-        FindPaymentCommand command = new FindPaymentCommand(predicate);
+        FindBillingCommand command = new FindBillingCommand(predicate);
 
-        String expected = FindPaymentCommand.class.getCanonicalName() + "{predicate=" + predicate + "}";
+        String expected = FindBillingCommand.class.getCanonicalName() + "{predicate=" + predicate + "}";
         assertEquals(expected, command.toString());
     }
 }

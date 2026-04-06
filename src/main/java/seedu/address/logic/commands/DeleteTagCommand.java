@@ -2,7 +2,9 @@ package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -39,7 +41,7 @@ public class DeleteTagCommand extends DeleteCommand {
     public DeleteTagCommand(Index index, List<Index> tagIndices) {
         super(index);
         requireNonNull(tagIndices);
-        this.tagIndices = tagIndices;
+        this.tagIndices = new ArrayList<>(tagIndices);
     }
 
     @Override
@@ -58,12 +60,18 @@ public class DeleteTagCommand extends DeleteCommand {
 
         // remove tags
         Set<Tag> updatedTags = new HashSet<>(personToEdit.getTags());
-        StringBuilder deletedTags = new StringBuilder();
+        Set<Tag> deletedTagSet = new LinkedHashSet<>();
 
         for (Index tagIndex : tagIndices) {
             Tag tagToDelete = sortedTags.get(tagIndex.getZeroBased());
-            updatedTags.remove(tagToDelete);
-            deletedTags.append(tagToDelete.tagName).append(", ");
+            if (updatedTags.remove(tagToDelete)) {
+                deletedTagSet.add(tagToDelete);
+            }
+        }
+
+        StringBuilder deletedTags = new StringBuilder();
+        for (Tag tag : deletedTagSet) {
+            deletedTags.append(tag.tagName).append(", ");
         }
 
         if (deletedTags.length() > 0) {

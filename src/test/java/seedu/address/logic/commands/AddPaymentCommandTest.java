@@ -65,6 +65,46 @@ public class AddPaymentCommandTest {
     }
 
     @Test
+    public void execute_duplicatePaymentDate_failureAndBillingUnchanged() {
+        LocalDate paymentDate = LocalDate.parse(VALID_PAYMENT_DATE);
+
+        Person initialPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        AddPaymentCommand firstAddCommand = new AddPaymentCommand(INDEX_FIRST_PERSON, paymentDate);
+
+        Billing billingAfterFirstPayment = initialPerson.recordFeesPaidAndAdvanceBilling(paymentDate);
+        Person personAfterFirstPayment = new PersonBuilder(initialPerson)
+            .withBilling(billingAfterFirstPayment)
+            .build();
+
+        String firstSuccessMessage = String.format(AddPaymentCommand.MESSAGE_ADD_PAYMENT_SUCCESS,
+            personAfterFirstPayment.getBilling().getTuitionFee(),
+            Messages.format(personAfterFirstPayment),
+            paymentDate.format(DateTimeFormatter.ISO_LOCAL_DATE));
+
+        Model expectedModelAfterFirstPayment = new ModelManager(
+                new AddressBook(model.getAddressBook()), new UserPrefs());
+        expectedModelAfterFirstPayment.setPerson(initialPerson, personAfterFirstPayment);
+
+        CommandResult expectedCommandResult = new CommandResult(firstSuccessMessage, personAfterFirstPayment);
+        assertCommandSuccess(firstAddCommand, model, expectedCommandResult, expectedModelAfterFirstPayment);
+
+        AddPaymentCommand duplicateAddCommand = new AddPaymentCommand(INDEX_FIRST_PERSON, paymentDate);
+        String expectedFailureMessage = String.format(AddPaymentCommand.MESSAGE_PAYMENT_DATE_IS_PRESENT,
+            paymentDate.format(DateTimeFormatter.ISO_LOCAL_DATE),
+            Messages.format(personAfterFirstPayment));
+
+        Billing billingBeforeDuplicateCommand =
+            model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased()).getBilling();
+        LocalDate dueDateBeforeDuplicateCommand = billingBeforeDuplicateCommand.getCurrentDueDate();
+
+        assertCommandFailure(duplicateAddCommand, model, expectedFailureMessage);
+
+        Person personAfterDuplicateFailure = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        assertEquals(billingBeforeDuplicateCommand, personAfterDuplicateFailure.getBilling());
+        assertEquals(dueDateBeforeDuplicateCommand, personAfterDuplicateFailure.getBilling().getCurrentDueDate());
+    }
+
+    @Test
     public void equals() {
         LocalDate paymentDate = LocalDate.parse(VALID_PAYMENT_DATE);
         AddPaymentCommand standardCommand = new AddPaymentCommand(INDEX_FIRST_PERSON, paymentDate);

@@ -31,6 +31,7 @@ public class AddPaymentCommand extends AddCommand {
             + PREFIX_DATE + "2026-01-13";
 
     public static final String MESSAGE_ADD_PAYMENT_SUCCESS = "%1$s paid by %2$s on %3$s";
+    public static final String MESSAGE_PAYMENT_DATE_IS_PRESENT = "Payment date %1$s is already present for %2$s";
 
     private final Index index;
     private final LocalDate paymentDate;
@@ -51,7 +52,15 @@ public class AddPaymentCommand extends AddCommand {
         requireNonNull(model);
 
         Person personToEdit = IndexedPersonResolver.getTargetPerson(model, index);
-        Billing updatedBilling = personToEdit.recordFeesPaidAndAdvanceBilling(paymentDate);
+
+        Billing updatedBilling;
+        try {
+            updatedBilling = personToEdit.recordFeesPaidAndAdvanceBilling(paymentDate);
+        } catch (IllegalArgumentException err) {
+            String formattedDate = paymentDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+            throw new CommandException(String.format(MESSAGE_PAYMENT_DATE_IS_PRESENT,
+                    formattedDate, Messages.format(personToEdit)));
+        }
 
         Person editedPerson = new PersonBuilder(personToEdit)
                 .withBilling(updatedBilling)

@@ -24,6 +24,7 @@ public class EditBillingCommandParserTest {
     private static final String VALID_PAST_DATE = "2026-03-20";
     private static final String VALID_AMOUNT_DESC = " " + PREFIX_AMOUNT + VALID_AMOUNT;
     private static final String VALID_DATE_DESC = " " + PREFIX_DATE + VALID_PAST_DATE;
+    private static final String INVALID_0_AMOUNT_DESC = " " + PREFIX_AMOUNT + "0";
     private static final String INVALID_AMOUNT_DESC = " " + PREFIX_AMOUNT + "-10";
 
     private final EditBillingCommandParser parser = new EditBillingCommandParser();
@@ -53,6 +54,13 @@ public class EditBillingCommandParserTest {
         String userInput = targetIndex.getOneBased() + VALID_AMOUNT_DESC;
         EditBillingCommand expectedCommand = new EditBillingCommand(targetIndex, Double.parseDouble(VALID_AMOUNT));
         assertParseSuccess(parser, userInput, expectedCommand);
+    }
+
+    @Test
+    public void parse_amount0_failure() {
+        Index targetIndex = INDEX_FIRST_PERSON;
+        String userInput = targetIndex.getOneBased() + INVALID_0_AMOUNT_DESC;
+        assertParseFailure(parser, userInput, ParserUtil.MESSAGE_INVALID_AMOUNT);
     }
 
     @Test
