@@ -7,8 +7,6 @@ TutorFlow is a **desktop app for freelance private tutors who need to manage stu
 
 TutorFlow keeps your student list, parent / guardian details, academics, tuition billing, payment history, appointments, and attendance records together in a single interface.
 
-![TutorFlow interface](images/UI_v1.4.png)
-
 * Table of Contents
 {:toc}
 
@@ -42,6 +40,8 @@ TutorFlow keeps your student list, parent / guardian details, academics, tuition
 --------------------------------------------------------------------------------------------------------------------
 
 ## TutorFlow at a glance
+
+![TutorFlow interface](images/UI_v1.4_annotated.png)
 
 TutorFlow is organized around a few core areas:
 
@@ -428,8 +428,8 @@ Details:
 * Matching ignores the day of the month.
 
 Examples:
-* `find billing d/2026-03` returns all students in the currently displayed list with payment due dates in March 2026.
-* `find billing d/2025-12` returns students with due dates in December 2025.
+* `find billing d/2026-03` 
+* `find billing d/2025-12` 
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -532,6 +532,10 @@ Closes TutorFlow.
 
 Format: `exit`
 
+### Navigating command history
+
+The `up` and `down` arrow keys on your keyboard can be used to nagivate through the past commands you have entered. 
+
 --------------------------------------------------------------------------------------------------------------------
 
 ## Data Management
@@ -631,3 +635,4 @@ Action | Format | Example
 **Help** | `help` | `help`
 **Clear** | `clear` | `clear`
 **Exit** | `exit` | `exit`
+**Navigate command history** | `up` and `down` keyboard arrow keys | -
