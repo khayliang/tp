@@ -34,7 +34,11 @@ public class DeleteAcadCommandParser implements Parser<DeleteAcadCommand> {
 
         List<Index> subjectIndices = new ArrayList<>();
         for (String subjectIndexString : subjectIndexStrings) {
-            subjectIndices.add(ParserUtil.parseIndex(subjectIndexString, DeleteAcadCommand.MESSAGE_USAGE));
+            try {
+                subjectIndices.add(ParserUtil.parseIndex(subjectIndexString));
+            } catch (ParseException pe) {
+                throw new ParseException("Invalid subject index.", pe);
+            }
         }
 
         return new DeleteAcadCommand(index, subjectIndices);

@@ -43,7 +43,10 @@ public class AddAcademicsCommandTest {
         AddAcademicsCommand command = new AddAcademicsCommand(INDEX_FIRST_PERSON, subjectsToAdd);
 
         Set<Subject> expectedSubjects = new HashSet<>(personToEdit.getAcademics().getSubjects());
-        expectedSubjects.addAll(subjectsToAdd);
+        for (Subject newSub : subjectsToAdd) {
+            expectedSubjects.removeIf(s -> s.getName().equals(newSub.getName()));
+            expectedSubjects.add(newSub);
+        }
 
         Person editedPerson = new PersonBuilder(personToEdit)
                 .withAcademics(new Academics(expectedSubjects))
@@ -179,6 +182,48 @@ public class AddAcademicsCommandTest {
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         showPersonAtIndex(expectedModel, INDEX_FIRST_PERSON);
+        expectedModel.setPerson(personToEdit, editedPerson);
+
+        CommandResult expectedResult = new CommandResult(expectedMessage, editedPerson);
+        assertCommandSuccess(command, model, expectedResult, expectedModel);
+    }
+
+    @Test
+    public void execute_upsertExistingSubjectWithDifferentLevel_replacesSubject() {
+        // ALICE has Math-Strong; adding Math-Basic should replace it
+        Person personToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+
+        // Assert precondition: person has Math with some level
+        assertTrue(personToEdit.getAcademics().getSubjects().stream()
+                .anyMatch(s -> s.getName().equals("Math")));
+
+        Set<Subject> subjectsToAdd = new HashSet<>();
+        subjectsToAdd.add(new Subject("Math", seedu.address.model.academic.Level.BASIC));
+
+        AddAcademicsCommand command = new AddAcademicsCommand(INDEX_FIRST_PERSON, subjectsToAdd);
+
+        Set<Subject> expectedSubjects = new HashSet<>(personToEdit.getAcademics().getSubjects());
+        expectedSubjects.removeIf(s -> s.getName().equals("Math"));
+        expectedSubjects.add(new Subject("Math", seedu.address.model.academic.Level.BASIC));
+
+        Person editedPerson = new PersonBuilder(personToEdit)
+                .withAcademics(new Academics(expectedSubjects))
+                .build();
+
+        // Resulting academics must have Math-Basic, not Math-Strong
+        assertTrue(editedPerson.getAcademics().getSubjects().stream()
+                .anyMatch(s -> s.getName().equals("Math")
+                        && s.getLevel().isPresent()
+                        && s.getLevel().get() == seedu.address.model.academic.Level.BASIC));
+        assertFalse(editedPerson.getAcademics().getSubjects().stream()
+                .anyMatch(s -> s.getName().equals("Math")
+                        && s.getLevel().isPresent()
+                        && s.getLevel().get() == seedu.address.model.academic.Level.STRONG));
+
+        String expectedMessage = String.format(AddAcademicsCommand.MESSAGE_ADD_ACADEMICS_SUCCESS,
+                Messages.format(editedPerson));
+
+        Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setPerson(personToEdit, editedPerson);
 
         CommandResult expectedResult = new CommandResult(expectedMessage, editedPerson);

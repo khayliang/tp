@@ -35,7 +35,11 @@ public class DeleteTagCommandParser implements Parser<DeleteTagCommand> {
 
         List<Index> tagIndices = new ArrayList<>();
         for (String tagIndexString : tagIndexStrings) {
-            tagIndices.add(ParserUtil.parseIndex(tagIndexString, DeleteTagCommand.MESSAGE_USAGE));
+            try {
+                tagIndices.add(ParserUtil.parseIndex(tagIndexString));
+            } catch (ParseException pe) {
+                throw new ParseException("Invalid tag index.", pe);
+            }
         }
 
         return new DeleteTagCommand(personIndex, tagIndices);

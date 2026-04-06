@@ -266,6 +266,14 @@ public class EditAcademicsCommandParserTest {
     }
 
     @Test
+    public void parse_multipleDescriptions_failure() {
+        Index index = INDEX_FIRST_PERSON;
+        String input = index.getOneBased() + " dsc/First dsc/Second";
+
+        assertParseFailure(parser, input, "Multiple description fields are not allowed.");
+    }
+
+    @Test
     public void parse_noteAfterSubjects_success() {
         Index index = INDEX_FIRST_PERSON;
         String input = index.getOneBased() + " s/Math dsc/Good";

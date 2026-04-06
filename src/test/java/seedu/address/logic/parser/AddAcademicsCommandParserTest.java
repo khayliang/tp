@@ -113,14 +113,8 @@ public class AddAcademicsCommandParserTest {
     }
 
     @Test
-    public void parse_duplicateSubjects_success() {
-        Index targetIndex = Index.fromOneBased(1);
-
-        Set<Subject> expected = new HashSet<>();
-        expected.add(new Subject("Math", null));
-
-        // duplicates allowed → Set dedup
-        assertParseSuccess(parser, "1 s/Math s/Math",
-                new AddAcademicsCommand(targetIndex, expected));
+    public void parse_duplicateSubjects_failure() {
+        assertParseFailure(parser, "1 s/Math s/Math",
+                "Duplicate subjects are not allowed.");
     }
 }

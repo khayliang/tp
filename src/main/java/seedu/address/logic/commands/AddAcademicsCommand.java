@@ -60,7 +60,12 @@ public class AddAcademicsCommand extends AddCommand {
         Set<Subject> updatedSubjects = new HashSet<>(
                 personToEdit.getAcademics().getSubjects()
         );
-        updatedSubjects.addAll(subjectsToAdd);
+
+        // Upsert: for each new subject, remove existing with same name, then add
+        for (Subject newSub : subjectsToAdd) {
+            updatedSubjects.removeIf(s -> s.getName().equals(newSub.getName()));
+            updatedSubjects.add(newSub);
+        }
 
         Academics updatedAcademics = new Academics(updatedSubjects,
                 personToEdit.getAcademics().getDescription());

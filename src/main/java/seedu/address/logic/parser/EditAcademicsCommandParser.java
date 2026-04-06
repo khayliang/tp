@@ -7,17 +7,15 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_DESCRIPTION;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_LEVEL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_SUBJECT;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.EditAcademicsCommand;
 import seedu.address.logic.commands.EditAcademicsCommand.EditAcademicsDescriptor;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.academic.Level;
-import seedu.address.model.academic.LevelUtil;
 import seedu.address.model.academic.Subject;
 
 /**
@@ -60,6 +58,11 @@ public class EditAcademicsCommandParser implements Parser<EditAcademicsCommand> 
 
         int dscIndex = remainder.indexOf(PREFIX_DESCRIPTION.getPrefix());
         if (dscIndex != -1) {
+            // Reject multiple dsc/ fields immediately
+            int secondDscIndex = remainder.indexOf(PREFIX_DESCRIPTION.getPrefix(), dscIndex + 1);
+            if (secondDscIndex != -1) {
+                throw new ParseException("Multiple description fields are not allowed.");
+            }
 
             int start = dscIndex + PREFIX_DESCRIPTION.getPrefix().length();
 
@@ -89,76 +92,15 @@ public class EditAcademicsCommandParser implements Parser<EditAcademicsCommand> 
 
         // ================= PARSE s/ l/ =================
         if (!subjectLevelPart.isEmpty()) {
+            Optional<List<Subject>> parseResult = AcademicsParserUtil
+                    .parseSubjectLevelSequenceAllowClear(subjectLevelPart,
+                            EditAcademicsCommand.MESSAGE_USAGE);
 
-            List<Subject> subjects = new ArrayList<>();
-            Subject current = null;
-
-            int i = 0;
-            boolean sawEmptySubject = false;
-
-            while (i < subjectLevelPart.length()) {
-
-                if (subjectLevelPart.startsWith(PREFIX_SUBJECT.getPrefix(), i)) {
-
-                    int start = i + PREFIX_SUBJECT.getPrefix().length();
-                    int next = findNextPrefix(subjectLevelPart, start);
-
-                    String name = subjectLevelPart.substring(start, next).trim();
-
-                    // Handle clear case: s/
-                    if (name.isEmpty()) {
-                        descriptor.setSubjects(new HashSet<>());
-                        sawEmptySubject = true;
-                        i = next;
-                        continue;
-                    }
-
-                    if (!Subject.isValidSubjectName(name)) {
-                        throw new ParseException(Subject.MESSAGE_CONSTRAINTS);
-                    }
-
-                    current = new Subject(name, null);
-                    subjects.add(current);
-
-                    i = next;
-
-                } else if (subjectLevelPart.startsWith(PREFIX_LEVEL.getPrefix(), i)) {
-
-                    if (current == null) {
-                        throw new ParseException("Level must follow a subject.");
-                    }
-
-                    if (current.getLevel().isPresent()) {
-                        throw new ParseException("Each subject can only have one level.");
-                    }
-
-                    int start = i + PREFIX_LEVEL.getPrefix().length();
-                    int next = findNextPrefix(subjectLevelPart, start);
-
-                    String levelStr = subjectLevelPart.substring(start, next).trim();
-
-                    Level level;
-                    try {
-                        level = LevelUtil.levelFromString(levelStr);
-                    } catch (IllegalArgumentException e) {
-                        throw new ParseException(LevelUtil.MESSAGE_CONSTRAINTS);
-                    }
-
-                    subjects.remove(subjects.size() - 1);
-                    current = new Subject(current.getName(), level);
-                    subjects.add(current);
-
-                    i = next;
-
-                } else {
-                    throw new ParseException(
-                            String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                                    EditAcademicsCommand.MESSAGE_USAGE));
-                }
-            }
-
-            // only set subjects if NOT clearing
-            if (!sawEmptySubject) {
+            if (parseResult.isEmpty()) {
+                // s/ with empty name → clear subjects
+                descriptor.setSubjects(new HashSet<>());
+            } else {
+                List<Subject> subjects = parseResult.get();
                 Set<String> seen = new HashSet<>();
                 for (Subject s : subjects) {
                     if (!seen.add(s.getName())) {
@@ -175,22 +117,5 @@ public class EditAcademicsCommandParser implements Parser<EditAcademicsCommand> 
         }
 
         return new EditAcademicsCommand(index, descriptor);
-    }
-
-    private int findNextPrefix(String input, int start) {
-        int nextSubject = input.indexOf(PREFIX_SUBJECT.getPrefix(), start);
-        int nextLevel = input.indexOf(PREFIX_LEVEL.getPrefix(), start);
-
-        if (nextSubject == -1 && nextLevel == -1) {
-            return input.length();
-        }
-        if (nextSubject == -1) {
-            return nextLevel;
-        }
-        if (nextLevel == -1) {
-            return nextSubject;
-        }
-
-        return Math.min(nextSubject, nextLevel);
     }
 }
