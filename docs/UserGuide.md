@@ -534,7 +534,7 @@ Format: `exit`
 
 ### Navigating command history
 
-The `up` and `down` arrow keys on your keyboard can be used to nagivate through the past commands you have entered. 
+The `up` and `down` arrow keys on your keyboard can be used to navigate through the past commands you have entered. 
 
 --------------------------------------------------------------------------------------------------------------------
 
