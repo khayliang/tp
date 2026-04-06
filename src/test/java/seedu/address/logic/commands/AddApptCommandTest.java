@@ -69,6 +69,31 @@ public class AddApptCommandTest {
     }
 
     @Test
+    public void execute_duplicateAppointmentDescription_failureAndAppointmentUnchanged() {
+        Person personWithAppointment = new PersonBuilder()
+                .withName("Duplicate Appointment")
+                .withPhone("90000003")
+                .withEmail("duplicate@example.com")
+                .withAddress("Duplicate Street 3")
+                .withAppointment("2026-01-20T10:00:00", VALID_APPOINTMENT_DESCRIPTION, Recurrence.NONE)
+                .build();
+
+        AddressBook addressBook = new AddressBook();
+        addressBook.addPerson(personWithAppointment);
+        model = new ModelManager(addressBook, new UserPrefs());
+
+        AddApptCommand addCommand = new AddApptCommand(INDEX_FIRST_PERSON,
+                LocalDateTime.parse("2026-01-21T10:00:00"),
+                Recurrence.WEEKLY,
+                "  " + VALID_APPOINTMENT_DESCRIPTION + "  ");
+
+        String expectedFailureMessage = String.format(AddApptCommand.MESSAGE_DUPLICATE_APPOINTMENT_DESCRIPTION,
+                VALID_APPOINTMENT_DESCRIPTION, Messages.format(personWithAppointment));
+
+        assertCommandFailure(addCommand, model, expectedFailureMessage);
+    }
+
+    @Test
     public void execute_validIndexFilteredAppointmentResults_success() {
         Person laterAppointmentPerson = new PersonBuilder().withName("Later Appointment")
                 .withPhone("90000001").withEmail("later@example.com").withAddress("Later Street 1")

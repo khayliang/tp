@@ -32,6 +32,8 @@ public class AddApptCommand extends AddCommand {
             + "d/2026-01-13T08:00:00 r/NONE dsc/Weekly algebra practice";
 
     public static final String MESSAGE_ADD_APPT_SUCCESS = "Added appointment for %1$s: %2$s";
+    public static final String MESSAGE_DUPLICATE_APPOINTMENT_DESCRIPTION =
+            "Appointment description \"%1$s\" already exists for %2$s";
 
     private final Index index;
     private final LocalDateTime appointmentStart;
@@ -56,6 +58,10 @@ public class AddApptCommand extends AddCommand {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         Person personToEdit = IndexedPersonResolver.getTargetPerson(model, index);
+        if (personToEdit.getAppointment().hasSessionWithDescription(description)) {
+            throw new CommandException(String.format(MESSAGE_DUPLICATE_APPOINTMENT_DESCRIPTION,
+                    description.trim(), Messages.format(personToEdit)));
+        }
         ScheduledSession session = new ScheduledSession(recurrence, appointmentStart, appointmentStart,
             AttendanceHistory.EMPTY, description);
         Appointment updatedAppointment = personToEdit.getAppointment().addSession(session);

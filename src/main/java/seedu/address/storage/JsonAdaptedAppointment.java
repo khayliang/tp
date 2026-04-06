@@ -35,6 +35,10 @@ class JsonAdaptedAppointment {
                 modelSessions.add(session.toModelType());
             }
         }
-        return new Appointment(modelSessions);
+        try {
+            return new Appointment(modelSessions);
+        } catch (IllegalArgumentException err) {
+            throw new IllegalValueException(err.getMessage());
+        }
     }
 }

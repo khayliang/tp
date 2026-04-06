@@ -111,6 +111,20 @@ public class EditApptCommandTest {
     }
 
     @Test
+    public void execute_duplicateAppointmentDescription_failureAndAppointmentUnchanged() {
+        Person personToEdit = createPersonWithTwoSessions();
+        model.addPerson(personToEdit);
+
+        EditApptCommand editCommand = new EditApptCommand(INDEX_FIRST_PERSON, INDEX_SECOND_PERSON,
+                Optional.empty(), Optional.empty(), Optional.of("  Algebra  "));
+
+        String expectedFailureMessage = String.format(EditApptCommand.MESSAGE_DUPLICATE_APPOINTMENT_DESCRIPTION,
+                "Algebra", Messages.format(personToEdit));
+
+        assertCommandFailure(editCommand, model, expectedFailureMessage);
+    }
+
+    @Test
     public void equals() {
         EditApptCommand firstCommand = new EditApptCommand(INDEX_FIRST_PERSON, INDEX_FIRST_PERSON,
                 Optional.of(LocalDateTime.parse("2026-02-01T09:30:00")),
@@ -159,6 +173,28 @@ public class EditApptCommandTest {
                 .withEmail("alex@example.com")
                 .withAddress("Alex Street 1")
                 .withAppointment(new Appointment(List.of(session)))
+                .build();
+    }
+
+    private Person createPersonWithTwoSessions() {
+        ScheduledSession firstSession = new ScheduledSession(
+                Recurrence.WEEKLY,
+                LocalDateTime.parse("2026-01-01T10:00:00"),
+                LocalDateTime.parse("2026-01-01T10:00:00"),
+                AttendanceHistory.EMPTY,
+                "Algebra");
+        ScheduledSession secondSession = new ScheduledSession(
+                Recurrence.NONE,
+                LocalDateTime.parse("2026-01-08T10:00:00"),
+                LocalDateTime.parse("2026-01-08T10:00:00"),
+                AttendanceHistory.EMPTY,
+                "Consultation");
+        return new PersonBuilder()
+                .withName("Alex")
+                .withPhone("90010001")
+                .withEmail("alex@example.com")
+                .withAddress("Alex Street 1")
+                .withAppointment(new Appointment(List.of(firstSession, secondSession)))
                 .build();
     }
 }

@@ -5,9 +5,11 @@ import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.AppClock;
@@ -20,6 +22,9 @@ import seedu.address.model.recurrence.Recurrence;
  * Immutable appointment container for a person's scheduled sessions.
  */
 public final class Appointment {
+
+    public static final String MESSAGE_DUPLICATE_SESSION_DESCRIPTION =
+            "Appointment session descriptions must be unique within the same student.";
 
     private final List<ScheduledSession> sessions;
 
@@ -36,6 +41,7 @@ public final class Appointment {
     public Appointment(List<ScheduledSession> sessions) {
         requireAllNonNull(sessions);
         List<ScheduledSession> copiedSessions = new ArrayList<>(sessions);
+        validateUniqueSessionDescriptions(copiedSessions);
         copiedSessions.sort(Comparator.comparing(ScheduledSession::getNext)
                 .thenComparing(ScheduledSession::getStart)
                 .thenComparing(ScheduledSession::getDescription));
@@ -66,6 +72,36 @@ public final class Appointment {
 
     public List<ScheduledSession> getSessions() {
         return sessions;
+    }
+
+    /**
+     * Returns true if a session with the given description already exists.
+     */
+    public boolean hasSessionWithDescription(String description) {
+        String normalizedDescription = normalizeDescription(description);
+        return sessions.stream()
+                .map(ScheduledSession::getDescription)
+                .anyMatch(normalizedDescription::equals);
+    }
+
+    /**
+     * Returns true if another session, excluding the given index, has the given description.
+     */
+    public boolean hasSessionWithDescriptionExcludingIndex(String description, int excludedIndex) {
+        if (excludedIndex < 0 || excludedIndex >= sessions.size()) {
+            throw new IndexOutOfBoundsException("Session index out of range: " + excludedIndex);
+        }
+
+        String normalizedDescription = normalizeDescription(description);
+        for (int i = 0; i < sessions.size(); i++) {
+            if (i == excludedIndex) {
+                continue;
+            }
+            if (sessions.get(i).getDescription().equals(normalizedDescription)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -137,6 +173,20 @@ public final class Appointment {
                 .filter(session -> !session.getNext().isBefore(now))
                 .findFirst()
                 .or(() -> Optional.of(sessions.get(sessions.size() - 1)));
+    }
+
+    private String normalizeDescription(String description) {
+        requireAllNonNull(description);
+        return description.trim();
+    }
+
+    private void validateUniqueSessionDescriptions(List<ScheduledSession> sessions) {
+        Set<String> seenDescriptions = new HashSet<>();
+        for (ScheduledSession session : sessions) {
+            if (!seenDescriptions.add(normalizeDescription(session.getDescription()))) {
+                throw new IllegalArgumentException(MESSAGE_DUPLICATE_SESSION_DESCRIPTION);
+            }
+        }
     }
 
     private ScheduledSession getSingleSession() {

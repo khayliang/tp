@@ -44,6 +44,8 @@ public class EditApptCommand extends EditCommand {
     public static final String MESSAGE_EDIT_APPT_SUCCESS = "Edited appointment for %1$s: %2$s";
     public static final String MESSAGE_INVALID_APPOINTMENT_INDEX =
             "The appointment index provided is invalid for the selected student.";
+    public static final String MESSAGE_DUPLICATE_APPOINTMENT_DESCRIPTION =
+            "Appointment description \"%1$s\" already exists for %2$s";
 
     private static final DateTimeFormatter APPOINTMENT_DATE_TIME_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
@@ -80,6 +82,7 @@ public class EditApptCommand extends EditCommand {
         validateSessionIndex(sessions);
 
         ScheduledSession targetSession = sessions.get(sessionIndex.getZeroBased());
+        validateDescriptionUniqueness(personToEdit, targetSession);
         ScheduledSession editedSession = createEditedSession(targetSession);
 
         Appointment updatedAppointment = personToEdit.getAppointment()
@@ -96,6 +99,24 @@ public class EditApptCommand extends EditCommand {
     private void validateSessionIndex(List<ScheduledSession> sessions) throws CommandException {
         if (sessionIndex.getZeroBased() >= sessions.size()) {
             throw new CommandException(MESSAGE_INVALID_APPOINTMENT_INDEX);
+        }
+    }
+
+    private void validateDescriptionUniqueness(Person personToEdit,
+                                               ScheduledSession targetSession) throws CommandException {
+        if (description.isEmpty()) {
+            return;
+        }
+
+        String updatedDescription = description.orElseThrow().trim();
+        if (updatedDescription.equals(targetSession.getDescription())) {
+            return;
+        }
+
+        if (personToEdit.getAppointment()
+                .hasSessionWithDescriptionExcludingIndex(updatedDescription, sessionIndex.getZeroBased())) {
+            throw new CommandException(String.format(MESSAGE_DUPLICATE_APPOINTMENT_DESCRIPTION,
+                    updatedDescription, Messages.format(personToEdit)));
         }
     }
 
