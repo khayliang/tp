@@ -379,6 +379,30 @@
     -fx-text-fill: #f1f1f1;
 }
 
+.detail-appointment-card {
+    -fx-background-color: #3d3d3d;
+    -fx-background-radius: 6;
+    -fx-padding: 8 10 8 10;
+}
+
+.detail-appointment-title {
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-font-size: 13px;
+    -fx-text-fill: #f2f2f2;
+}
+
+.detail-appointment-meta {
+    -fx-font-family: "Segoe UI";
+    -fx-font-size: 11px;
+    -fx-text-fill: #b8bdc2;
+}
+
+.detail-attendance-summary {
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-font-size: 11px;
+    -fx-text-fill: #cfd4d8;
+}
+
 .detail-tag {
     -fx-font-family: "Segoe UI";
     -fx-font-size: 11px;
@@ -410,9 +434,24 @@
     -fx-font-family: "Segoe UI";
     -fx-font-size: 11px;
     -fx-text-fill: white;
-    -fx-background-color: #6b7cd3;
+    -fx-background-color: #5f6aa8;
     -fx-padding: 2 6 2 6;
     -fx-background-radius: 4;
+}
+
+.detail-attendance-present {
+    -fx-background-color: #4f7f5f;
+}
+
+.detail-attendance-absent {
+    -fx-background-color: #8d5f64;
+}
+
+.detail-attendance-more {
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-font-size: 11px;
+    -fx-text-fill: #d0d0d0;
+    -fx-padding: 2 4 2 4;
 }
 
 #filterField, #personListPanel, #personWebpage {

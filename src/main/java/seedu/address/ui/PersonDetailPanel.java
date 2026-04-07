@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 
 import javafx.fxml.FXML;
@@ -29,6 +30,7 @@ public class PersonDetailPanel extends UiPart<Region> {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("d MMM uuuu, h:mma");
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("d MMM uuuu");
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("h:mma");
+    private static final int MAX_VISIBLE_ATTENDANCE_RECORDS = 3;
 
     @FXML
     private VBox contentContainer;
@@ -212,31 +214,43 @@ public class PersonDetailPanel extends UiPart<Region> {
         return String.format("$%.2f", amount);
     }
 
-    private String formatAttendance(Attendance attendance) {
-        String status = attendance.hasAttended() ? "Present" : "Absent";
-        LocalDateTime recordedAt = attendance.getRecordedAt();
-        return status + ": " + (recordedAt.toLocalTime().equals(LocalTime.MIDNIGHT)
-                ? formatDate(recordedAt.toLocalDate())
-                : formatDateTime(recordedAt));
+    private String formatAppointmentTitle(int appointmentIndex, ScheduledSession session) {
+        return appointmentIndex + ". " + session.getDescription();
     }
 
-    private String formatAppointment(int appointmentIndex, ScheduledSession session) {
-        return appointmentIndex + ". " + formatDateTime(session.getNext()) + " - " + session.getDescription();
+    private String formatAppointmentMeta(ScheduledSession session) {
+        return "Next: " + formatDateTime(session.getNext()) + " | " + formatRecurrenceSchedule(session);
+    }
+
+    private String formatAttendanceDate(LocalDateTime recordedAt) {
+        return recordedAt.toLocalTime().equals(LocalTime.MIDNIGHT)
+                ? formatDate(recordedAt.toLocalDate())
+                : formatDateTime(recordedAt);
+    }
+
+    private String formatCompactAttendance(Attendance attendance) {
+        String statusPrefix = attendance.hasAttended() ? "P" : "A";
+        return statusPrefix + " " + formatAttendanceDate(attendance.getRecordedAt());
+    }
+
+    private String formatAttendanceSummary(List<Attendance> sortedAttendanceRecords) {
+        long presentCount = sortedAttendanceRecords.stream().filter(Attendance::hasAttended).count();
+        long absentCount = sortedAttendanceRecords.size() - presentCount;
+        String latestAttendance = formatAttendanceDate(sortedAttendanceRecords.get(0).getRecordedAt());
+        return presentCount + " present, " + absentCount + " absent | Latest: " + latestAttendance;
     }
 
     private VBox createAppointmentSection(int appointmentIndex, ScheduledSession session) {
         VBox appointmentSection = new VBox(6);
+        appointmentSection.getStyleClass().add("detail-appointment-card");
 
-        Label appointmentLabel = new Label(formatAppointment(appointmentIndex, session));
-        appointmentLabel.getStyleClass().add("detail-section-title");
+        Label appointmentLabel = new Label(formatAppointmentTitle(appointmentIndex, session));
+        appointmentLabel.getStyleClass().add("detail-appointment-title");
         appointmentLabel.setWrapText(true);
 
-        Label scheduleLabel = new Label("Schedule: " + formatRecurrenceSchedule(session));
-        scheduleLabel.getStyleClass().add("detail-field-value");
+        Label scheduleLabel = new Label(formatAppointmentMeta(session));
+        scheduleLabel.getStyleClass().add("detail-appointment-meta");
         scheduleLabel.setWrapText(true);
-
-        Label attendanceTitle = new Label("Attendance");
-        attendanceTitle.getStyleClass().add("detail-field-label");
 
         FlowPane attendancePane = new FlowPane();
         attendancePane.setHgap(6);
@@ -244,19 +258,42 @@ public class PersonDetailPanel extends UiPart<Region> {
         attendancePane.setPrefWrapLength(320);
 
         if (session.getAttendanceHistory().isEmpty()) {
+            Label attendanceSummary = new Label("0 present, 0 absent");
+            attendanceSummary.getStyleClass().add("detail-attendance-summary");
+
             Label noAttendanceLabel = new Label("No attendance history");
             noAttendanceLabel.getStyleClass().add("detail-field-value");
             attendancePane.getChildren().add(noAttendanceLabel);
+
+            appointmentSection.getChildren().addAll(appointmentLabel, scheduleLabel, attendanceSummary, attendancePane);
         } else {
-            java.util.List<Attendance> attendanceRecords = session.getAttendanceHistory().getRecords();
-            for (int index = attendanceRecords.size() - 1; index >= 0; index--) {
-                Label attendanceLabel = new Label(formatAttendance(attendanceRecords.get(index)));
+            List<Attendance> attendanceRecords = session.getAttendanceHistory().getRecords().stream()
+                    .sorted(Comparator.comparing(Attendance::getRecordedAt).reversed())
+                    .toList();
+
+            Label attendanceSummary = new Label(formatAttendanceSummary(attendanceRecords));
+            attendanceSummary.getStyleClass().add("detail-attendance-summary");
+
+            int visibleRecords = Math.min(MAX_VISIBLE_ATTENDANCE_RECORDS, attendanceRecords.size());
+            for (int index = 0; index < visibleRecords; index++) {
+                Attendance attendance = attendanceRecords.get(index);
+                Label attendanceLabel = new Label(formatCompactAttendance(attendance));
                 attendanceLabel.getStyleClass().add("detail-attendance-date");
+                attendanceLabel.getStyleClass().add(
+                        attendance.hasAttended() ? "detail-attendance-present" : "detail-attendance-absent");
                 attendancePane.getChildren().add(attendanceLabel);
             }
+
+            int hiddenRecordCount = attendanceRecords.size() - visibleRecords;
+            if (hiddenRecordCount > 0) {
+                Label hiddenRecordsLabel = new Label("+" + hiddenRecordCount + " more");
+                hiddenRecordsLabel.getStyleClass().add("detail-attendance-more");
+                attendancePane.getChildren().add(hiddenRecordsLabel);
+            }
+
+            appointmentSection.getChildren().addAll(appointmentLabel, scheduleLabel, attendanceSummary, attendancePane);
         }
 
-        appointmentSection.getChildren().addAll(appointmentLabel, scheduleLabel, attendanceTitle, attendancePane);
         return appointmentSection;
     }
 
