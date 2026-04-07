@@ -50,8 +50,18 @@ public class DeletePaymentCommandTest {
                 .build();
 
         String formattedDate = PAYMENT_DATE_TO_DELETE.format(DateTimeFormatter.ISO_LOCAL_DATE);
-        String expectedMessage = String.format(DeletePaymentCommand.MESSAGE_DELETE_PAYMENT_SUCCESS,
+        String deleteFeedback = String.format(DeletePaymentCommand.MESSAGE_DELETE_PAYMENT_SUCCESS,
                 formattedDate, Messages.format(editedPerson));
+        String dueDateFeedback;
+        if (updatedBilling.getCurrentDueDate().isBefore(personWithPaymentHistory.getBilling().getCurrentDueDate())) {
+            dueDateFeedback = String.format(DeletePaymentCommand.MESSAGE_PAYMENT_DUE_DATE_ROLLED_BACK,
+                    personWithPaymentHistory.getBilling().getCurrentDueDate(),
+                    updatedBilling.getCurrentDueDate());
+        } else {
+            dueDateFeedback = String.format(DeletePaymentCommand.MESSAGE_PAYMENT_DUE_DATE_UNCHANGED,
+                    updatedBilling.getCurrentDueDate());
+        }
+        String expectedMessage = deleteFeedback + " " + dueDateFeedback;
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setPerson(personWithPaymentHistory, editedPerson);

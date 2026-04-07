@@ -45,7 +45,9 @@ public class EditBillingCommandTest {
                 .build();
 
         String expectedMessage = String.format(EditBillingCommand.MESSAGE_EDIT_TUITION_FEE_SUCCESS,
-                Messages.format(editedPerson), updatedBilling.getTuitionFee());
+                Messages.format(editedPerson),
+                personToEdit.getBilling().getTuitionFee(),
+                updatedBilling.getTuitionFee());
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setPerson(personToEdit, editedPerson);
@@ -67,7 +69,9 @@ public class EditBillingCommandTest {
                 .build();
 
         String expectedMessage = String.format(EditBillingCommand.MESSAGE_EDIT_PAYMENT_DUE_SUCCESS,
-                Messages.format(editedPerson), updatedBilling.getCurrentDueDate());
+                Messages.format(editedPerson),
+                personToEdit.getBilling().getCurrentDueDate(),
+                updatedBilling.getCurrentDueDate());
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setPerson(personToEdit, editedPerson);
@@ -93,7 +97,9 @@ public class EditBillingCommandTest {
 
         String expectedMessage = String.format(EditBillingCommand.MESSAGE_EDIT_BILLING_SUCCESS,
                 Messages.format(editedPerson),
+                personToEdit.getBilling().getTuitionFee(),
                 updatedBilling.getTuitionFee(),
+                personToEdit.getBilling().getCurrentDueDate(),
                 updatedBilling.getCurrentDueDate());
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
