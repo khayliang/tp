@@ -20,9 +20,12 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.address.model.attendance.Attendance;
+import seedu.address.model.attendance.AttendanceHistory;
 import seedu.address.model.billing.Billing;
 import seedu.address.model.billing.PaymentHistory;
 import seedu.address.model.recurrence.Recurrence;
+import seedu.address.model.session.Appointment;
 import seedu.address.model.tag.Tag;
 
 public class PersonTest {
@@ -137,7 +140,7 @@ public class PersonTest {
     @Test
     public void getAppointment_present_returnsStoredAppointment() {
         Person person = getPersonBuilder()
-                .withAppointment(seedu.address.model.session.Appointment.of(
+                .withAppointment(Appointment.of(
                         "2026-01-13T08:00:00", "Algebra", Recurrence.NONE))
                 .build();
         assertEquals(LocalDateTime.parse("2026-01-13T08:00:00"), person.getNextAppointment().orElseThrow().getStart());
@@ -148,10 +151,10 @@ public class PersonTest {
     @Test
     public void getAttendance_withAppointment_returnsAppointmentAttendance() {
         Person person = new PersonBuilder(ALICE)
-                .withAppointment(seedu.address.model.session.Appointment.of(
+                .withAppointment(Appointment.of(
                         "2026-01-13T08:00:00", "Algebra", Recurrence.NONE).withAttendance(
-                                seedu.address.model.attendance.AttendanceHistory.EMPTY.addAttendance(
-                                        new seedu.address.model.attendance.Attendance(
+                                AttendanceHistory.EMPTY.addAttendance(
+                                        new Attendance(
                                                 true, LocalDateTime.parse("2026-01-29T08:00:00")))))
                 .build();
         assertEquals(LocalDateTime.parse("2026-01-29T08:00:00"),
@@ -216,7 +219,7 @@ public class PersonTest {
         assertFalse(ALICE.equals(editedAlice));
 
         editedAlice = new PersonBuilder(ALICE)
-                .withAppointment(seedu.address.model.session.Appointment.of(
+                .withAppointment(Appointment.of(
                         "2026-01-13T08:00:00", "Algebra", Recurrence.NONE))
                 .build();
         assertFalse(ALICE.equals(editedAlice));
@@ -232,10 +235,10 @@ public class PersonTest {
         assertFalse(ALICE.equals(editedAlice));
 
         editedAlice = new PersonBuilder(ALICE)
-                .withAppointment(seedu.address.model.session.Appointment.of(
+                .withAppointment(Appointment.of(
                         "2026-01-13T08:00:00", "Algebra", Recurrence.NONE).withAttendance(
-                                seedu.address.model.attendance.AttendanceHistory.EMPTY.addAttendance(
-                                        new seedu.address.model.attendance.Attendance(
+                                AttendanceHistory.EMPTY.addAttendance(
+                                        new Attendance(
                                                 true, LocalDateTime.parse("2026-01-29T08:00:00")))))
                 .build();
         assertFalse(ALICE.equals(editedAlice));

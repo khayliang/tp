@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
+import seedu.address.model.tag.Tag;
 
 public class UniquePersonListTest {
 
@@ -44,7 +45,7 @@ public class UniquePersonListTest {
         uniquePersonList.add(ALICE);
         Person editedAlice = new PersonBuilder(ALICE)
                 .withAddress(new Address(VALID_ADDRESS_BOB))
-                .withTags(Set.of(new seedu.address.model.tag.Tag(VALID_TAG_JC)))
+            .withTags(Set.of(new Tag(VALID_TAG_JC)))
                 .build();
         assertTrue(uniquePersonList.contains(editedAlice));
     }
@@ -89,7 +90,7 @@ public class UniquePersonListTest {
         uniquePersonList.add(ALICE);
         Person editedAlice = new PersonBuilder(ALICE)
                 .withAddress(new Address(VALID_ADDRESS_BOB))
-                .withTags(Set.of(new seedu.address.model.tag.Tag(VALID_TAG_JC)))
+            .withTags(Set.of(new Tag(VALID_TAG_JC)))
                 .build();
         uniquePersonList.setPerson(ALICE, editedAlice);
         UniquePersonList expectedUniquePersonList = new UniquePersonList();

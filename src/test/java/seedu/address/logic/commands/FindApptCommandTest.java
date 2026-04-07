@@ -19,6 +19,8 @@ import seedu.address.model.UserPrefs;
 import seedu.address.model.person.AppointmentInWeekPredicate;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.PersonBuilder;
+import seedu.address.model.recurrence.Recurrence;
+import seedu.address.model.session.Appointment;
 
 /**
  * Contains integration tests (interaction with the Model) for {@code FindApptCommand}.
@@ -64,15 +66,15 @@ public class FindApptCommandTest {
     private static Model buildModelWithAppointments() {
         AddressBook addressBook = new AddressBook();
         Person aliceWithAppt = new PersonBuilder(ALICE)
-                .withAppointment(seedu.address.model.session.Appointment.of(
-                        "2026-02-09T08:00:00", "", seedu.address.model.recurrence.Recurrence.NONE))
+            .withAppointment(Appointment.of(
+                "2026-02-09T08:00:00", "", Recurrence.NONE))
                 .build();
         Person bensonWithAppt = new PersonBuilder(BENSON)
-                .withAppointment(seedu.address.model.session.Appointment.of(
-                        "2026-02-15T15:30:00", "", seedu.address.model.recurrence.Recurrence.NONE)).build();
+            .withAppointment(Appointment.of(
+                "2026-02-15T15:30:00", "", Recurrence.NONE)).build();
         Person carlWithAppt = new PersonBuilder(CARL)
-                .withAppointment(seedu.address.model.session.Appointment.of(
-                        "2026-02-16T10:00:00", "", seedu.address.model.recurrence.Recurrence.NONE)).build();
+            .withAppointment(Appointment.of(
+                "2026-02-16T10:00:00", "", Recurrence.NONE)).build();
         addressBook.addPerson(aliceWithAppt);
         addressBook.addPerson(bensonWithAppt);
         addressBook.addPerson(carlWithAppt);

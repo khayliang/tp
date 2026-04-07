@@ -9,9 +9,11 @@ import static seedu.address.testutil.TypicalPersons.getPersonBuilder;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.Collections;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
@@ -26,8 +28,8 @@ import seedu.address.model.recurrence.Recurrence;
  */
 public class FindBillingCommandTest {
 
-    private Model model = new ModelManager(new seedu.address.model.AddressBook(), new UserPrefs());
-    private Model expectedModel = new ModelManager(new seedu.address.model.AddressBook(), new UserPrefs());
+    private Model model = new ModelManager(new AddressBook(), new UserPrefs());
+    private Model expectedModel = new ModelManager(new AddressBook(), new UserPrefs());
 
     @Test
     public void equals() {
@@ -101,7 +103,7 @@ public class FindBillingCommandTest {
         String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 0);
 
         assertCommandSuccess(command, model, expectedMessage, expectedModel);
-        assertEquals(java.util.Collections.emptyList(), model.getFilteredPersonList());
+        assertEquals(Collections.emptyList(), model.getFilteredPersonList());
     }
 
     @Test

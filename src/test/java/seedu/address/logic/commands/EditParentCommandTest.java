@@ -21,6 +21,7 @@ import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.person.Email;
+import seedu.address.model.person.Guardian;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.PersonBuilder;
@@ -42,7 +43,7 @@ public class EditParentCommandTest {
         EditParentCommand editParentCommand = new EditParentCommand(INDEX_FIRST_PERSON, descriptor);
 
         Person editedPerson = new PersonBuilder(personToEdit)
-                .withGuardian(new seedu.address.model.person.Guardian(new Name(VALID_PARENT_NAME_AMY), null, null))
+                .withGuardian(new Guardian(new Name(VALID_PARENT_NAME_AMY), null, null))
                 .build();
         String expectedMessage = String.format(EditParentCommand.MESSAGE_EDIT_PARENT_SUCCESS,
                 Messages.format(editedPerson));
@@ -66,7 +67,7 @@ public class EditParentCommandTest {
         EditParentCommand editParentCommand = new EditParentCommand(INDEX_SECOND_PERSON, descriptor);
 
         Person editedPerson = new PersonBuilder(personToEdit)
-                .withGuardian(new seedu.address.model.person.Guardian(
+                .withGuardian(new Guardian(
                         personToEdit.getGuardian().orElseThrow().getName(),
                         new Phone("99998888"),
                         personToEdit.getGuardian().orElseThrow().getEmail().orElse(null)))
@@ -94,7 +95,7 @@ public class EditParentCommandTest {
         EditParentCommand editParentCommand = new EditParentCommand(INDEX_FIRST_PERSON, descriptor);
 
         Person editedPerson = new PersonBuilder(personToEdit)
-                .withGuardian(new seedu.address.model.person.Guardian(
+                .withGuardian(new Guardian(
                         new Name(VALID_PARENT_NAME_AMY), new Phone("91234567"), new Email("parent@example.com")))
                 .build();
         String expectedMessage = String.format(EditParentCommand.MESSAGE_EDIT_PARENT_SUCCESS,
@@ -128,7 +129,7 @@ public class EditParentCommandTest {
         EditParentCommand editParentCommand = new EditParentCommand(INDEX_FIRST_PERSON, descriptor);
 
         Person editedPerson = new PersonBuilder(personToEdit)
-                .withGuardian(new seedu.address.model.person.Guardian(new Name(VALID_PARENT_NAME_AMY), null, null))
+                .withGuardian(new Guardian(new Name(VALID_PARENT_NAME_AMY), null, null))
                 .build();
         String expectedMessage = String.format(EditParentCommand.MESSAGE_EDIT_PARENT_SUCCESS,
                 Messages.format(editedPerson));

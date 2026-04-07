@@ -18,9 +18,12 @@ import org.junit.jupiter.api.Test;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
+import seedu.address.model.person.Email;
 import seedu.address.model.person.Guardian;
 import seedu.address.model.person.GuardianContainsKeywordsPredicate;
 import seedu.address.model.person.Name;
+import seedu.address.model.person.Person;
+import seedu.address.model.person.Phone;
 
 public class FindParentCommandTest {
 
@@ -139,8 +142,8 @@ public class FindParentCommandTest {
     @Test
     public void execute_matchByGuardianPhone_onePersonFound() {
         // Add a person with a guardian phone to a fresh model
-        seedu.address.model.person.Person personWithParentPhone = getPersonBuilder("Test Student")
-                .withGuardian(new Guardian(new Name("Test Parent"), new seedu.address.model.person.Phone("81234567"),
+        Person personWithParentPhone = getPersonBuilder("Test Student")
+                .withGuardian(new Guardian(new Name("Test Parent"), new Phone("81234567"),
                         null))
                 .build();
         Model localModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
@@ -160,8 +163,8 @@ public class FindParentCommandTest {
     @Test
     public void execute_matchByGuardianPhonePartial_onePersonFound() {
         // Partial phone substring should match
-        seedu.address.model.person.Person personWithParentPhone = getPersonBuilder("Test Student")
-                .withGuardian(new Guardian(new Name("Test Parent"), new seedu.address.model.person.Phone("81234567"),
+        Person personWithParentPhone = getPersonBuilder("Test Student")
+                .withGuardian(new Guardian(new Name("Test Parent"), new Phone("81234567"),
                         null))
                 .build();
         Model localModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
@@ -180,9 +183,9 @@ public class FindParentCommandTest {
 
     @Test
     public void execute_matchByGuardianEmail_onePersonFound() {
-        seedu.address.model.person.Person personWithParentEmail = getPersonBuilder("Test Student")
+        Person personWithParentEmail = getPersonBuilder("Test Student")
                 .withGuardian(new Guardian(new Name("Test Parent"), null,
-                        new seedu.address.model.person.Email("parent@example.com")))
+                        new Email("parent@example.com")))
                 .build();
         Model localModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
         Model localExpectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
@@ -200,9 +203,9 @@ public class FindParentCommandTest {
 
     @Test
     public void execute_matchByGuardianEmailCaseInsensitive_onePersonFound() {
-        seedu.address.model.person.Person personWithParentEmail = getPersonBuilder("Test Student")
+        Person personWithParentEmail = getPersonBuilder("Test Student")
                 .withGuardian(new Guardian(new Name("Test Parent"), null,
-                        new seedu.address.model.person.Email("parent@example.com")))
+                        new Email("parent@example.com")))
                 .build();
         Model localModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
         Model localExpectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
