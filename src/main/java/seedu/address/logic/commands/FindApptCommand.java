@@ -23,7 +23,7 @@ public class FindApptCommand extends FindCommand {
             + "Parameters: [" + PREFIX_DATE + "DATE]\n"
             + "Example: " + FindCommand.COMMAND_WORD + " " + SUB_COMMAND_WORD + " " + PREFIX_DATE + "2026-02-13";
 
-    public static final String MESSAGE_SUCCESS = "%1$d students listed for week %2$s to %3$s";
+    public static final String MESSAGE_SUCCESS = "Found %1$d student(s) with sessions in week %2$s to %3$s.";
 
     private final LocalDate targetDate;
     private final AppointmentInWeekPredicate predicate;

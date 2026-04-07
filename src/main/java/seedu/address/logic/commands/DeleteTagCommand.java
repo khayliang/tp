@@ -28,7 +28,7 @@ public class DeleteTagCommand extends DeleteCommand {
             + "Parameters: INDEX t/TAG_INDEX [t/TAG_INDEX]...\n"
             + "Example: " + COMMAND_WORD + " " + SUB_COMMAND_WORD + " 1 t/2 t/3";
 
-    public static final String MESSAGE_DELETE_TAG_SUCCESS = "Deleted Tag(s): %1$s";
+    public static final String MESSAGE_DELETE_TAG_SUCCESS = "Removed tag(s): %1$s.";
 
     private final List<Index> tagIndices;
 

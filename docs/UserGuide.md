@@ -41,7 +41,7 @@ TutorFlow keeps your student list, parent / guardian details, academics, tuition
 
 ## TutorFlow at a glance
 
-![TutorFlow interface](images/UI_v1.4_annotated.png)
+![TutorFlow interface](images/UI_v1.5_annotated.png)
 
 TutorFlow is organized around a few core areas:
 

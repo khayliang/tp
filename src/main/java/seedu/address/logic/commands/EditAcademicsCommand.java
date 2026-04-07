@@ -39,7 +39,7 @@ public class EditAcademicsCommand extends EditCommand {
             + PREFIX_DESCRIPTION + "Good progress";
 
     public static final String MESSAGE_EDIT_ACADEMICS_SUCCESS =
-            "Edited Academics for Person: %1$s";
+            "Updated academics for student: %1$s.";
 
     private final EditAcademicsDescriptor descriptor;
 

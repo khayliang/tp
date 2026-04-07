@@ -28,7 +28,11 @@ public class DeletePaymentCommand extends DeleteCommand {
         + "Example: " + COMMAND_WORD + " " + SUB_COMMAND_WORD + " 1 d/2026-01-13";
 
     public static final String MESSAGE_PAYMENT_DATE_NOT_FOUND = "Payment date %1$s is not recorded for %2$s";
-    public static final String MESSAGE_DELETE_PAYMENT_SUCCESS = "Deleted payment date %1$s for %2$s";
+    public static final String MESSAGE_DELETE_PAYMENT_SUCCESS = "Deleted payment date %1$s for %2$s.";
+    public static final String MESSAGE_PAYMENT_DUE_DATE_ROLLED_BACK =
+            "Billing due date rolled back from %1$s to %2$s.";
+    public static final String MESSAGE_PAYMENT_DUE_DATE_UNCHANGED =
+            "Billing due date remains %1$s.";
 
     private final LocalDate paymentDate;
 
@@ -45,6 +49,7 @@ public class DeletePaymentCommand extends DeleteCommand {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         Person personToEdit = getTargetPerson(model);
+        LocalDate previousDueDate = personToEdit.getBilling().getCurrentDueDate();
 
         Billing updatedBilling;
         try {
@@ -61,8 +66,19 @@ public class DeletePaymentCommand extends DeleteCommand {
         replacePerson(model, personToEdit, editedPerson);
 
         String formattedDate = paymentDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
-        return new CommandResult(String.format(MESSAGE_DELETE_PAYMENT_SUCCESS,
-                formattedDate, Messages.format(editedPerson)), editedPerson);
+        String deleteFeedback = String.format(MESSAGE_DELETE_PAYMENT_SUCCESS,
+                formattedDate, Messages.format(editedPerson));
+        String dueDateFeedback;
+        if (updatedBilling.getCurrentDueDate().isBefore(previousDueDate)) {
+            dueDateFeedback = String.format(MESSAGE_PAYMENT_DUE_DATE_ROLLED_BACK,
+                previousDueDate,
+                updatedBilling.getCurrentDueDate());
+        } else {
+            dueDateFeedback = String.format(MESSAGE_PAYMENT_DUE_DATE_UNCHANGED,
+                updatedBilling.getCurrentDueDate());
+        }
+
+        return new CommandResult(deleteFeedback + " " + dueDateFeedback, editedPerson);
     }
 
     @Override

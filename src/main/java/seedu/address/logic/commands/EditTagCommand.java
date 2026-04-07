@@ -31,7 +31,7 @@ public class EditTagCommand extends EditCommand {
             + PREFIX_TAG + "JC " + PREFIX_TAG + "J1";
 
 
-    public static final String MESSAGE_EDIT_TAG_SUCCESS = "Edited Tags for Person: %1$s";
+    public static final String MESSAGE_EDIT_TAG_SUCCESS = "Replaced tags for student: %1$s.";
 
     private final Set<Tag> tags;
 

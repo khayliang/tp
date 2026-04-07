@@ -26,7 +26,7 @@ public class DeleteApptCommand extends DeleteCommand {
             + "Parameters: INDEX s/SESSION_INDEX [s/SESSION_INDEX]...\n"
             + "Example: " + COMMAND_WORD + " " + SUB_COMMAND_WORD + " 1 s/2 s/3";
 
-    public static final String MESSAGE_DELETE_APPT_SUCCESS = "Deleted session(s) for %1$s: %2$s";
+    public static final String MESSAGE_DELETE_APPT_SUCCESS = "Removed appointment session(s) for %1$s: %2$s.";
     public static final String MESSAGE_INVALID_APPOINTMENT_INDEX =
             "One or more session indices provided are invalid for the selected student.";
 

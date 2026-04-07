@@ -60,9 +60,12 @@ public class AddAttdCommandTest {
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setPerson(personToEdit, editedPerson);
 
+        String expectedMessage = String.format(AddAttdCommand.MESSAGE_ADD_ATTD_SUCCESS,
+                Messages.format(editedPerson), "present", LocalDate.parse("2026-01-13"))
+                + " " + AddAttdCommand.MESSAGE_NON_RECURRING_NEXT_UNCHANGED;
+
         assertCommandSuccess(addCommand, model,
-                new CommandResult(String.format(AddAttdCommand.MESSAGE_ADD_ATTD_SUCCESS,
-                        Messages.format(editedPerson), "present", LocalDate.parse("2026-01-13")), editedPerson),
+                new CommandResult(expectedMessage, editedPerson),
                 expectedModel);
     }
 

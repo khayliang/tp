@@ -40,7 +40,13 @@ public class DeleteAttdCommand extends DeleteCommand {
             + PREFIX_SESSION + "2 " + PREFIX_DATE + "2026-01-29T08:00:00";
 
     public static final String MESSAGE_DELETE_ATTD_SUCCESS =
-            "Deleted attendance for %1$s from session %2$s on %3$s";
+            "Deleted attendance for %1$s from session %2$s on %3$s.";
+    public static final String MESSAGE_RECURRING_NEXT_ROLLED_BACK =
+            "Recurring session next date rolled back from %1$s to %2$s.";
+    public static final String MESSAGE_RECURRING_NEXT_UNCHANGED =
+            "Recurring session next date remains %1$s.";
+    public static final String MESSAGE_NON_RECURRING_NEXT_UNCHANGED =
+            "Session is non-recurring; no next date was rolled back.";
     public static final String MESSAGE_INVALID_APPOINTMENT_INDEX =
             "The appointment index provided is invalid for the selected student.";
     public static final String MESSAGE_ATTENDANCE_NOT_FOUND =
@@ -88,6 +94,7 @@ public class DeleteAttdCommand extends DeleteCommand {
 
         int targetSessionZeroBased = sessionIndex.getZeroBased();
         ScheduledSession session = sessions.get(targetSessionZeroBased);
+        LocalDateTime previousNext = session.getNext();
         AttendanceHistory attendanceHistory = session.getAttendanceHistory();
 
         boolean shouldRollback = isLatestRecordBeingDeleted(attendanceHistory);
@@ -105,10 +112,14 @@ public class DeleteAttdCommand extends DeleteCommand {
                 .build();
 
         replacePerson(model, personToEdit, editedPerson);
-        return new CommandResult(String.format(MESSAGE_DELETE_ATTD_SUCCESS,
+        String deletionFeedback = String.format(MESSAGE_DELETE_ATTD_SUCCESS,
                 Messages.format(editedPerson),
                 sessionIndex.getOneBased(),
-                formatTarget()), editedPerson);
+            formatTarget());
+        String scheduleFeedback = buildScheduleFeedback(
+            session.getRecurrence(), previousNext, updatedSession.getNext());
+
+        return new CommandResult(deletionFeedback + " " + scheduleFeedback, editedPerson);
     }
 
     private void validateSessionIndex(List<ScheduledSession> sessions) throws CommandException {
@@ -153,6 +164,26 @@ public class DeleteAttdCommand extends DeleteCommand {
             return targetDateTime.format(ATTENDANCE_DATE_TIME_FORMATTER);
         }
         return recordedDate.get().toString();
+    }
+
+    private String buildScheduleFeedback(Recurrence recurrence,
+                                         LocalDateTime previousNext,
+                                         LocalDateTime updatedNext) {
+        if (recurrence == Recurrence.NONE) {
+            return MESSAGE_NON_RECURRING_NEXT_UNCHANGED;
+        }
+
+        if (updatedNext.isBefore(previousNext)) {
+            return String.format(MESSAGE_RECURRING_NEXT_ROLLED_BACK,
+                    formatSessionNext(previousNext),
+                    formatSessionNext(updatedNext));
+        }
+
+        return String.format(MESSAGE_RECURRING_NEXT_UNCHANGED, formatSessionNext(updatedNext));
+    }
+
+    private String formatSessionNext(LocalDateTime nextDateTime) {
+        return nextDateTime.format(ATTENDANCE_DATE_TIME_FORMATTER);
     }
 
     @Override

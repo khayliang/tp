@@ -41,7 +41,7 @@ public class EditApptCommand extends EditCommand {
             + PREFIX_SESSION + "2 " + PREFIX_DATE + "2026-02-12T09:00:00 "
             + PREFIX_RECURRENCE + "WEEKLY " + PREFIX_DESCRIPTION + "Physics consultation";
 
-    public static final String MESSAGE_EDIT_APPT_SUCCESS = "Edited appointment for %1$s: %2$s";
+    public static final String MESSAGE_EDIT_APPT_SUCCESS = "Updated appointment session for %1$s to %2$s.";
     public static final String MESSAGE_INVALID_APPOINTMENT_INDEX =
             "The appointment index provided is invalid for the selected student.";
     public static final String MESSAGE_DUPLICATE_APPOINTMENT_DESCRIPTION =

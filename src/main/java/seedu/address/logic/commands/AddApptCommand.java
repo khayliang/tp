@@ -31,7 +31,7 @@ public class AddApptCommand extends AddCommand {
             + "Example: " + COMMAND_WORD + " " + SUB_COMMAND_WORD + " 1 "
             + "d/2026-01-13T08:00:00 r/NONE dsc/Weekly algebra practice";
 
-    public static final String MESSAGE_ADD_APPT_SUCCESS = "Added appointment for %1$s: %2$s";
+    public static final String MESSAGE_ADD_APPT_SUCCESS = "Added appointment session for %1$s at %2$s.";
     public static final String MESSAGE_DUPLICATE_APPOINTMENT_DESCRIPTION =
             "Appointment description \"%1$s\" already exists for %2$s";
 

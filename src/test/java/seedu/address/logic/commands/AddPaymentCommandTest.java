@@ -45,10 +45,7 @@ public class AddPaymentCommandTest {
                 .withBilling(updatedBilling)
                 .build();
 
-        String expectedMessage = String.format(AddPaymentCommand.MESSAGE_ADD_PAYMENT_SUCCESS,
-                editedPerson.getBilling().getTuitionFee(),
-                Messages.format(editedPerson),
-                paymentDate.format(DateTimeFormatter.ISO_LOCAL_DATE));
+        String expectedMessage = buildExpectedSuccessMessage(personToEdit, editedPerson, paymentDate);
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setPerson(personToEdit, editedPerson);
@@ -78,10 +75,7 @@ public class AddPaymentCommandTest {
             .withBilling(billingAfterFirstPayment)
             .build();
 
-        String firstSuccessMessage = String.format(AddPaymentCommand.MESSAGE_ADD_PAYMENT_SUCCESS,
-            personAfterFirstPayment.getBilling().getTuitionFee(),
-            Messages.format(personAfterFirstPayment),
-            paymentDate.format(DateTimeFormatter.ISO_LOCAL_DATE));
+        String firstSuccessMessage = buildExpectedSuccessMessage(initialPerson, personAfterFirstPayment, paymentDate);
 
         Model expectedModelAfterFirstPayment = new ModelManager(
                 new AddressBook(model.getAddressBook()), new UserPrefs());
@@ -115,12 +109,14 @@ public class AddPaymentCommandTest {
         model.setPerson(personToEdit, updatedPerson);
 
         AddPaymentCommand addCommand = new AddPaymentCommand(INDEX_FIRST_PERSON, LocalDate.parse("2026-03-01"));
-        addCommand.execute(model);
+        CommandResult commandResult = addCommand.execute(model);
 
-        Billing billingAfterCommand = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased())
-            .getBilling();
+        Person editedPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Billing billingAfterCommand = editedPerson.getBilling();
         assertEquals(LocalDate.parse("2026-04-01"), billingAfterCommand.getCurrentDueDate());
         assertTrue(billingAfterCommand.getPaymentHistory().hasPaidOn(LocalDate.parse("2026-03-01")));
+        assertEquals(buildExpectedSuccessMessage(updatedPerson, editedPerson, LocalDate.parse("2026-03-01")),
+                commandResult.getFeedbackToUser());
     }
 
     @Test
@@ -132,12 +128,35 @@ public class AddPaymentCommandTest {
         model.setPerson(personToEdit, updatedPerson);
 
         AddPaymentCommand addCommand = new AddPaymentCommand(INDEX_FIRST_PERSON, LocalDate.parse("2026-03-20"));
-        addCommand.execute(model);
+        CommandResult commandResult = addCommand.execute(model);
 
-        Billing billingAfterCommand = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased())
-            .getBilling();
+        Person editedPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Billing billingAfterCommand = editedPerson.getBilling();
         assertEquals(LocalDate.parse("2026-05-01"), billingAfterCommand.getCurrentDueDate());
         assertTrue(billingAfterCommand.getPaymentHistory().hasPaidOn(LocalDate.parse("2026-03-20")));
+        assertEquals(buildExpectedSuccessMessage(updatedPerson, editedPerson, LocalDate.parse("2026-03-20")),
+                commandResult.getFeedbackToUser());
+    }
+
+    private String buildExpectedSuccessMessage(Person originalPerson, Person editedPerson, LocalDate paymentDate) {
+        String paymentFeedback = String.format(AddPaymentCommand.MESSAGE_ADD_PAYMENT_SUCCESS,
+                editedPerson.getBilling().getTuitionFee(),
+                Messages.format(editedPerson),
+                paymentDate.format(DateTimeFormatter.ISO_LOCAL_DATE));
+
+        LocalDate previousDueDate = originalPerson.getBilling().getCurrentDueDate();
+        LocalDate updatedDueDate = editedPerson.getBilling().getCurrentDueDate();
+        String dueDateFeedback;
+        if (updatedDueDate.isAfter(previousDueDate)) {
+            dueDateFeedback = String.format(AddPaymentCommand.MESSAGE_PAYMENT_DUE_DATE_ADVANCED,
+                previousDueDate,
+                updatedDueDate);
+        } else {
+            dueDateFeedback = String.format(AddPaymentCommand.MESSAGE_PAYMENT_DUE_DATE_UNCHANGED,
+                updatedDueDate);
+        }
+
+        return paymentFeedback + " " + dueDateFeedback;
     }
 
     @Test

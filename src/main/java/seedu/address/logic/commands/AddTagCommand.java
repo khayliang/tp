@@ -30,7 +30,7 @@ public class AddTagCommand extends AddCommand {
             + "Example: " + COMMAND_WORD + " " + SUB_COMMAND_WORD + " 1 "
             + PREFIX_TAG + "friends " + PREFIX_TAG + "CS2103";
 
-    public static final String MESSAGE_ADD_TAG_SUCCESS = "Added Tags to Person: %1$s";
+    public static final String MESSAGE_ADD_TAG_SUCCESS = "Added tags for student: %1$s.";
 
     private final Index index;
     private final Set<Tag> tagsToAdd;

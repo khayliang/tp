@@ -19,7 +19,7 @@ public class DeletePersonCommand extends DeleteCommand {
         + "Parameters: INDEX (must be a positive integer)\n"
         + "Example: " + COMMAND_WORD + " " + SUB_COMMAND_WORD + " 1";
 
-    public static final String MESSAGE_DELETE_PERSON_SUCCESS = "Deleted Student: %1$s";
+    public static final String MESSAGE_DELETE_PERSON_SUCCESS = "Removed student from TutorFlow: %1$s.";
 
     /**
      * @param index of the person in the filtered person list to delete

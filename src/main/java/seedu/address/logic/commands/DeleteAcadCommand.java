@@ -27,7 +27,7 @@ public class DeleteAcadCommand extends DeleteCommand {
             + "Parameters: INDEX s/SUBJECT_INDEX [s/SUBJECT_INDEX]...\n"
             + "Example: delete acad 1 s/2 s/4";
 
-    public static final String MESSAGE_DELETE_SUBJECT_SUCCESS = "Deleted Subject(s): %1$s";
+    public static final String MESSAGE_DELETE_SUBJECT_SUCCESS = "Removed subject(s): %1$s.";
 
     private final List<Index> subjectIndices;
 

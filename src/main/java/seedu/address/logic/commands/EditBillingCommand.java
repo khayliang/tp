@@ -35,10 +35,12 @@ public class EditBillingCommand extends EditCommand {
             + COMMAND_WORD + " " + SUB_COMMAND_WORD + " 1 "
             + PREFIX_AMOUNT + "70 " + PREFIX_DATE + "2026-03-01";
 
-    public static final String MESSAGE_EDIT_TUITION_FEE_SUCCESS = "Updated tuition fee for %1$s: $%2$.2f";
-    public static final String MESSAGE_EDIT_PAYMENT_DUE_SUCCESS = "Updated payment due date for %1$s: %2$s";
+    public static final String MESSAGE_EDIT_TUITION_FEE_SUCCESS =
+            "Updated tuition fee for %1$s from $%2$.2f to $%3$.2f.";
+    public static final String MESSAGE_EDIT_PAYMENT_DUE_SUCCESS =
+            "Updated payment due date for %1$s from %2$s to %3$s.";
     public static final String MESSAGE_EDIT_BILLING_SUCCESS =
-            "Updated billing for %1$s: tuition fee=$%2$.2f, payment due date=%3$s";
+            "Updated billing for %1$s: tuition fee $%2$.2f -> $%3$.2f, payment due date %4$s -> %5$s.";
 
     private final Optional<Double> tuitionFee;
     private final Optional<LocalDate> paymentDue;
@@ -78,7 +80,8 @@ public class EditBillingCommand extends EditCommand {
         requireNonNull(model);
 
         Person personToEdit = getTargetPerson(model);
-        Billing updatedBilling = personToEdit.getBilling();
+        Billing currentBilling = personToEdit.getBilling();
+        Billing updatedBilling = currentBilling;
         if (tuitionFee.isPresent()) {
             updatedBilling = updatedBilling.updateRate(tuitionFee.get());
         }
@@ -95,17 +98,23 @@ public class EditBillingCommand extends EditCommand {
         if (tuitionFee.isPresent() && paymentDue.isPresent()) {
             return new CommandResult(String.format(MESSAGE_EDIT_BILLING_SUCCESS,
                     Messages.format(editedPerson),
+                    currentBilling.getTuitionFee(),
                     updatedBilling.getTuitionFee(),
+                    currentBilling.getCurrentDueDate(),
                     updatedBilling.getCurrentDueDate()),
                     editedPerson);
         }
         if (tuitionFee.isPresent()) {
             return new CommandResult(String.format(MESSAGE_EDIT_TUITION_FEE_SUCCESS,
-                    Messages.format(editedPerson), updatedBilling.getTuitionFee()), editedPerson);
+                    Messages.format(editedPerson),
+                    currentBilling.getTuitionFee(),
+                    updatedBilling.getTuitionFee()), editedPerson);
         }
 
         return new CommandResult(String.format(MESSAGE_EDIT_PAYMENT_DUE_SUCCESS,
-                Messages.format(editedPerson), updatedBilling.getCurrentDueDate()), editedPerson);
+                Messages.format(editedPerson),
+                currentBilling.getCurrentDueDate(),
+                updatedBilling.getCurrentDueDate()), editedPerson);
     }
 
     @Override

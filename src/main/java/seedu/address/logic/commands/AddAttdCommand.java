@@ -34,7 +34,14 @@ public class AddAttdCommand extends AddCommand {
             + "Parameters: INDEX (must be a positive integer) s/SESSION_INDEX [y|n] [d/DATE_OR_DATE_TIME]\n"
             + "Example: " + COMMAND_WORD + " " + SUB_COMMAND_WORD + " 1 s/2 y d/2026-01-29T08:00:00";
 
-    public static final String MESSAGE_ADD_ATTD_SUCCESS = "Recorded attendance for %1$s: %2$s on %3$s";
+    public static final String MESSAGE_ADD_ATTD_SUCCESS = "Recorded %2$s attendance for %1$s on %3$s.";
+    public static final String MESSAGE_RECURRING_NEXT_ADVANCED =
+            "Recurring session next date advanced from %1$s to %2$s.";
+    public static final String MESSAGE_RECURRING_NEXT_UNCHANGED =
+            "Recurring session next date remains %1$s because the added attendance is not later than the latest "
+                    + "record.";
+    public static final String MESSAGE_NON_RECURRING_NEXT_UNCHANGED =
+            "Session is non-recurring; no next date was advanced.";
     public static final String MESSAGE_INVALID_APPOINTMENT_INDEX =
             "The appointment index provided is invalid for the selected student.";
     public static final String MESSAGE_NON_RECURRING_ATTENDANCE_ALREADY_RECORDED =
@@ -69,6 +76,7 @@ public class AddAttdCommand extends AddCommand {
     public CommandResult execute(Model model) throws CommandException {
         Person personToEdit = IndexedPersonResolver.getTargetPerson(model, personIndex);
         ScheduledSession session = getTargetSession(personToEdit);
+        LocalDateTime previousNext = session.getNext();
         if (session.getRecurrence() == Recurrence.NONE && !session.getAttendanceHistory().isEmpty()) {
             throw new CommandException(MESSAGE_NON_RECURRING_ATTENDANCE_ALREADY_RECORDED);
         }
@@ -102,9 +110,12 @@ public class AddAttdCommand extends AddCommand {
                 .build();
 
         model.setPerson(personToEdit, editedPerson);
-        return new CommandResult(String.format(MESSAGE_ADD_ATTD_SUCCESS,
+        String attendanceFeedback = String.format(MESSAGE_ADD_ATTD_SUCCESS,
                 Messages.format(editedPerson), hasAttended ? "present" : "absent",
-                formatRecordedAt(effectiveRecordedAt)), editedPerson);
+                formatRecordedAt(effectiveRecordedAt));
+        String nextSessionFeedback = buildNextSessionFeedback(
+                session.getRecurrence(), previousNext, updatedSession.getNext());
+        return new CommandResult(attendanceFeedback + " " + nextSessionFeedback, editedPerson);
     }
 
     private String formatRecordedAt(LocalDateTime recordedAt) {
@@ -112,6 +123,26 @@ public class AddAttdCommand extends AddCommand {
             return recordedAt.toLocalDate().toString();
         }
         return recordedAt.format(ATTENDANCE_DATE_TIME_FORMATTER);
+    }
+
+    private String buildNextSessionFeedback(Recurrence recurrence,
+                                            LocalDateTime previousNext,
+                                            LocalDateTime updatedNext) {
+        if (recurrence == Recurrence.NONE) {
+            return MESSAGE_NON_RECURRING_NEXT_UNCHANGED;
+        }
+
+        if (updatedNext.isAfter(previousNext)) {
+            return String.format(MESSAGE_RECURRING_NEXT_ADVANCED,
+                    formatSessionNext(previousNext),
+                    formatSessionNext(updatedNext));
+        }
+
+        return String.format(MESSAGE_RECURRING_NEXT_UNCHANGED, formatSessionNext(updatedNext));
+    }
+
+    private String formatSessionNext(LocalDateTime nextDateTime) {
+        return nextDateTime.format(ATTENDANCE_DATE_TIME_FORMATTER);
     }
 
     private ScheduledSession getTargetSession(Person person) throws CommandException {

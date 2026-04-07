@@ -41,7 +41,7 @@ public class EditPersonCommand extends EditCommand {
             + PREFIX_PHONE + "91234567 "
             + PREFIX_EMAIL + "johndoe@example.com";
 
-    public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Student: %1$s";
+    public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Updated student details: %1$s.";
     public static final String MESSAGE_DUPLICATE_PERSON = "This student already exists in the address book.";
 
     private final EditPersonDescriptor editPersonDescriptor;

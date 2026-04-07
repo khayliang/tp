@@ -65,8 +65,11 @@ public class DeleteAttdCommandTest {
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setPerson(personToEdit, editedPerson);
 
-        String expectedMessage = String.format(DeleteAttdCommand.MESSAGE_DELETE_ATTD_SUCCESS,
+        String deletionFeedback = String.format(DeleteAttdCommand.MESSAGE_DELETE_ATTD_SUCCESS,
                 Messages.format(editedPerson), 1, "2026-01-08T10:00:00");
+        String rollbackFeedback = String.format(DeleteAttdCommand.MESSAGE_RECURRING_NEXT_ROLLED_BACK,
+                "2026-01-15T10:00:00", "2026-01-08T10:00:00");
+        String expectedMessage = deletionFeedback + " " + rollbackFeedback;
         assertCommandSuccess(deleteCommand, model,
                 new CommandResult(expectedMessage, editedPerson), expectedModel);
 

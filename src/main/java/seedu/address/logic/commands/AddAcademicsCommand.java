@@ -35,7 +35,7 @@ public class AddAcademicsCommand extends AddCommand {
             + PREFIX_SUBJECT + "Science";
 
     public static final String MESSAGE_ADD_ACADEMICS_SUCCESS =
-            "Added Subjects to Person: %1$s";
+            "Added academic subjects for student: %1$s.";
 
     private final Index index;
     private final Set<Subject> subjectsToAdd;

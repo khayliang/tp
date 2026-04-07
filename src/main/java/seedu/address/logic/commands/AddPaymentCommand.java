@@ -30,7 +30,12 @@ public class AddPaymentCommand extends AddCommand {
             + "Example: " + COMMAND_WORD + " " + SUB_COMMAND_WORD + " 1 "
             + PREFIX_DATE + "2026-01-13";
 
-    public static final String MESSAGE_ADD_PAYMENT_SUCCESS = "%1$s paid by %2$s on %3$s";
+    public static final String MESSAGE_ADD_PAYMENT_SUCCESS =
+            "Recorded tuition payment of $%1$.2f for %2$s on %3$s.";
+    public static final String MESSAGE_PAYMENT_DUE_DATE_ADVANCED =
+            "Billing due date advanced from %1$s to %2$s.";
+    public static final String MESSAGE_PAYMENT_DUE_DATE_UNCHANGED =
+            "Billing due date remains %1$s because the added date is not later than the latest recorded payment.";
     public static final String MESSAGE_PAYMENT_DATE_IS_PRESENT = "Payment date %1$s is already present for %2$s";
 
     private final Index index;
@@ -52,6 +57,7 @@ public class AddPaymentCommand extends AddCommand {
         requireNonNull(model);
 
         Person personToEdit = IndexedPersonResolver.getTargetPerson(model, index);
+        LocalDate previousDueDate = personToEdit.getBilling().getCurrentDueDate();
 
         Billing updatedBilling;
         try {
@@ -68,11 +74,21 @@ public class AddPaymentCommand extends AddCommand {
         model.setPerson(personToEdit, editedPerson);
 
         String formattedDate = paymentDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
-        return new CommandResult(String.format(MESSAGE_ADD_PAYMENT_SUCCESS,
+        String paymentFeedback = String.format(MESSAGE_ADD_PAYMENT_SUCCESS,
                 editedPerson.getBilling().getTuitionFee(),
                 Messages.format(editedPerson),
-                formattedDate),
-                editedPerson);
+            formattedDate);
+        String dueDateFeedback;
+        if (updatedBilling.getCurrentDueDate().isAfter(previousDueDate)) {
+            dueDateFeedback = String.format(MESSAGE_PAYMENT_DUE_DATE_ADVANCED,
+                previousDueDate,
+                updatedBilling.getCurrentDueDate());
+        } else {
+            dueDateFeedback = String.format(MESSAGE_PAYMENT_DUE_DATE_UNCHANGED,
+                updatedBilling.getCurrentDueDate());
+        }
+
+        return new CommandResult(paymentFeedback + " " + dueDateFeedback, editedPerson);
     }
 
     @Override
