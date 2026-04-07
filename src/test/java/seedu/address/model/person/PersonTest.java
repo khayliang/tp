@@ -11,6 +11,7 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_JC;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalPersons.ALICE;
 import static seedu.address.testutil.TypicalPersons.BOB;
+import static seedu.address.testutil.TypicalPersons.getPersonBuilder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,11 +20,13 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.address.model.attendance.Attendance;
+import seedu.address.model.attendance.AttendanceHistory;
 import seedu.address.model.billing.Billing;
 import seedu.address.model.billing.PaymentHistory;
 import seedu.address.model.recurrence.Recurrence;
+import seedu.address.model.session.Appointment;
 import seedu.address.model.tag.Tag;
-import seedu.address.testutil.PersonBuilder;
 
 public class PersonTest {
 
@@ -128,7 +131,7 @@ public class PersonTest {
 
     @Test
     public void asObservableList_modifyList_throwsUnsupportedOperationException() {
-        Person person = new PersonBuilder().withTags("friend").build();
+        Person person = getPersonBuilder().withTags(Set.of(new Tag("friend"))).build();
         assertThrows(UnsupportedOperationException.class, () -> {
             person.getTags().stream().findAny().ifPresent(person.getTags()::remove);
         });
@@ -136,8 +139,9 @@ public class PersonTest {
 
     @Test
     public void getAppointment_present_returnsStoredAppointment() {
-        Person person = new PersonBuilder()
-                .withAppointment("2026-01-13T08:00:00", "Algebra", Recurrence.NONE)
+        Person person = getPersonBuilder()
+                .withAppointment(Appointment.of(
+                        "2026-01-13T08:00:00", "Algebra", Recurrence.NONE))
                 .build();
         assertEquals(LocalDateTime.parse("2026-01-13T08:00:00"), person.getNextAppointment().orElseThrow().getStart());
         assertEquals(LocalDateTime.parse("2026-01-13T08:00:00"), person.getNextAppointment().orElseThrow().getNext());
@@ -147,8 +151,11 @@ public class PersonTest {
     @Test
     public void getAttendance_withAppointment_returnsAppointmentAttendance() {
         Person person = new PersonBuilder(ALICE)
-                .withAppointment("2026-01-13T08:00:00", "Algebra", Recurrence.NONE)
-                .addAttendance("2026-01-29T08:00:00")
+                .withAppointment(Appointment.of(
+                        "2026-01-13T08:00:00", "Algebra", Recurrence.NONE).withAttendance(
+                                AttendanceHistory.EMPTY.addAttendance(
+                                        new Attendance(
+                                                true, LocalDateTime.parse("2026-01-29T08:00:00")))))
                 .build();
         assertEquals(LocalDateTime.parse("2026-01-29T08:00:00"),
                 person.getNextAppointment()
@@ -166,23 +173,23 @@ public class PersonTest {
         assertFalse(ALICE.isSamePerson(null));
 
         Person editedAlice = new PersonBuilder(ALICE)
-                .withPhone(VALID_PHONE_BOB)
-                .withEmail(VALID_EMAIL_BOB)
-                .withAddress(VALID_ADDRESS_BOB)
-                .withTags(VALID_TAG_JC)
+                .withPhone(new Phone(VALID_PHONE_BOB))
+                .withEmail(new Email(VALID_EMAIL_BOB))
+                .withAddress(new Address(VALID_ADDRESS_BOB))
+                .withTags(Set.of(new Tag(VALID_TAG_JC)))
                 .build();
         assertTrue(ALICE.isSamePerson(editedAlice));
 
-        editedAlice = new PersonBuilder(ALICE).withName(VALID_NAME_BOB).build();
+        editedAlice = new PersonBuilder(ALICE).withName(new Name(VALID_NAME_BOB)).build();
         assertFalse(ALICE.isSamePerson(editedAlice));
 
         Person editedBob = new PersonBuilder(BOB)
-                .withName(VALID_NAME_BOB.toLowerCase())
+                .withName(new Name(VALID_NAME_BOB.toLowerCase()))
                 .build();
         assertFalse(BOB.isSamePerson(editedBob));
 
         String nameWithTrailingSpaces = VALID_NAME_BOB + " ";
-        editedBob = new PersonBuilder(BOB).withName(nameWithTrailingSpaces).build();
+        editedBob = new PersonBuilder(BOB).withName(new Name(nameWithTrailingSpaces)).build();
         assertFalse(BOB.isSamePerson(editedBob));
     }
 
@@ -196,23 +203,24 @@ public class PersonTest {
         assertFalse(ALICE.equals(5));
         assertFalse(ALICE.equals(BOB));
 
-        Person editedAlice = new PersonBuilder(ALICE).withName(VALID_NAME_BOB).build();
+        Person editedAlice = new PersonBuilder(ALICE).withName(new Name(VALID_NAME_BOB)).build();
         assertFalse(ALICE.equals(editedAlice));
 
-        editedAlice = new PersonBuilder(ALICE).withPhone(VALID_PHONE_BOB).build();
+        editedAlice = new PersonBuilder(ALICE).withPhone(new Phone(VALID_PHONE_BOB)).build();
         assertFalse(ALICE.equals(editedAlice));
 
-        editedAlice = new PersonBuilder(ALICE).withEmail(VALID_EMAIL_BOB).build();
+        editedAlice = new PersonBuilder(ALICE).withEmail(new Email(VALID_EMAIL_BOB)).build();
         assertFalse(ALICE.equals(editedAlice));
 
-        editedAlice = new PersonBuilder(ALICE).withAddress(VALID_ADDRESS_BOB).build();
+        editedAlice = new PersonBuilder(ALICE).withAddress(new Address(VALID_ADDRESS_BOB)).build();
         assertFalse(ALICE.equals(editedAlice));
 
-        editedAlice = new PersonBuilder(ALICE).withTags(VALID_TAG_JC).build();
+        editedAlice = new PersonBuilder(ALICE).withTags(Set.of(new Tag(VALID_TAG_JC))).build();
         assertFalse(ALICE.equals(editedAlice));
 
         editedAlice = new PersonBuilder(ALICE)
-                .withAppointment("2026-01-13T08:00:00", "Algebra", Recurrence.NONE)
+                .withAppointment(Appointment.of(
+                        "2026-01-13T08:00:00", "Algebra", Recurrence.NONE))
                 .build();
         assertFalse(ALICE.equals(editedAlice));
 
@@ -227,8 +235,11 @@ public class PersonTest {
         assertFalse(ALICE.equals(editedAlice));
 
         editedAlice = new PersonBuilder(ALICE)
-                .withAppointment("2026-01-13T08:00:00", "Algebra", Recurrence.NONE)
-                .addAttendance("2026-01-29T08:00:00")
+                .withAppointment(Appointment.of(
+                        "2026-01-13T08:00:00", "Algebra", Recurrence.NONE).withAttendance(
+                                AttendanceHistory.EMPTY.addAttendance(
+                                        new Attendance(
+                                                true, LocalDateTime.parse("2026-01-29T08:00:00")))))
                 .build();
         assertFalse(ALICE.equals(editedAlice));
     }

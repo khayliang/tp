@@ -21,11 +21,15 @@ import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.attendance.AttendanceHistory;
+import seedu.address.model.person.Address;
+import seedu.address.model.person.Email;
+import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.PersonBuilder;
+import seedu.address.model.person.Phone;
 import seedu.address.model.recurrence.Recurrence;
 import seedu.address.model.session.Appointment;
 import seedu.address.model.session.ScheduledSession;
-import seedu.address.testutil.PersonBuilder;
 
 /**
  * Contains integration tests and unit tests for EditApptCommand.
@@ -167,11 +171,12 @@ public class EditApptCommandTest {
                 LocalDateTime.parse("2026-01-01T10:00:00"),
                 AttendanceHistory.EMPTY,
                 "Algebra");
-        return new PersonBuilder()
-                .withName("Alex")
-                .withPhone("90010001")
-                .withEmail("alex@example.com")
-                .withAddress("Alex Street 1")
+        return new PersonBuilder(
+                new Name("Alex"),
+                new Phone("90010001"),
+                new Email("alex@example.com"),
+                new Address("Alex Street 1"),
+                java.util.Set.of())
                 .withAppointment(new Appointment(List.of(session)))
                 .build();
     }
@@ -189,11 +194,12 @@ public class EditApptCommandTest {
                 LocalDateTime.parse("2026-01-08T10:00:00"),
                 AttendanceHistory.EMPTY,
                 "Consultation");
-        return new PersonBuilder()
-                .withName("Alex")
-                .withPhone("90010001")
-                .withEmail("alex@example.com")
-                .withAddress("Alex Street 1")
+        return new PersonBuilder(
+                new Name("Alex"),
+                new Phone("90010001"),
+                new Email("alex@example.com"),
+                new Address("Alex Street 1"),
+                java.util.Set.of())
                 .withAppointment(new Appointment(List.of(firstSession, secondSession)))
                 .build();
     }

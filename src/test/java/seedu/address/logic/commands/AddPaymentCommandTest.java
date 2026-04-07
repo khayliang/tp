@@ -24,8 +24,8 @@ import seedu.address.model.UserPrefs;
 import seedu.address.model.billing.Billing;
 import seedu.address.model.billing.PaymentHistory;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.PersonBuilder;
 import seedu.address.model.recurrence.Recurrence;
-import seedu.address.testutil.PersonBuilder;
 
 /**
  * Contains integration tests (interaction with the Model) and unit tests for AddPaymentCommand.

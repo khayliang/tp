@@ -9,6 +9,7 @@ import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.address.commons.util.AppClock;
 import seedu.address.logic.commands.FindApptCommand;
 import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.commands.FindPersonCommand;
@@ -49,7 +50,7 @@ public class FindCommandParserTest {
 
     @Test
     public void parse_emptyApptArgs_returnsFindApptCommandWithCurrentDate() {
-        FindApptCommand expectedFindCommand = new FindApptCommand(seedu.address.commons.util.AppClock.today());
+        FindApptCommand expectedFindCommand = new FindApptCommand(AppClock.today());
         assertParseSuccess(parser, "appt", expectedFindCommand);
     }
 

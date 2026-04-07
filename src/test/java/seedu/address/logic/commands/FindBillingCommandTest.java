@@ -5,12 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.Messages.MESSAGE_PERSONS_LISTED_OVERVIEW;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
+import static seedu.address.testutil.TypicalPersons.getPersonBuilder;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.Collections;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
@@ -19,15 +22,14 @@ import seedu.address.model.billing.PaymentDueMonthPredicate;
 import seedu.address.model.billing.PaymentHistory;
 import seedu.address.model.person.Person;
 import seedu.address.model.recurrence.Recurrence;
-import seedu.address.testutil.PersonBuilder;
 
 /**
  * Contains integration tests (interaction with the Model) for {@code FindBillingCommand}.
  */
 public class FindBillingCommandTest {
 
-    private Model model = new ModelManager(new seedu.address.model.AddressBook(), new UserPrefs());
-    private Model expectedModel = new ModelManager(new seedu.address.model.AddressBook(), new UserPrefs());
+    private Model model = new ModelManager(new AddressBook(), new UserPrefs());
+    private Model expectedModel = new ModelManager(new AddressBook(), new UserPrefs());
 
     @Test
     public void equals() {
@@ -59,11 +61,11 @@ public class FindBillingCommandTest {
     @Test
     public void execute_singleMonth_multiplePersonsFound() {
         // Person A and B have due date in 2020-01, Person C in 2020-02
-        Person personA = new PersonBuilder().withName("Alice Payment").withBilling(
+        Person personA = getPersonBuilder("Alice Payment").withBilling(
                 new Billing(Recurrence.MONTHLY, LocalDate.of(2020, 1, 1), 0.0, PaymentHistory.EMPTY)).build();
-        Person personB = new PersonBuilder().withName("Bob Payment").withBilling(
+        Person personB = getPersonBuilder("Bob Payment").withBilling(
                 new Billing(Recurrence.MONTHLY, LocalDate.of(2020, 1, 15), 0.0, PaymentHistory.EMPTY)).build();
-        Person personC = new PersonBuilder().withName("Charlie Payment").withBilling(
+        Person personC = getPersonBuilder("Charlie Payment").withBilling(
                 new Billing(Recurrence.MONTHLY, LocalDate.of(2020, 2, 1), 0.0, PaymentHistory.EMPTY)).build();
 
         model.addPerson(personA);
@@ -87,7 +89,7 @@ public class FindBillingCommandTest {
 
     @Test
     public void execute_noMatchingMonth_noPersonFound() {
-        Person person = new PersonBuilder().withName("Solo").withBilling(
+        Person person = getPersonBuilder("Solo").withBilling(
                 new Billing(Recurrence.MONTHLY, LocalDate.of(2021, 3, 1), 0.0, PaymentHistory.EMPTY)).build();
 
         model.addPerson(person);
@@ -101,7 +103,7 @@ public class FindBillingCommandTest {
         String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 0);
 
         assertCommandSuccess(command, model, expectedMessage, expectedModel);
-        assertEquals(java.util.Collections.emptyList(), model.getFilteredPersonList());
+        assertEquals(Collections.emptyList(), model.getFilteredPersonList());
     }
 
     @Test

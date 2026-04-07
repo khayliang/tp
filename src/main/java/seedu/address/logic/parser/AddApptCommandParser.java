@@ -8,6 +8,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_RECURRENCE;
 import java.time.LocalDateTime;
 
 import seedu.address.commons.core.index.Index;
+import seedu.address.logic.Messages;
 import seedu.address.logic.commands.AddApptCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.recurrence.Recurrence;
@@ -27,7 +28,7 @@ public class AddApptCommandParser implements Parser<AddApptCommand> {
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_DATE, PREFIX_RECURRENCE, PREFIX_DESCRIPTION);
 
         if (argMultimap.getValue(PREFIX_DATE).isEmpty() || argMultimap.getValue(PREFIX_DESCRIPTION).isEmpty()) {
-            throw new ParseException(String.format(seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT,
+            throw new ParseException(String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT,
                     AddApptCommand.MESSAGE_USAGE));
         }
 
@@ -40,7 +41,7 @@ public class AddApptCommandParser implements Parser<AddApptCommand> {
 
         String description = argMultimap.getValue(PREFIX_DESCRIPTION).get().trim();
         if (description.isEmpty()) {
-            throw new ParseException(String.format(seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT,
+            throw new ParseException(String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT,
                     AddApptCommand.MESSAGE_USAGE));
         }
 

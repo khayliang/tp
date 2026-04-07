@@ -21,10 +21,11 @@ import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.person.Email;
+import seedu.address.model.person.Guardian;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.PersonBuilder;
 import seedu.address.model.person.Phone;
-import seedu.address.testutil.PersonBuilder;
 
 /**
  * Contains integration tests (interaction with the Model) and unit tests for {@code EditParentCommand}.
@@ -41,7 +42,9 @@ public class EditParentCommandTest {
         descriptor.setParentName(newParentName);
         EditParentCommand editParentCommand = new EditParentCommand(INDEX_FIRST_PERSON, descriptor);
 
-        Person editedPerson = new PersonBuilder(personToEdit).withParentName(VALID_PARENT_NAME_AMY).build();
+        Person editedPerson = new PersonBuilder(personToEdit)
+                .withGuardian(new Guardian(new Name(VALID_PARENT_NAME_AMY), null, null))
+                .build();
         String expectedMessage = String.format(EditParentCommand.MESSAGE_EDIT_PARENT_SUCCESS,
                 Messages.format(editedPerson));
 
@@ -63,7 +66,12 @@ public class EditParentCommandTest {
         descriptor.setParentPhone(newPhone);
         EditParentCommand editParentCommand = new EditParentCommand(INDEX_SECOND_PERSON, descriptor);
 
-        Person editedPerson = new PersonBuilder(personToEdit).withParentPhone("99998888").build();
+        Person editedPerson = new PersonBuilder(personToEdit)
+                .withGuardian(new Guardian(
+                        personToEdit.getGuardian().orElseThrow().getName(),
+                        new Phone("99998888"),
+                        personToEdit.getGuardian().orElseThrow().getEmail().orElse(null)))
+                .build();
         String expectedMessage = String.format(EditParentCommand.MESSAGE_EDIT_PARENT_SUCCESS,
                 Messages.format(editedPerson));
 
@@ -86,8 +94,10 @@ public class EditParentCommandTest {
         descriptor.setParentEmail(newEmail);
         EditParentCommand editParentCommand = new EditParentCommand(INDEX_FIRST_PERSON, descriptor);
 
-        Person editedPerson = new PersonBuilder(personToEdit).withParentName(VALID_PARENT_NAME_AMY)
-                .withParentPhone("91234567").withParentEmail("parent@example.com").build();
+        Person editedPerson = new PersonBuilder(personToEdit)
+                .withGuardian(new Guardian(
+                        new Name(VALID_PARENT_NAME_AMY), new Phone("91234567"), new Email("parent@example.com")))
+                .build();
         String expectedMessage = String.format(EditParentCommand.MESSAGE_EDIT_PARENT_SUCCESS,
                 Messages.format(editedPerson));
 
@@ -140,7 +150,9 @@ public class EditParentCommandTest {
         descriptor.setParentName(newParentName);
         EditParentCommand editParentCommand = new EditParentCommand(INDEX_FIRST_PERSON, descriptor);
 
-        Person editedPerson = new PersonBuilder(personToEdit).withParentName(VALID_PARENT_NAME_AMY).build();
+        Person editedPerson = new PersonBuilder(personToEdit)
+                .withGuardian(new Guardian(new Name(VALID_PARENT_NAME_AMY), null, null))
+                .build();
         String expectedMessage = String.format(EditParentCommand.MESSAGE_EDIT_PARENT_SUCCESS,
                 Messages.format(editedPerson));
 

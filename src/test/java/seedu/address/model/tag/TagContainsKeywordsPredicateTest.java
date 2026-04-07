@@ -2,13 +2,13 @@ package seedu.address.model.tag;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.address.testutil.TypicalPersons.getPersonBuilder;
 
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
 import seedu.address.model.person.Person;
-import seedu.address.testutil.PersonBuilder;
 
 public class TagContainsKeywordsPredicateTest {
 
@@ -42,8 +42,8 @@ public class TagContainsKeywordsPredicateTest {
 
     @Test
     public void test_personContainsMatchingTag_returnsTrue() {
-        Person person = new PersonBuilder()
-                .withTags("JC", "P6")
+        Person person = getPersonBuilder()
+                .withTags(Set.of(new Tag("JC"), new Tag("P6")))
                 .build();
 
         // single match
@@ -60,8 +60,8 @@ public class TagContainsKeywordsPredicateTest {
 
     @Test
     public void test_personDoesNotContainMatchingTag_returnsFalse() {
-        Person person = new PersonBuilder()
-                .withTags("JC", "P6")
+        Person person = getPersonBuilder()
+                .withTags(Set.of(new Tag("JC"), new Tag("P6")))
                 .build();
 
         TagContainsKeywordsPredicate predicate =
@@ -72,8 +72,8 @@ public class TagContainsKeywordsPredicateTest {
 
     @Test
     public void test_emptyKeywordSet_returnsFalse() {
-        Person person = new PersonBuilder()
-                .withTags("JC")
+        Person person = getPersonBuilder()
+                .withTags(Set.of(new Tag("JC")))
                 .build();
 
         TagContainsKeywordsPredicate predicate =

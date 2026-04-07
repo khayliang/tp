@@ -23,8 +23,8 @@ import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.PersonBuilder;
 import seedu.address.model.tag.Tag;
-import seedu.address.testutil.PersonBuilder;
 
 /**
  * Contains integration tests (interaction with the Model) and unit tests for EditTagCommand.
@@ -42,7 +42,7 @@ public class EditTagCommandTest {
         EditTagCommand editCommand = new EditTagCommand(INDEX_FIRST_PERSON, tags);
 
         Person editedPerson = new PersonBuilder(personInList)
-                .withTags(VALID_TAG_JC, VALID_TAG_GROUP1)
+                .withTags(Set.of(new Tag(VALID_TAG_JC), new Tag(VALID_TAG_GROUP1)))
                 .build();
 
         String expectedMessage = String.format(EditTagCommand.MESSAGE_EDIT_TAG_SUCCESS,
@@ -64,7 +64,7 @@ public class EditTagCommandTest {
         EditTagCommand editCommand = new EditTagCommand(INDEX_FIRST_PERSON, tags);
 
         Person editedPerson = new PersonBuilder(personInList)
-                .withTags()
+                .withTags(Set.of())
                 .build();
 
         String expectedMessage = String.format(EditTagCommand.MESSAGE_EDIT_TAG_SUCCESS,
@@ -88,7 +88,7 @@ public class EditTagCommandTest {
         EditTagCommand editCommand = new EditTagCommand(INDEX_FIRST_PERSON, tags);
 
         Person editedPerson = new PersonBuilder(personInFilteredList)
-                .withTags(VALID_TAG_JC)
+                .withTags(Set.of(new Tag(VALID_TAG_JC)))
                 .build();
 
         String expectedMessage = String.format(EditTagCommand.MESSAGE_EDIT_TAG_SUCCESS,

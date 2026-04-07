@@ -10,6 +10,7 @@ import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.logic.commands.CommandTestUtil.showPersonAtIndex;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
+import static seedu.address.testutil.TypicalPersons.getPersonBuilder;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
 import java.time.LocalDate;
@@ -24,12 +25,11 @@ import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
-import seedu.address.model.attendance.AttendanceRecords;
 import seedu.address.model.person.AppointmentInWeekPredicate;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.PersonBuilder;
 import seedu.address.model.recurrence.Recurrence;
 import seedu.address.model.session.Appointment;
-import seedu.address.testutil.PersonBuilder;
 
 /**
  * Contains integration tests and unit tests for AddApptCommand.
@@ -45,9 +45,8 @@ public class AddApptCommandTest {
         AddApptCommand addCommand = new AddApptCommand(INDEX_FIRST_PERSON, appointmentStart,
                 Recurrence.NONE, VALID_APPOINTMENT_DESCRIPTION);
 
-        Person editedPerson = new PersonBuilder(personToEdit)
-                .withAppointment(VALID_APPOINTMENT_START, VALID_APPOINTMENT_DESCRIPTION, Recurrence.NONE)
-                .build();
+        Person editedPerson = new PersonBuilder(personToEdit).withAppointment(
+                Appointment.of(VALID_APPOINTMENT_START, VALID_APPOINTMENT_DESCRIPTION, Recurrence.NONE)).build();
 
         String expectedMessage = String.format(AddApptCommand.MESSAGE_ADD_APPT_SUCCESS,
                 Messages.format(editedPerson), appointmentStart.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
@@ -70,12 +69,10 @@ public class AddApptCommandTest {
 
     @Test
     public void execute_duplicateAppointmentDescription_failureAndAppointmentUnchanged() {
-        Person personWithAppointment = new PersonBuilder()
-                .withName("Duplicate Appointment")
-                .withPhone("90000003")
-                .withEmail("duplicate@example.com")
-                .withAddress("Duplicate Street 3")
-                .withAppointment("2026-01-20T10:00:00", VALID_APPOINTMENT_DESCRIPTION, Recurrence.NONE)
+        Person personWithAppointment = getPersonBuilder("Duplicate Appointment", "90000003",
+                "duplicate@example.com", "Duplicate Street 3")
+                .withAppointment(Appointment.of("2026-01-20T10:00:00", VALID_APPOINTMENT_DESCRIPTION,
+                        Recurrence.NONE))
                 .build();
 
         AddressBook addressBook = new AddressBook();
@@ -95,12 +92,12 @@ public class AddApptCommandTest {
 
     @Test
     public void execute_validIndexFilteredAppointmentResults_success() {
-        Person laterAppointmentPerson = new PersonBuilder().withName("Later Appointment")
-                .withPhone("90000001").withEmail("later@example.com").withAddress("Later Street 1")
-                .withAppointment("2026-01-20T10:00:00", "Later lesson", Recurrence.NONE).build();
-        Person earlierAppointmentPerson = new PersonBuilder().withName("Earlier Appointment")
-                .withPhone("90000002").withEmail("earlier@example.com").withAddress("Earlier Street 2")
-                .withAppointment("2026-01-10T10:00:00", "Earlier lesson", Recurrence.NONE).build();
+        Person laterAppointmentPerson = getPersonBuilder("Later Appointment", "90000001",
+                "later@example.com", "Later Street 1")
+                .withAppointment(Appointment.of("2026-01-20T10:00:00", "Later lesson", Recurrence.NONE)).build();
+        Person earlierAppointmentPerson = getPersonBuilder("Earlier Appointment", "90000002",
+                "earlier@example.com", "Earlier Street 2")
+                .withAppointment(Appointment.of("2026-01-10T10:00:00", "Earlier lesson", Recurrence.NONE)).build();
 
         AddressBook addressBook = new AddressBook();
         addressBook.addPerson(laterAppointmentPerson);
@@ -114,8 +111,7 @@ public class AddApptCommandTest {
                 Recurrence.NONE, VALID_APPOINTMENT_DESCRIPTION);
 
         Person editedPerson = new PersonBuilder(laterAppointmentPerson)
-                .addAppointment(new Appointment(Recurrence.NONE, newAppointmentStart, newAppointmentStart,
-                        AttendanceRecords.EMPTY, VALID_APPOINTMENT_DESCRIPTION))
+                .addAppointment(Appointment.of(VALID_APPOINTMENT_START, VALID_APPOINTMENT_DESCRIPTION, Recurrence.NONE))
                 .build();
         String expectedMessage = String.format(AddApptCommand.MESSAGE_ADD_APPT_SUCCESS,
                 Messages.format(editedPerson), newAppointmentStart.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
@@ -138,9 +134,8 @@ public class AddApptCommandTest {
         AddApptCommand addCommand = new AddApptCommand(INDEX_FIRST_PERSON, appointmentStart,
                 Recurrence.NONE, VALID_APPOINTMENT_DESCRIPTION);
 
-        Person editedPerson = new PersonBuilder(personToEdit)
-                .withAppointment(VALID_APPOINTMENT_START, VALID_APPOINTMENT_DESCRIPTION, Recurrence.NONE)
-                .build();
+        Person editedPerson = new PersonBuilder(personToEdit).withAppointment(
+                Appointment.of(VALID_APPOINTMENT_START, VALID_APPOINTMENT_DESCRIPTION, Recurrence.NONE)).build();
         String expectedMessage = String.format(AddApptCommand.MESSAGE_ADD_APPT_SUCCESS,
                 Messages.format(editedPerson), appointmentStart.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
 
@@ -154,15 +149,15 @@ public class AddApptCommandTest {
 
     @Test
     public void execute_validIndexAppointmentFilteredList_success() {
-        Person laterAppointmentPerson = new PersonBuilder().withName("Later Appointment")
-                .withPhone("90000101").withEmail("later2@example.com").withAddress("Later Street 2")
-                .withAppointment("2026-01-20T10:00:00", "Later lesson", Recurrence.NONE).build();
-        Person earlierAppointmentPerson = new PersonBuilder().withName("Earlier Appointment")
-                .withPhone("90000102").withEmail("earlier2@example.com").withAddress("Earlier Street 3")
-                .withAppointment("2026-01-19T10:00:00", "Earlier lesson", Recurrence.NONE).build();
-        Person outOfWeekAppointmentPerson = new PersonBuilder().withName("Out Of Week Appointment")
-                .withPhone("90000103").withEmail("outofweek@example.com").withAddress("Out Street 1")
-                .withAppointment("2026-02-05T10:00:00", "Out of week", Recurrence.NONE).build();
+        Person laterAppointmentPerson = getPersonBuilder("Later Appointment", "90000101",
+                "later2@example.com", "Later Street 2")
+                .withAppointment(Appointment.of("2026-01-20T10:00:00", "Later lesson", Recurrence.NONE)).build();
+        Person earlierAppointmentPerson = getPersonBuilder("Earlier Appointment", "90000102",
+                "earlier2@example.com", "Earlier Street 3")
+                .withAppointment(Appointment.of("2026-01-19T10:00:00", "Earlier lesson", Recurrence.NONE)).build();
+        Person outOfWeekAppointmentPerson = getPersonBuilder("Out Of Week Appointment", "90000103",
+                "outofweek@example.com", "Out Street 1")
+                .withAppointment(Appointment.of("2026-02-05T10:00:00", "Out of week", Recurrence.NONE)).build();
 
         AddressBook addressBook = new AddressBook();
         addressBook.addPerson(laterAppointmentPerson);
@@ -178,8 +173,7 @@ public class AddApptCommandTest {
                 Recurrence.NONE, VALID_APPOINTMENT_DESCRIPTION);
 
         Person editedPerson = new PersonBuilder(laterAppointmentPerson)
-                .addAppointment(new Appointment(Recurrence.NONE, newAppointmentStart, newAppointmentStart,
-                        AttendanceRecords.EMPTY, VALID_APPOINTMENT_DESCRIPTION))
+                .addAppointment(Appointment.of("2026-01-22T08:00:00", VALID_APPOINTMENT_DESCRIPTION, Recurrence.NONE))
                 .build();
         String expectedMessage = String.format(AddApptCommand.MESSAGE_ADD_APPT_SUCCESS,
                 Messages.format(editedPerson), newAppointmentStart.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));

@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.AddAcademicsCommand;
 import seedu.address.model.academic.Level;
+import seedu.address.model.academic.LevelUtil;
 import seedu.address.model.academic.Subject;
 
 /**
@@ -102,7 +103,7 @@ public class AddAcademicsCommandParserTest {
     @Test
     public void parse_invalidLevel_failure() {
         assertParseFailure(parser, "1 s/Math l/Invalid",
-                seedu.address.model.academic.LevelUtil.MESSAGE_CONSTRAINTS);
+                                LevelUtil.MESSAGE_CONSTRAINTS);
     }
 
     @Test

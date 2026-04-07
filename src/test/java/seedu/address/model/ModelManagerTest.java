@@ -15,10 +15,11 @@ import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.GuiSettings;
+import seedu.address.model.person.Name;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.PersonBuilder;
 import seedu.address.testutil.AddressBookBuilder;
-import seedu.address.testutil.PersonBuilder;
 
 public class ModelManagerTest {
 
@@ -106,7 +107,7 @@ public class ModelManagerTest {
 
         Person editedAlice =
             new PersonBuilder(ALICE)
-                .withName("Charlie").build();
+                .withName(new Name("Charlie")).build();
         modelManager.setPerson(ALICE, editedAlice);
 
         assertEquals(1, modelManager.getFilteredPersonList().size());

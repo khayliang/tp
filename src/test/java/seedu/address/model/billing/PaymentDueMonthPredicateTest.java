@@ -2,6 +2,7 @@ package seedu.address.model.billing;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.address.testutil.TypicalPersons.getPersonBuilder;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -10,7 +11,6 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.model.person.Person;
 import seedu.address.model.recurrence.Recurrence;
-import seedu.address.testutil.PersonBuilder;
 
 public class PaymentDueMonthPredicateTest {
 
@@ -38,7 +38,7 @@ public class PaymentDueMonthPredicateTest {
 
     @Test
     public void test_personDueDateMatches_returnsTrue() {
-        Person person = new PersonBuilder().withBilling(
+        Person person = getPersonBuilder().withBilling(
             new Billing(Recurrence.MONTHLY, LocalDate.of(2026, 3, 5), 0.0, PaymentHistory.EMPTY)).build();
 
         PaymentDueMonthPredicate predicate = new PaymentDueMonthPredicate(YearMonth.of(2026, 3));
@@ -47,7 +47,7 @@ public class PaymentDueMonthPredicateTest {
 
     @Test
     public void test_personDueDateDoesNotMatch_returnsFalse() {
-        Person person = new PersonBuilder().withBilling(
+        Person person = getPersonBuilder().withBilling(
             new Billing(Recurrence.MONTHLY, LocalDate.of(2026, 4, 1), 0.0, PaymentHistory.EMPTY)).build();
 
         PaymentDueMonthPredicate predicate = new PaymentDueMonthPredicate(YearMonth.of(2026, 3));

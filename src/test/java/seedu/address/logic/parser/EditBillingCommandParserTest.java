@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.EditBillingCommand;
+import seedu.address.logic.commands.EditCommand;
 
 public class EditBillingCommandParserTest {
 
@@ -31,7 +32,7 @@ public class EditBillingCommandParserTest {
 
     @Test
     public void parse_missingParts_failure() {
-        assertParseFailure(parser, "1", seedu.address.logic.commands.EditCommand.MESSAGE_NOT_EDITED);
+        assertParseFailure(parser, "1", EditCommand.MESSAGE_NOT_EDITED);
     }
 
     @Test

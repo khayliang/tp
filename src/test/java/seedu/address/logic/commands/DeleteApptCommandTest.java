@@ -8,6 +8,7 @@ import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.logic.commands.CommandTestUtil.showPersonAtIndex;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
+import static seedu.address.testutil.TypicalPersons.getPersonBuilder;
 
 import java.time.LocalDateTime;
 
@@ -19,11 +20,11 @@ import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
-import seedu.address.model.attendance.AttendanceRecords;
+import seedu.address.model.attendance.AttendanceHistory;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.PersonBuilder;
 import seedu.address.model.recurrence.Recurrence;
 import seedu.address.model.session.Appointment;
-import seedu.address.testutil.PersonBuilder;
 
 /**
  * Contains integration tests and unit tests for {@code DeleteApptCommand}.
@@ -130,17 +131,17 @@ public class DeleteApptCommandTest {
 
     private static Model buildModelWithAppointments() {
         AddressBook addressBook = new AddressBook();
-        Person personWithTwoAppointments = new PersonBuilder().withName("Alex")
-                .withPhone("90010001").withEmail("alex@example.com").withAddress("Alex Street 1")
-                .withAppointment("2026-01-10T10:00:00", "First lesson", Recurrence.NONE)
+        Person personWithTwoAppointments = getPersonBuilder("Alex", "90010001",
+                "alex@example.com", "Alex Street 1")
+                .withAppointment(Appointment.of("2026-01-10T10:00:00", "First lesson", Recurrence.NONE))
                 .addAppointment(new Appointment(Recurrence.NONE,
                         LocalDateTime.parse("2026-01-20T10:00:00"),
                         LocalDateTime.parse("2026-01-20T10:00:00"),
-                        AttendanceRecords.EMPTY, "Second lesson"))
+                        AttendanceHistory.EMPTY, "Second lesson"))
                 .build();
-        Person otherPerson = new PersonBuilder().withName("Blake")
-                .withPhone("90010002").withEmail("blake@example.com").withAddress("Blake Street 2")
-                .withAppointment("2026-01-30T10:00:00", "Other lesson", Recurrence.NONE)
+        Person otherPerson = getPersonBuilder("Blake", "90010002",
+                "blake@example.com", "Blake Street 2")
+                .withAppointment(Appointment.of("2026-01-30T10:00:00", "Other lesson", Recurrence.NONE))
                 .build();
         addressBook.addPerson(personWithTwoAppointments);
         addressBook.addPerson(otherPerson);

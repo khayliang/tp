@@ -18,6 +18,7 @@ import seedu.address.model.attendance.AttendanceHistory;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.PersonBuilder;
 import seedu.address.model.recurrence.Recurrence;
+import seedu.address.model.session.Appointment;
 import seedu.address.model.session.ScheduledSession;
 
 /**
@@ -97,7 +98,7 @@ public class AddAttdCommand extends AddCommand {
             new java.util.ArrayList<>(personToEdit.getAppointment().getSessions());
         updatedSessions.set(currentSessionIndex, updatedSession);
         Person editedPerson = new PersonBuilder(personToEdit)
-                .withAppointment(new seedu.address.model.session.Appointment(updatedSessions))
+                .withAppointment(new Appointment(updatedSessions))
                 .build();
 
         model.setPerson(personToEdit, editedPerson);

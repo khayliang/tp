@@ -3,25 +3,23 @@ package seedu.address.model.person;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.address.testutil.TypicalPersons.getPersonBuilder;
 
 import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import seedu.address.testutil.PersonBuilder;
-
 public class GuardianContainsKeywordsPredicateTest {
 
-    private final Person personWithGuardian = new PersonBuilder()
-            .withName("Student One")
-            .withParentName("Alice Tan")
-            .withParentPhone("91234567")
-            .withParentEmail("alice@example.com")
+    private final Person personWithGuardian = getPersonBuilder("Student One")
+            .withGuardian(new Guardian(
+                    new Name("Alice Tan"),
+                    new Phone("91234567"),
+                    new Email("alice@example.com")))
             .build();
 
-    private final Person personWithoutGuardian = new PersonBuilder()
-            .withName("Student Two")
+    private final Person personWithoutGuardian = getPersonBuilder("Student Two")
             .build();
 
     @Test

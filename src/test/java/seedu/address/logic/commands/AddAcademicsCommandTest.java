@@ -22,6 +22,7 @@ import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.academic.Academics;
+import seedu.address.model.academic.Level;
 import seedu.address.model.academic.Subject;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.PersonBuilder;
@@ -198,13 +199,13 @@ public class AddAcademicsCommandTest {
                 .anyMatch(s -> s.getName().equals("Math")));
 
         Set<Subject> subjectsToAdd = new HashSet<>();
-        subjectsToAdd.add(new Subject("Math", seedu.address.model.academic.Level.BASIC));
+        subjectsToAdd.add(new Subject("Math", Level.BASIC));
 
         AddAcademicsCommand command = new AddAcademicsCommand(INDEX_FIRST_PERSON, subjectsToAdd);
 
         Set<Subject> expectedSubjects = new HashSet<>(personToEdit.getAcademics().getSubjects());
         expectedSubjects.removeIf(s -> s.getName().equals("Math"));
-        expectedSubjects.add(new Subject("Math", seedu.address.model.academic.Level.BASIC));
+        expectedSubjects.add(new Subject("Math", Level.BASIC));
 
         Person editedPerson = new PersonBuilder(personToEdit)
                 .withAcademics(new Academics(expectedSubjects))
@@ -214,11 +215,11 @@ public class AddAcademicsCommandTest {
         assertTrue(editedPerson.getAcademics().getSubjects().stream()
                 .anyMatch(s -> s.getName().equals("Math")
                         && s.getLevel().isPresent()
-                        && s.getLevel().get() == seedu.address.model.academic.Level.BASIC));
+                        && s.getLevel().get() == Level.BASIC));
         assertFalse(editedPerson.getAcademics().getSubjects().stream()
                 .anyMatch(s -> s.getName().equals("Math")
                         && s.getLevel().isPresent()
-                        && s.getLevel().get() == seedu.address.model.academic.Level.STRONG));
+                        && s.getLevel().get() == Level.STRONG));
 
         String expectedMessage = String.format(AddAcademicsCommand.MESSAGE_ADD_ACADEMICS_SUCCESS,
                 Messages.format(editedPerson));

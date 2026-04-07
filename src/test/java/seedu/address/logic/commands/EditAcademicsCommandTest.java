@@ -24,7 +24,7 @@ import seedu.address.model.academic.Academics;
 import seedu.address.model.academic.Level;
 import seedu.address.model.academic.Subject;
 import seedu.address.model.person.Person;
-import seedu.address.testutil.PersonBuilder;
+import seedu.address.model.person.PersonBuilder;
 
 /**
  * Contains integration tests (interaction with the Model) and unit tests for EditAcademicsCommand.

@@ -24,10 +24,10 @@ import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.PersonBuilder;
 import seedu.address.model.person.Phone;
 import seedu.address.model.recurrence.Recurrence;
 import seedu.address.model.session.Appointment;
-import seedu.address.testutil.PersonBuilder;
 
 public class JsonAdaptedPersonTest {
     private static final String INVALID_NAME = "R@chel";
@@ -464,8 +464,8 @@ public class JsonAdaptedPersonTest {
 
     @Test
     public void toModelType_multipleAppointments_roundTripsSuccessfully() throws Exception {
-        seedu.address.model.person.Person person = new PersonBuilder(BENSON)
-                .withAppointment("2026-01-13T08:00:00", "Algebra", Recurrence.NONE)
+        Person person = new PersonBuilder(BENSON)
+                .withAppointment(Appointment.of("2026-01-13T08:00:00", "Algebra", Recurrence.NONE))
                 .addAppointment(new Appointment(Recurrence.WEEKLY,
                         LocalDateTime.parse("2026-02-03T09:00:00"),
                         LocalDateTime.parse("2026-02-03T09:00:00"),

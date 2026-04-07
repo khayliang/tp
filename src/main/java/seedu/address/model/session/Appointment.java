@@ -13,9 +13,7 @@ import java.util.Set;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.AppClock;
-import seedu.address.model.attendance.Attendance;
 import seedu.address.model.attendance.AttendanceHistory;
-import seedu.address.model.attendance.AttendanceRecords;
 import seedu.address.model.recurrence.Recurrence;
 
 /**
@@ -57,13 +55,11 @@ public final class Appointment {
     }
 
     /**
-     * Backward-compatible constructor accepting legacy attendance records type.
+     * Creates an {@code Appointment} from an ISO-8601 date-time string.
      */
-    public Appointment(Recurrence recurrence, LocalDateTime start, LocalDateTime next,
-                       AttendanceRecords attendanceRecords, String description) {
-        this(recurrence, start, next,
-                new AttendanceHistory(attendanceRecords.getRecords().toArray(Attendance[]::new)),
-                description);
+    public static Appointment of(String startDateTime, String description, Recurrence recurrence) {
+        LocalDateTime start = LocalDateTime.parse(startDateTime);
+        return new Appointment(recurrence, start, start, AttendanceHistory.EMPTY, description);
     }
 
     public static Appointment defaultAppointment() {
@@ -237,13 +233,6 @@ public final class Appointment {
     public Appointment withAttendance(AttendanceHistory updatedAttendance) {
         ScheduledSession current = getSingleSession();
         return new Appointment(List.of(current.withAttendance(updatedAttendance)));
-    }
-
-    /**
-     * Backward-compatible single-session mutation.
-     */
-    public Appointment withAttendance(AttendanceRecords updatedAttendance) {
-        return withAttendance(new AttendanceHistory(updatedAttendance.getRecords().toArray(Attendance[]::new)));
     }
 
     @Override

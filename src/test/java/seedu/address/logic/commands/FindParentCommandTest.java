@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.Messages.MESSAGE_PERSONS_LISTED_OVERVIEW;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.testutil.TypicalPersons.BENSON;
+import static seedu.address.testutil.TypicalPersons.getPersonBuilder;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
 import java.util.Arrays;
@@ -17,8 +18,12 @@ import org.junit.jupiter.api.Test;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
+import seedu.address.model.person.Email;
+import seedu.address.model.person.Guardian;
 import seedu.address.model.person.GuardianContainsKeywordsPredicate;
-import seedu.address.testutil.PersonBuilder;
+import seedu.address.model.person.Name;
+import seedu.address.model.person.Person;
+import seedu.address.model.person.Phone;
 
 public class FindParentCommandTest {
 
@@ -137,10 +142,9 @@ public class FindParentCommandTest {
     @Test
     public void execute_matchByGuardianPhone_onePersonFound() {
         // Add a person with a guardian phone to a fresh model
-        seedu.address.model.person.Person personWithParentPhone = new PersonBuilder()
-                .withName("Test Student")
-                .withParentName("Test Parent")
-                .withParentPhone("81234567")
+        Person personWithParentPhone = getPersonBuilder("Test Student")
+                .withGuardian(new Guardian(new Name("Test Parent"), new Phone("81234567"),
+                        null))
                 .build();
         Model localModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
         Model localExpectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
@@ -159,10 +163,9 @@ public class FindParentCommandTest {
     @Test
     public void execute_matchByGuardianPhonePartial_onePersonFound() {
         // Partial phone substring should match
-        seedu.address.model.person.Person personWithParentPhone = new PersonBuilder()
-                .withName("Test Student")
-                .withParentName("Test Parent")
-                .withParentPhone("81234567")
+        Person personWithParentPhone = getPersonBuilder("Test Student")
+                .withGuardian(new Guardian(new Name("Test Parent"), new Phone("81234567"),
+                        null))
                 .build();
         Model localModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
         Model localExpectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
@@ -180,10 +183,9 @@ public class FindParentCommandTest {
 
     @Test
     public void execute_matchByGuardianEmail_onePersonFound() {
-        seedu.address.model.person.Person personWithParentEmail = new PersonBuilder()
-                .withName("Test Student")
-                .withParentName("Test Parent")
-                .withParentEmail("parent@example.com")
+        Person personWithParentEmail = getPersonBuilder("Test Student")
+                .withGuardian(new Guardian(new Name("Test Parent"), null,
+                        new Email("parent@example.com")))
                 .build();
         Model localModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
         Model localExpectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
@@ -201,10 +203,9 @@ public class FindParentCommandTest {
 
     @Test
     public void execute_matchByGuardianEmailCaseInsensitive_onePersonFound() {
-        seedu.address.model.person.Person personWithParentEmail = new PersonBuilder()
-                .withName("Test Student")
-                .withParentName("Test Parent")
-                .withParentEmail("parent@example.com")
+        Person personWithParentEmail = getPersonBuilder("Test Student")
+                .withGuardian(new Guardian(new Name("Test Parent"), null,
+                        new Email("parent@example.com")))
                 .build();
         Model localModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
         Model localExpectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());

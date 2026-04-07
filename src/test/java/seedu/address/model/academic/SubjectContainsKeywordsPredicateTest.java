@@ -2,13 +2,13 @@ package seedu.address.model.academic;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.address.testutil.TypicalPersons.getPersonBuilder;
 
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
 import seedu.address.model.person.Person;
-import seedu.address.testutil.PersonBuilder;
 
 public class SubjectContainsKeywordsPredicateTest {
 
@@ -42,7 +42,7 @@ public class SubjectContainsKeywordsPredicateTest {
 
     @Test
     public void test_personContainsMatchingSubject_returnsTrue() {
-        Person person = new PersonBuilder()
+        Person person = getPersonBuilder()
                 .withAcademics(new Academics(Set.of(
                         new Subject("Math", null),
                         new Subject("Science", null))))
@@ -62,7 +62,7 @@ public class SubjectContainsKeywordsPredicateTest {
 
     @Test
     public void test_personDoesNotContainMatchingSubject_returnsFalse() {
-        Person person = new PersonBuilder()
+        Person person = getPersonBuilder()
                 .withAcademics(new Academics(Set.of(
                         new Subject("Math", null),
                         new Subject("Science", null))))
@@ -76,7 +76,7 @@ public class SubjectContainsKeywordsPredicateTest {
 
     @Test
     public void test_emptyKeywordSet_returnsFalse() {
-        Person person = new PersonBuilder()
+        Person person = getPersonBuilder()
                 .withAcademics(new Academics(Set.of(
                         new Subject("Math", null))))
                 .build();
@@ -89,7 +89,7 @@ public class SubjectContainsKeywordsPredicateTest {
 
     @Test
     public void test_partialMatch_returnsTrue() {
-        Person person = new PersonBuilder()
+        Person person = getPersonBuilder()
                 .withAcademics(new Academics(Set.of(
                         new Subject("Mathematics", null))))
                 .build();
