@@ -99,6 +99,28 @@ public class EditParentCommandTest {
     }
 
     @Test
+    public void execute_addParentPhoneWithoutExistingGuardian_throwsCommandException() {
+        Person personToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        EditParentDescriptor descriptor = new EditParentDescriptor();
+        descriptor.setParentPhone(new Phone("91234567"));
+        EditParentCommand editParentCommand = new EditParentCommand(INDEX_FIRST_PERSON, descriptor);
+
+        assertCommandFailure(editParentCommand, model, EditParentCommand.MESSAGE_MISSING_PARENT_NAME);
+        assertTrue(personToEdit.getGuardian().isEmpty());
+    }
+
+    @Test
+    public void execute_addParentEmailWithoutExistingGuardian_throwsCommandException() {
+        Person personToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        EditParentDescriptor descriptor = new EditParentDescriptor();
+        descriptor.setParentEmail(new Email("parent@example.com"));
+        EditParentCommand editParentCommand = new EditParentCommand(INDEX_FIRST_PERSON, descriptor);
+
+        assertCommandFailure(editParentCommand, model, EditParentCommand.MESSAGE_MISSING_PARENT_NAME);
+        assertTrue(personToEdit.getGuardian().isEmpty());
+    }
+
+    @Test
     public void execute_invalidIndexUnfilteredList_throwsCommandException() {
         Index outOfBoundIndex = Index.fromOneBased(model.getFilteredPersonList().size() + 1);
         EditParentDescriptor descriptor = new EditParentDescriptor();

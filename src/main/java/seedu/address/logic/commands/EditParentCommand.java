@@ -39,6 +39,9 @@ public class EditParentCommand extends EditCommand {
             + PREFIX_PARENT_EMAIL + "johnlim@example.com";
 
     public static final String MESSAGE_EDIT_PARENT_SUCCESS = "Edited parent details of student: %1$s";
+    public static final String MESSAGE_MISSING_PARENT_NAME =
+            "Parent name must be provided when adding parent phone or email to a student without existing parent "
+                    + "details.";
 
     private final EditParentDescriptor editParentDescriptor;
 
@@ -68,6 +71,10 @@ public class EditParentCommand extends EditCommand {
                 .orElse(existingGuardian.flatMap(Guardian::getPhone).orElse(null));
         Email email = editParentDescriptor.getParentEmail()
                 .orElse(existingGuardian.flatMap(Guardian::getEmail).orElse(null));
+
+        if (name == null && (phone != null || email != null)) {
+            throw new CommandException(MESSAGE_MISSING_PARENT_NAME);
+        }
 
         if (name != null) {
             builder.withGuardian(new Guardian(name, phone, email));

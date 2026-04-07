@@ -32,6 +32,12 @@ public class FindParentCommandParserTest {
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindParentCommand.MESSAGE_USAGE));
     }
 
+    @Test
+    public void parse_unexpectedPreamble_throwsParseException() {
+        assertParseFailure(parser, "5 n/Melvin",
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindParentCommand.MESSAGE_USAGE));
+    }
+
     // ──────────────────────── success cases — single prefix ────────────────────────
 
     @Test
@@ -39,6 +45,7 @@ public class FindParentCommandParserTest {
         FindParentCommand expected = new FindParentCommand(new GuardianContainsKeywordsPredicate(
                 Arrays.asList("Alice", "Bob"), Collections.emptyList(), Collections.emptyList()));
         // Normal input
+        assertParseSuccess(parser, "n/Alice Bob", expected);
         assertParseSuccess(parser, " n/Alice Bob", expected);
         // Extra whitespace
         assertParseSuccess(parser, " n/ Alice  Bob ", expected);

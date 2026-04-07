@@ -34,6 +34,11 @@ public class FindParentCommandParser implements Parser<FindParentCommand> {
 
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_PARENT_NAME, PREFIX_PARENT_PHONE, PREFIX_PARENT_EMAIL);
 
+        if (!argMultimap.getPreamble().isEmpty()) {
+            throw new ParseException(
+                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindParentCommand.MESSAGE_USAGE));
+        }
+
         List<String> nameKeywords = parseKeywords(argMultimap, PREFIX_PARENT_NAME);
         List<String> phoneKeywords = parseKeywords(argMultimap, PREFIX_PARENT_PHONE);
         List<String> emailKeywords = parseKeywords(argMultimap, PREFIX_PARENT_EMAIL);
