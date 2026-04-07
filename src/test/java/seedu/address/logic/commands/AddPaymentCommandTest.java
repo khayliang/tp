@@ -40,16 +40,7 @@ public class AddPaymentCommandTest {
         LocalDate paymentDate = LocalDate.parse(VALID_PAYMENT_DATE);
         AddPaymentCommand addCommand = new AddPaymentCommand(INDEX_FIRST_PERSON, paymentDate);
 
-        boolean shouldAdvanceBillingCycle = personToEdit
-                .getBilling()
-                .getPaymentHistory()
-                .getLatestPaidDate()
-                .map(paymentDate::isAfter)
-                .orElse(true);
-        Billing updatedBilling = personToEdit.getBilling().recordTuitionPaid(paymentDate);
-        if (shouldAdvanceBillingCycle) {
-            updatedBilling = updatedBilling.advanceDueDate();
-        }
+        Billing updatedBilling = personToEdit.getBilling().recordTuitionPaidAndAdvanceDueDate(paymentDate);
 
         Person editedPerson = new PersonBuilder(personToEdit)
                 .withBilling(updatedBilling)
@@ -83,16 +74,8 @@ public class AddPaymentCommandTest {
         Person initialPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         AddPaymentCommand firstAddCommand = new AddPaymentCommand(INDEX_FIRST_PERSON, paymentDate);
 
-        boolean shouldAdvanceBillingCycle = initialPerson
-                .getBilling()
-                .getPaymentHistory()
-                .getLatestPaidDate()
-                .map(paymentDate::isAfter)
-                .orElse(true);
-        Billing billingAfterFirstPayment = initialPerson.getBilling().recordTuitionPaid(paymentDate);
-        if (shouldAdvanceBillingCycle) {
-            billingAfterFirstPayment = billingAfterFirstPayment.advanceDueDate();
-        }
+        Billing billingAfterFirstPayment = initialPerson.getBilling()
+            .recordTuitionPaidAndAdvanceDueDate(paymentDate);
 
         Person personAfterFirstPayment = new PersonBuilder(initialPerson)
             .withBilling(billingAfterFirstPayment)

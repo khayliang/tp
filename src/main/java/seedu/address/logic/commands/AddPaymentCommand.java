@@ -55,16 +55,7 @@ public class AddPaymentCommand extends AddCommand {
 
         Billing updatedBilling;
         try {
-            boolean shouldAdvanceBillingCycle = personToEdit
-                    .getBilling()
-                    .getPaymentHistory()
-                    .getLatestPaidDate()
-                    .map(paymentDate::isAfter)
-                    .orElse(true);
-            updatedBilling = personToEdit.getBilling().recordTuitionPaid(paymentDate);
-            if (shouldAdvanceBillingCycle) {
-                updatedBilling = updatedBilling.advanceDueDate();
-            }
+            updatedBilling = personToEdit.getBilling().recordTuitionPaidAndAdvanceDueDate(paymentDate);
         } catch (IllegalArgumentException err) {
             String formattedDate = paymentDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
             throw new CommandException(String.format(MESSAGE_PAYMENT_DATE_IS_PRESENT,

@@ -112,6 +112,25 @@ public class Billing {
     }
 
     /**
+     * Records payment and conditionally advances due date when this payment is chronologically latest.
+     * If the payment is a backfilled historical payment (not after latest recorded payment),
+     * only payment history is updated.
+     * @param paymentDate a valid {@code LocalDate}
+     * @return new {@code Billing} with updated payment history and possibly advanced due date
+     */
+    public Billing recordTuitionPaidAndAdvanceDueDate(LocalDate paymentDate) {
+        requireNonNull(paymentDate);
+
+        boolean shouldAdvanceDueDate = paymentHistory
+                .getLatestPaidDate()
+                .map(paymentDate::isAfter)
+                .orElse(true);
+
+        Billing billingAfterRecord = recordTuitionPaid(paymentDate);
+        return shouldAdvanceDueDate ? billingAfterRecord.advanceDueDate() : billingAfterRecord;
+    }
+
+    /**
      * Deletes a previously recorded payment date and conditionally rolls back due date
      * Rolls back one recurrence cycle only when deleting the latest chronological payment date
      * @param paymentDate a valid {@code LocalDate}

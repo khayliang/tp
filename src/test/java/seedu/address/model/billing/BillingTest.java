@@ -91,6 +91,28 @@ public class BillingTest {
     }
 
     @Test
+    public void recordTuitionPaidAndAdvanceDueDate_latestPaymentDate_advancesDueDate() {
+        PaymentHistory history = new PaymentHistory(LocalDate.of(2026, 3, 15));
+        Billing original = new Billing(Recurrence.MONTHLY, LocalDate.of(2026, 4, 1), 100.0, history);
+
+        Billing updated = original.recordTuitionPaidAndAdvanceDueDate(LocalDate.of(2026, 3, 20));
+
+        assertEquals(LocalDate.of(2026, 5, 1), updated.getCurrentDueDate());
+        assertTrue(updated.getPaymentHistory().hasPaidOn(LocalDate.of(2026, 3, 20)));
+    }
+
+    @Test
+    public void recordTuitionPaidAndAdvanceDueDate_backfilledPaymentDate_keepsDueDate() {
+        PaymentHistory history = new PaymentHistory(LocalDate.of(2026, 3, 15));
+        Billing original = new Billing(Recurrence.MONTHLY, LocalDate.of(2026, 4, 1), 100.0, history);
+
+        Billing updated = original.recordTuitionPaidAndAdvanceDueDate(LocalDate.of(2026, 3, 1));
+
+        assertEquals(LocalDate.of(2026, 4, 1), updated.getCurrentDueDate());
+        assertTrue(updated.getPaymentHistory().hasPaidOn(LocalDate.of(2026, 3, 1)));
+    }
+
+    @Test
     public void deleteRecordedPayment_latestDate_rollsBackDueDateAndRemovesDate() {
         PaymentHistory history = new PaymentHistory(
                 LocalDate.of(2026, 3, 1),
