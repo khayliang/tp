@@ -11,7 +11,7 @@ import seedu.address.commons.util.ToStringBuilder;
 /**
  * Tests that a {@code Person}'s {@code Guardian} matches the given name, phone, and/or email keywords.
  * Name matching is case-insensitive full-word; phone and email matching is case-insensitive substring.
- * Only fields with non-empty keyword lists are tested; all tested fields must match (AND logic).
+ * A match in any supplied field is sufficient.
  */
 public class GuardianContainsKeywordsPredicate implements Predicate<Person> {
 
@@ -38,34 +38,27 @@ public class GuardianContainsKeywordsPredicate implements Predicate<Person> {
             return false;
         }
         Guardian guardian = guardianOpt.get();
+        boolean hasFilters = !nameKeywords.isEmpty() || !phoneKeywords.isEmpty() || !emailKeywords.isEmpty();
+        boolean matchesAnyField = false;
 
         if (!nameKeywords.isEmpty()) {
-            boolean nameMatches = nameKeywords.stream()
+            matchesAnyField = matchesAnyField || nameKeywords.stream()
                     .anyMatch(kw -> StringUtil.containsWordIgnoreCase(guardian.getName().fullName, kw));
-            if (!nameMatches) {
-                return false;
-            }
         }
 
         if (!phoneKeywords.isEmpty()) {
             String phone = guardian.getPhone().map(p -> p.value).orElse("");
-            boolean phoneMatches = phoneKeywords.stream()
+            matchesAnyField = matchesAnyField || phoneKeywords.stream()
                     .anyMatch(kw -> phone.toLowerCase().contains(kw.toLowerCase()));
-            if (!phoneMatches) {
-                return false;
-            }
         }
 
         if (!emailKeywords.isEmpty()) {
             String email = guardian.getEmail().map(e -> e.value).orElse("");
-            boolean emailMatches = emailKeywords.stream()
+            matchesAnyField = matchesAnyField || emailKeywords.stream()
                     .anyMatch(kw -> email.toLowerCase().contains(kw.toLowerCase()));
-            if (!emailMatches) {
-                return false;
-            }
         }
 
-        return true;
+        return hasFilters && matchesAnyField;
     }
 
     @Override

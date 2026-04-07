@@ -76,7 +76,15 @@ public class ArgumentTokenizerTest {
         argMultimap = ArgumentTokenizer.tokenize(argsString, pSlash);
         assertPreambleEmpty(argMultimap);
         assertArgumentPresent(argMultimap, pSlash, "Argument value");
+    }
 
+    @Test
+    public void tokenize_oneArgumentAtStart_detectsPrefix() {
+        String argsString = "p/Argument value";
+        ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(argsString, pSlash);
+
+        assertPreambleEmpty(argMultimap);
+        assertArgumentPresent(argMultimap, pSlash, "Argument value");
     }
 
     @Test

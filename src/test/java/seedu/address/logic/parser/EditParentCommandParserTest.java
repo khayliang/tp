@@ -77,4 +77,14 @@ public class EditParentCommandParserTest {
         EditParentCommand expectedCommand = new EditParentCommand(targetIndex, expectedDescriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
     }
+
+    @Test
+    public void parse_invalidUpdatedFields_failure() {
+        Index targetIndex = INDEX_FIRST_PERSON;
+
+        assertParseFailure(parser, targetIndex.getOneBased() + " " + PREFIX_PARENT_NAME + "123",
+                Name.MESSAGE_CONSTRAINTS);
+        assertParseFailure(parser, targetIndex.getOneBased() + " " + PREFIX_PARENT_PHONE + "123",
+                Phone.MESSAGE_CONSTRAINTS);
+    }
 }

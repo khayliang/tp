@@ -222,14 +222,14 @@ public class FindParentCommandTest {
     }
 
     @Test
-    public void execute_nameAndPhoneBothRequired_andLogic() {
-        // Guardian name matches but phone does NOT -> should not be listed
+    public void execute_nameAndPhoneEitherMatches_orLogic() {
+        // Guardian name matches even though phone does not, so the person should still be listed
         GuardianContainsKeywordsPredicate predicate = makePredicate(
                 List.of("Susan"), List.of("00000000"), Collections.emptyList());
         FindParentCommand command = new FindParentCommand(predicate);
         expectedModel.updateFilteredPersonListWithAnd(predicate);
-        assertCommandSuccess(command, model, String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 0), expectedModel);
-        assertEquals(Collections.emptyList(), model.getFilteredPersonList());
+        assertCommandSuccess(command, model, String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 1), expectedModel);
+        assertEquals(Collections.singletonList(BENSON), model.getFilteredPersonList());
     }
 
     // ──────────────────────── toString ────────────────────────
