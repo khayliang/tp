@@ -113,7 +113,7 @@ class JsonAdaptedPerson {
             extractGuardianPhone(source),
             extractGuardianEmail(source),
             new JsonAdaptedAppointment(source.getAppointment()),
-            source.getPaymentHistory().getPaidDates().stream()
+            source.getBilling().getPaymentHistory().getPaidDates().stream()
                 .map(value -> value.format(DateTimeUtil.ISO_LOCAL_DATE_STRICT_FORMATTER))
                 .collect(Collectors.toList()),
             source.getBilling().getCurrentDueDate().format(DateTimeUtil.ISO_LOCAL_DATE_STRICT_FORMATTER),

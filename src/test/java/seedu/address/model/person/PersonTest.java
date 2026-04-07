@@ -160,7 +160,7 @@ public class PersonTest {
         assertEquals(LocalDateTime.parse("2026-01-29T08:00:00"),
                 person.getNextAppointment()
                         .orElseThrow()
-                        .getAttendance()
+                        .getAttendanceHistory()
                         .getLastRecord()
                         .orElseThrow()
                         .getRecordedAt()

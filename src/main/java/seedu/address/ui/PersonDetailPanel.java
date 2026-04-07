@@ -215,14 +215,14 @@ public class PersonDetailPanel extends UiPart<Region> {
         }
 
         // Display payment history
-        if (person.getPaymentHistory().getPaidDates().isEmpty()) {
+        if (person.getBilling().getPaymentHistory().getPaidDates().isEmpty()) {
             Label noPaymentsLabel = new Label("No payment history");
             noPaymentsLabel.getStyleClass().add("detail-field-value");
             paymentHistoryFlowPane.getChildren().add(noPaymentsLabel);
             paymentHistoryToggleLink.setManaged(false);
             paymentHistoryToggleLink.setVisible(false);
         } else {
-            List<LocalDate> paymentDates = person.getPaymentHistory().getPaidDates().stream()
+            List<LocalDate> paymentDates = person.getBilling().getPaymentHistory().getPaidDates().stream()
                     .sorted(java.util.Comparator.reverseOrder()) // Most recent first
                     .toList();
 

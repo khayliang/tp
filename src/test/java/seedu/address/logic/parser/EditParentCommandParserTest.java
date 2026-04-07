@@ -1,8 +1,8 @@
 package seedu.address.logic.parser;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_PARENT_EMAIL;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_PARENT_NAME;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_PARENT_PHONE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
@@ -35,16 +35,16 @@ public class EditParentCommandParserTest {
 
     @Test
     public void parse_invalidPreamble_failure() {
-        assertParseFailure(parser, "-5" + " " + PREFIX_PARENT_NAME + VALID_NAME, MESSAGE_INVALID_FORMAT);
-        assertParseFailure(parser, "0" + " " + PREFIX_PARENT_NAME + VALID_NAME, MESSAGE_INVALID_FORMAT);
+        assertParseFailure(parser, "-5" + " " + PREFIX_NAME + VALID_NAME, MESSAGE_INVALID_FORMAT);
+        assertParseFailure(parser, "0" + " " + PREFIX_NAME + VALID_NAME, MESSAGE_INVALID_FORMAT);
         assertParseFailure(parser, "1 some random string", MESSAGE_INVALID_FORMAT);
     }
 
     @Test
     public void parse_allFieldsSpecified_success() {
         Index targetIndex = INDEX_FIRST_PERSON;
-        String userInput = targetIndex.getOneBased() + " " + PREFIX_PARENT_NAME + VALID_NAME
-                + " " + PREFIX_PARENT_PHONE + VALID_PHONE + " " + PREFIX_PARENT_EMAIL + VALID_EMAIL;
+        String userInput = targetIndex.getOneBased() + " " + PREFIX_NAME + VALID_NAME
+                + " " + PREFIX_PHONE + VALID_PHONE + " " + PREFIX_EMAIL + VALID_EMAIL;
 
         Optional<Name> expectedName = Optional.of(new Name(VALID_NAME));
         Optional<Phone> expectedPhone = Optional.of(new Phone(VALID_PHONE));
@@ -82,9 +82,9 @@ public class EditParentCommandParserTest {
     public void parse_invalidUpdatedFields_failure() {
         Index targetIndex = INDEX_FIRST_PERSON;
 
-        assertParseFailure(parser, targetIndex.getOneBased() + " " + PREFIX_PARENT_NAME + "123",
+        assertParseFailure(parser, targetIndex.getOneBased() + " " + PREFIX_NAME + "123",
                 Name.MESSAGE_CONSTRAINTS);
-        assertParseFailure(parser, targetIndex.getOneBased() + " " + PREFIX_PARENT_PHONE + "123",
+        assertParseFailure(parser, targetIndex.getOneBased() + " " + PREFIX_PHONE + "123",
                 Phone.MESSAGE_CONSTRAINTS);
     }
 }

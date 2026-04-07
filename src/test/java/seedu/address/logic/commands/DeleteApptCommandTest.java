@@ -39,7 +39,7 @@ public class DeleteApptCommandTest {
         DeleteApptCommand deleteCommand = new DeleteApptCommand(INDEX_FIRST_PERSON, INDEX_SECOND_PERSON);
 
         Person editedPerson = new PersonBuilder(personToEdit)
-                .withAppointments(personToEdit.getAppointments().subList(0, 1))
+                .withAppointments(personToEdit.getAppointment().getSessions().subList(0, 1))
                 .build();
         String expectedMessage = String.format(DeleteApptCommand.MESSAGE_DELETE_APPT_SUCCESS,
                 Messages.format(editedPerson), "2026-01-20T10:00:00");
@@ -74,7 +74,7 @@ public class DeleteApptCommandTest {
         DeleteApptCommand deleteCommand = new DeleteApptCommand(INDEX_FIRST_PERSON, INDEX_SECOND_PERSON);
 
         Person editedPerson = new PersonBuilder(personToEdit)
-                .withAppointments(personToEdit.getAppointments().subList(0, 1))
+                .withAppointments(personToEdit.getAppointment().getSessions().subList(0, 1))
                 .build();
         String expectedMessage = String.format(DeleteApptCommand.MESSAGE_DELETE_APPT_SUCCESS,
                 Messages.format(editedPerson), "2026-01-20T10:00:00");
@@ -95,7 +95,7 @@ public class DeleteApptCommandTest {
         DeleteApptCommand deleteCommand = new DeleteApptCommand(INDEX_FIRST_PERSON, INDEX_SECOND_PERSON);
 
         Person editedPerson = new PersonBuilder(personToEdit)
-                .withAppointments(personToEdit.getAppointments().subList(0, 1))
+                .withAppointments(personToEdit.getAppointment().getSessions().subList(0, 1))
                 .build();
         String expectedMessage = String.format(DeleteApptCommand.MESSAGE_DELETE_APPT_SUCCESS,
                 Messages.format(editedPerson), "2026-01-20T10:00:00");

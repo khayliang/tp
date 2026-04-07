@@ -351,9 +351,9 @@ public class JsonAdaptedPersonTest {
                 VALID_ATTENDANCE_HISTORY);
         Person modelPerson = person.toModelType();
 
-        assertEquals(2, modelPerson.getNextAppointment().orElseThrow().getAttendance().getRecords().size());
+        assertEquals(2, modelPerson.getNextAppointment().orElseThrow().getAttendanceHistory().getRecords().size());
         assertEquals(LocalDateTime.parse("2026-01-29T08:00:00"),
-                modelPerson.getNextAppointment().orElseThrow().getAttendance().getLastRecord().orElseThrow()
+                modelPerson.getNextAppointment().orElseThrow().getAttendanceHistory().getLastRecord().orElseThrow()
                         .getRecordedAt());
     }
 
@@ -368,9 +368,9 @@ public class JsonAdaptedPersonTest {
                 VALID_ATTENDANCE_HISTORY);
         Person modelPerson = person.toModelType();
 
-        assertEquals(2, modelPerson.getNextAppointment().orElseThrow().getAttendance().getRecords().size());
+        assertEquals(2, modelPerson.getNextAppointment().orElseThrow().getAttendanceHistory().getRecords().size());
         assertEquals(LocalDateTime.parse("2026-01-29T08:00:00"),
-                modelPerson.getNextAppointment().orElseThrow().getAttendance().getLastRecord().orElseThrow()
+                modelPerson.getNextAppointment().orElseThrow().getAttendanceHistory().getLastRecord().orElseThrow()
                         .getRecordedAt());
     }
 

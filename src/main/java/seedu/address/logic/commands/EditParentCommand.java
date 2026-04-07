@@ -1,9 +1,9 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_PARENT_EMAIL;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_PARENT_NAME;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_PARENT_PHONE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -31,12 +31,12 @@ public class EditParentCommand extends EditCommand {
             + ": Sets the parent details of the student identified by the index number in the displayed "
             + "student list. At least one optional field must be provided.\n"
             + "Parameters: INDEX (must be a positive integer) "
-            + "[" + PREFIX_PARENT_NAME + "PARENT_NAME] "
-            + "[" + PREFIX_PARENT_PHONE + "PARENT_PHONE] "
-            + "[" + PREFIX_PARENT_EMAIL + "PARENT_EMAIL]\n"
+            + "[" + PREFIX_NAME + "PARENT_NAME] "
+            + "[" + PREFIX_PHONE + "PARENT_PHONE] "
+            + "[" + PREFIX_EMAIL + "PARENT_EMAIL]\n"
             + "Example: " + COMMAND_WORD + " " + SUB_COMMAND_WORD + " 3 "
-            + PREFIX_PARENT_NAME + "John Lim " + PREFIX_PARENT_PHONE + "91234567 "
-            + PREFIX_PARENT_EMAIL + "johnlim@example.com";
+            + PREFIX_NAME + "John Lim " + PREFIX_PHONE + "91234567 "
+            + PREFIX_EMAIL + "johnlim@example.com";
 
     public static final String MESSAGE_EDIT_PARENT_SUCCESS = "Updated parent/guardian details for student: %1$s.";
     public static final String MESSAGE_MISSING_PARENT_NAME =

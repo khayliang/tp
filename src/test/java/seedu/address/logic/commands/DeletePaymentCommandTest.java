@@ -69,8 +69,8 @@ public class DeletePaymentCommandTest {
         CommandResult expectedCommandResult = new CommandResult(expectedMessage, editedPerson);
         assertCommandSuccess(deleteCommand, model, expectedCommandResult, expectedModel);
 
-        assertFalse(editedPerson.getPaymentHistory().hasPaidOn(PAYMENT_DATE_TO_DELETE));
-        assertTrue(editedPerson.getPaymentHistory().hasPaidOn(OTHER_PAYMENT_DATE));
+        assertFalse(editedPerson.getBilling().getPaymentHistory().hasPaidOn(PAYMENT_DATE_TO_DELETE));
+        assertTrue(editedPerson.getBilling().getPaymentHistory().hasPaidOn(OTHER_PAYMENT_DATE));
     }
 
     @Test

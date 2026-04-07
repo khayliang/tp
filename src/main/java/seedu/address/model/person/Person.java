@@ -13,7 +13,6 @@ import java.util.Set;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.academic.Academics;
 import seedu.address.model.billing.Billing;
-import seedu.address.model.billing.PaymentHistory;
 import seedu.address.model.session.Appointment;
 import seedu.address.model.session.ScheduledSession;
 import seedu.address.model.tag.Tag;
@@ -111,20 +110,13 @@ public class Person {
         return appointment;
     }
 
-    /**
-     * Backward-compatible accessor exposing scheduled sessions list.
-     */
-    public List<ScheduledSession> getAppointments() {
-        return appointment.getSessions();
-    }
+
 
     public Billing getBilling() {
         return billing;
     }
 
-    public PaymentHistory getPaymentHistory() {
-        return billing.getPaymentHistory();
-    }
+
 
     /**
      * Returns an immutable tag set, which throws {@code UnsupportedOperationException}

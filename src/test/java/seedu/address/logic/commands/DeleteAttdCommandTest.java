@@ -73,7 +73,8 @@ public class DeleteAttdCommandTest {
         assertCommandSuccess(deleteCommand, model,
                 new CommandResult(expectedMessage, editedPerson), expectedModel);
 
-        LocalDateTime updatedNext = model.getFilteredPersonList().get(0).getAppointments().get(0).getNext();
+        LocalDateTime updatedNext = model.getFilteredPersonList().get(0)
+                .getAppointment().getSessions().get(0).getNext();
         assertEquals(LocalDateTime.parse("2026-01-08T10:00:00"), updatedNext);
     }
 
@@ -87,7 +88,7 @@ public class DeleteAttdCommandTest {
 
         deleteCommand.execute(model);
 
-        ScheduledSession updatedSession = model.getFilteredPersonList().get(0).getAppointments().get(0);
+        ScheduledSession updatedSession = model.getFilteredPersonList().get(0).getAppointment().getSessions().get(0);
         assertEquals(NEXT, updatedSession.getNext());
         assertEquals(1, updatedSession.getAttendanceHistory().getRecords().size());
         assertTrue(updatedSession.getAttendanceHistory().hasRecordAt(LATEST_ATTENDANCE));

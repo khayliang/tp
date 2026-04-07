@@ -50,12 +50,7 @@ public final class ScheduledSession {
         return attendanceHistory;
     }
 
-    /**
-     * Backward-compatible accessor alias.
-     */
-    public AttendanceHistory getAttendance() {
-        return attendanceHistory;
-    }
+
 
     public String getDescription() {
         return description;

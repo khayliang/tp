@@ -78,32 +78,6 @@ public class ParserUtil {
         return new Name(trimmedName);
     }
 
-    /**
-     * Parses a {@code String parentName} into a {@code Name}. Leading and trailing whitespaces will be trimmed.
-     *
-     * @throws ParseException if the given {@code parentName} is invalid.
-     */
-    public static Name parseParentName(String parentName) throws ParseException {
-        return parseName(parentName);
-    }
-
-    /**
-     * Parses a {@code String parentPhone} into a {@code Phone}. Leading and trailing whitespaces will be trimmed.
-     *
-     * @throws ParseException if the given {@code parentPhone} is invalid.
-     */
-    public static Phone parseParentPhone(String parentPhone) throws ParseException {
-        return parsePhone(parentPhone);
-    }
-
-    /**
-     * Parses a {@code String parentEmail} into a {@code Email}. Leading and trailing whitespaces will be trimmed.
-     *
-     * @throws ParseException if the given {@code parentEmail} is invalid.
-     */
-    public static Email parseParentEmail(String parentEmail) throws ParseException {
-        return parseEmail(parentEmail);
-    }
 
     /**
      * Parses a {@code String phone} into a {@code Phone}.

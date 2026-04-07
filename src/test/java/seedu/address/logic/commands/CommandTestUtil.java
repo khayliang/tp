@@ -8,7 +8,6 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_DESCRIPTION;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_LEVEL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_PARENT_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_RECURRENCE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_SUBJECT;
@@ -71,8 +70,8 @@ public class CommandTestUtil {
     public static final String ADDRESS_DESC_BOB = " " + PREFIX_ADDRESS + VALID_ADDRESS_BOB;
     public static final String TAG_DESC_FRIEND = " " + PREFIX_TAG + VALID_TAG_FRIEND;
     public static final String TAG_DESC_HUSBAND = " " + PREFIX_TAG + VALID_TAG_HUSBAND;
-    public static final String PARENT_NAME_DESC_AMY = " " + PREFIX_PARENT_NAME + VALID_PARENT_NAME_AMY;
-    public static final String PARENT_NAME_DESC_BOB = " " + PREFIX_PARENT_NAME + VALID_PARENT_NAME_BOB;
+    public static final String PARENT_NAME_DESC_AMY = " " + PREFIX_NAME + VALID_PARENT_NAME_AMY;
+    public static final String PARENT_NAME_DESC_BOB = " " + PREFIX_NAME + VALID_PARENT_NAME_BOB;
     public static final String TAG_DESC_JC = " " + PREFIX_TAG + VALID_TAG_JC;
     public static final String TAG_DESC_GROUP1 = " " + PREFIX_TAG + VALID_TAG_GROUP1;
     public static final String SUBJECT_DESC_MATH_STRONG =

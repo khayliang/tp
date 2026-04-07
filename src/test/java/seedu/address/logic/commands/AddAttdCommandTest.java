@@ -52,7 +52,7 @@ public class AddAttdCommandTest {
                 .withAppointment(new Appointment(Recurrence.NONE,
                         LocalDateTime.parse("2026-01-13T08:00:00"),
                         LocalDateTime.parse("2026-01-13T08:00:00"),
-                        personToEdit.getNextAppointment().orElseThrow().getAttendance()
+                        personToEdit.getNextAppointment().orElseThrow().getAttendanceHistory()
                                 .addAttendance(new Attendance(true, LocalDate.parse("2026-01-13"))),
                         "Algebra"))
                 .build();
@@ -83,7 +83,7 @@ public class AddAttdCommandTest {
 
         Person editedPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         Attendance recordedAttendance = editedPerson.getNextAppointment().orElseThrow()
-                .getAttendance().getLastRecord().orElseThrow();
+                .getAttendanceHistory().getLastRecord().orElseThrow();
         assertTrue(recordedAttendance.hasAttended());
         assertEquals(LocalDateTime.parse(VALID_ATTENDANCE_DATE + "T00:00:00"), recordedAttendance.getRecordedAt());
     }
@@ -102,7 +102,7 @@ public class AddAttdCommandTest {
 
         Person editedPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         Attendance recordedAttendance = editedPerson.getNextAppointment().orElseThrow()
-                .getAttendance().getLastRecord().orElseThrow();
+                .getAttendanceHistory().getLastRecord().orElseThrow();
         assertTrue(recordedAttendance.hasAttended());
         assertEquals(LocalDateTime.parse("2026-01-29T08:30:00"), recordedAttendance.getRecordedAt());
     }
@@ -120,7 +120,7 @@ public class AddAttdCommandTest {
 
         Person editedPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         Attendance recordedAttendance = editedPerson.getNextAppointment().orElseThrow()
-                .getAttendance().getLastRecord().orElseThrow();
+                .getAttendanceHistory().getLastRecord().orElseThrow();
         assertFalse(recordedAttendance.hasAttended());
         assertEquals(LocalDateTime.parse("2026-01-13T00:00:00"), recordedAttendance.getRecordedAt());
     }
@@ -138,7 +138,7 @@ public class AddAttdCommandTest {
 
         Person editedPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         Attendance recordedAttendance = editedPerson.getNextAppointment().orElseThrow()
-                .getAttendance().getLastRecord().orElseThrow();
+                .getAttendanceHistory().getLastRecord().orElseThrow();
         assertFalse(recordedAttendance.hasAttended());
         assertEquals(LocalDateTime.parse(VALID_ATTENDANCE_DATE + "T00:00:00"), recordedAttendance.getRecordedAt());
     }
@@ -173,9 +173,9 @@ public class AddAttdCommandTest {
         addCommand.execute(model);
 
         Person editedPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        assertEquals(2, editedPerson.getNextAppointment().orElseThrow().getAttendance().getRecords().size());
+        assertEquals(2, editedPerson.getNextAppointment().orElseThrow().getAttendanceHistory().getRecords().size());
         assertEquals(LocalDateTime.parse(VALID_ATTENDANCE_DATE + "T00:00:00"), editedPerson.getNextAppointment()
-                .orElseThrow().getAttendance().getLastRecord().orElseThrow().getRecordedAt());
+                .orElseThrow().getAttendanceHistory().getLastRecord().orElseThrow().getRecordedAt());
     }
 
     @Test
@@ -212,7 +212,7 @@ public class AddAttdCommandTest {
         Person editedPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         assertEquals(LocalDateTime.parse("2026-01-20T08:00:00"),
                 editedPerson.getNextAppointment().orElseThrow().getNext());
-        assertEquals(2, editedPerson.getNextAppointment().orElseThrow().getAttendance().getRecords().size());
+        assertEquals(2, editedPerson.getNextAppointment().orElseThrow().getAttendanceHistory().getRecords().size());
     }
 
     @Test
@@ -289,9 +289,9 @@ public class AddAttdCommandTest {
         addCommand.execute(model);
 
         Person editedPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        assertTrue(editedPerson.getAppointments().get(0).getAttendance().isEmpty());
+        assertTrue(editedPerson.getAppointment().getSessions().get(0).getAttendanceHistory().isEmpty());
         assertEquals(LocalDateTime.parse("2026-01-20T00:00:00"),
-                editedPerson.getAppointments().get(1).getAttendance().getLastRecord().orElseThrow()
+                editedPerson.getAppointment().getSessions().get(1).getAttendanceHistory().getLastRecord().orElseThrow()
                         .getRecordedAt());
     }
 

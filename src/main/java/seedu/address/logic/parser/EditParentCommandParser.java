@@ -1,9 +1,9 @@
 package seedu.address.logic.parser;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_PARENT_EMAIL;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_PARENT_NAME;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_PARENT_PHONE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -32,20 +32,20 @@ public class EditParentCommandParser implements Parser<EditParentCommand> {
     @Override
     public EditParentCommand parse(String args) throws ParseException {
         requireNonNull(args);
-        ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_PARENT_NAME, PREFIX_PARENT_PHONE,
-                PREFIX_PARENT_EMAIL);
+        ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_PHONE,
+                PREFIX_EMAIL);
 
         Index index = ParserUtil.parseIndex(argMultimap.getPreamble(), EditParentCommand.MESSAGE_USAGE);
 
-        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_PARENT_NAME, PREFIX_PARENT_PHONE, PREFIX_PARENT_EMAIL);
+        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME, PREFIX_PHONE, PREFIX_EMAIL);
 
         EditParentDescriptor editParentDescriptor = new EditParentDescriptor();
 
-        parseAndSet(argMultimap, PREFIX_PARENT_NAME, ParserUtil::parseParentName,
+        parseAndSet(argMultimap, PREFIX_NAME, ParserUtil::parseName,
                 editParentDescriptor::setParentName);
-        parseAndSet(argMultimap, PREFIX_PARENT_PHONE, ParserUtil::parseParentPhone,
+        parseAndSet(argMultimap, PREFIX_PHONE, ParserUtil::parsePhone,
                 editParentDescriptor::setParentPhone);
-        parseAndSet(argMultimap, PREFIX_PARENT_EMAIL, ParserUtil::parseParentEmail,
+        parseAndSet(argMultimap, PREFIX_EMAIL, ParserUtil::parseEmail,
                 editParentDescriptor::setParentEmail);
 
         if (!editParentDescriptor.isAnyFieldEdited()) {

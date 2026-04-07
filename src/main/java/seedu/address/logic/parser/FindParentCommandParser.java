@@ -2,9 +2,9 @@ package seedu.address.logic.parser;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_PARENT_EMAIL;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_PARENT_NAME;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_PARENT_PHONE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,18 +30,18 @@ public class FindParentCommandParser implements Parser<FindParentCommand> {
     public FindParentCommand parse(String args) throws ParseException {
         requireNonNull(args);
         ArgumentMultimap argMultimap =
-                ArgumentTokenizer.tokenize(args, PREFIX_PARENT_NAME, PREFIX_PARENT_PHONE, PREFIX_PARENT_EMAIL);
+                ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_PHONE, PREFIX_EMAIL);
 
-        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_PARENT_NAME, PREFIX_PARENT_PHONE, PREFIX_PARENT_EMAIL);
+        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME, PREFIX_PHONE, PREFIX_EMAIL);
 
         if (!argMultimap.getPreamble().isEmpty()) {
             throw new ParseException(
                     String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindParentCommand.MESSAGE_USAGE));
         }
 
-        List<String> nameKeywords = parseKeywords(argMultimap, PREFIX_PARENT_NAME);
-        List<String> phoneKeywords = parseKeywords(argMultimap, PREFIX_PARENT_PHONE);
-        List<String> emailKeywords = parseKeywords(argMultimap, PREFIX_PARENT_EMAIL);
+        List<String> nameKeywords = parseKeywords(argMultimap, PREFIX_NAME);
+        List<String> phoneKeywords = parseKeywords(argMultimap, PREFIX_PHONE);
+        List<String> emailKeywords = parseKeywords(argMultimap, PREFIX_EMAIL);
 
         if (nameKeywords.isEmpty() && phoneKeywords.isEmpty() && emailKeywords.isEmpty()) {
             throw new ParseException(
