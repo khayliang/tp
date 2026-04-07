@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -163,6 +164,12 @@
           <VBox spacing="6">
             <Label text="Payment History" styleClass="detail-section-title" />
             <FlowPane fx:id="paymentHistoryFlowPane" hgap="6" vgap="6" prefWrapLength="280" />
+            <Hyperlink fx:id="paymentHistoryToggleLink"
+                       text="Show all"
+                       visible="false"
+                       managed="false"
+                       focusTraversable="false"
+                       styleClass="detail-toggle-link" />
           </VBox>
         </VBox>
       </VBox>

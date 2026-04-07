@@ -40,7 +40,8 @@ public class AddPaymentCommandTest {
         LocalDate paymentDate = LocalDate.parse(VALID_PAYMENT_DATE);
         AddPaymentCommand addCommand = new AddPaymentCommand(INDEX_FIRST_PERSON, paymentDate);
 
-        Billing updatedBilling = personToEdit.recordFeesPaidAndAdvanceBilling(paymentDate);
+        Billing updatedBilling = personToEdit.getBilling().recordTuitionPaidAndAdvanceDueDate(paymentDate);
+
         Person editedPerson = new PersonBuilder(personToEdit)
                 .withBilling(updatedBilling)
                 .build();
@@ -70,7 +71,9 @@ public class AddPaymentCommandTest {
         Person initialPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         AddPaymentCommand firstAddCommand = new AddPaymentCommand(INDEX_FIRST_PERSON, paymentDate);
 
-        Billing billingAfterFirstPayment = initialPerson.recordFeesPaidAndAdvanceBilling(paymentDate);
+        Billing billingAfterFirstPayment = initialPerson.getBilling()
+            .recordTuitionPaidAndAdvanceDueDate(paymentDate);
+
         Person personAfterFirstPayment = new PersonBuilder(initialPerson)
             .withBilling(billingAfterFirstPayment)
             .build();

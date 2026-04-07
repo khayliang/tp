@@ -53,7 +53,7 @@ public class DeletePaymentCommand extends DeleteCommand {
 
         Billing updatedBilling;
         try {
-            updatedBilling = personToEdit.deleteRecordedPayment(paymentDate);
+            updatedBilling = personToEdit.getBilling().deleteRecordedPayment(paymentDate);
         } catch (IllegalArgumentException err) {
             String formattedDate = paymentDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
             throw new CommandException(String.format(MESSAGE_PAYMENT_DATE_NOT_FOUND,

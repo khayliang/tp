@@ -44,7 +44,7 @@ public class DeletePaymentCommandTest {
 
         DeletePaymentCommand deleteCommand = new DeletePaymentCommand(INDEX_FIRST_PERSON, PAYMENT_DATE_TO_DELETE);
 
-        Billing updatedBilling = personWithPaymentHistory.deleteRecordedPayment(PAYMENT_DATE_TO_DELETE);
+        Billing updatedBilling = personWithPaymentHistory.getBilling().deleteRecordedPayment(PAYMENT_DATE_TO_DELETE);
         Person editedPerson = new PersonBuilder(personWithPaymentHistory)
                 .withBilling(updatedBilling)
                 .build();

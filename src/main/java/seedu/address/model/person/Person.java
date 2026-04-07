@@ -2,7 +2,6 @@ package seedu.address.model.person;
 
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
-import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -162,43 +161,6 @@ public class Person {
         }
 
         return otherPerson != null && otherPerson.getName().equals(getName());
-    }
-
-    /**
-     * Returns an immutable {@code Billing} object with updated payment history.
-     * Advances billing by one recurrence cycle only when {@code paymentDate}
-     * is later than the latest previously recorded payment date.
-     * @param paymentDate A valid {@code LocalDate}
-     * @return {@code Billing} object
-     */
-    public Billing recordFeesPaidAndAdvanceBilling(LocalDate paymentDate) {
-        boolean shouldAdvanceBillingCycle = billing.getPaymentHistory().getLatestPaidDate()
-                .map(paymentDate::isAfter)
-                .orElse(true);
-        Billing updatedBilling = billing.recordTuitionPaid(paymentDate);
-        return shouldAdvanceBillingCycle ? updatedBilling.advanceDueDate() : updatedBilling;
-    }
-
-    /**
-     * Returns an immutable {@code Billing} object with updated payment history after deleting
-     * a recorded payment date. Due date is rolled back one recurrence cycle only when deleting
-     * the latest chronological payment date.
-     * @param paymentDate A valid {@code LocalDate}
-     * @return updated {@code Billing} object
-     * @throws IllegalArgumentException if paymentDate is not recorded
-     */
-    public Billing deleteRecordedPayment(LocalDate paymentDate) {
-        return billing.deleteRecordedPayment(paymentDate);
-    }
-
-    /**
-     * Returns a new {@code Billing} instance with an updated tuition fee for this person.
-     * @param tuitionFee the new tuition fee amount to apply; must be non-negative
-     * @return a new {@code Billing} object with the updated tuition fee and all other billing fields unchanged
-     * @throws IllegalArgumentException if {@code tuitionFee} is negative
-     */
-    public Billing updateTuitionRate(Double tuitionFee) {
-        return billing.updateRate(tuitionFee);
     }
 
     /**

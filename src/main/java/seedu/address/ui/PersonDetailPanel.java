@@ -9,9 +9,12 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
@@ -33,6 +36,7 @@ public class PersonDetailPanel extends UiPart<Region> {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("d MMM uuuu");
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("h:mma");
     private static final int MAX_VISIBLE_ATTENDANCE_RECORDS = 3;
+    private static final int MAX_VISIBLE_PAYMENT_HISTORY_RECORDS = 3;
     private static final String NOT_SET_TEXT = "Not set";
 
     @FXML
@@ -84,6 +88,9 @@ public class PersonDetailPanel extends UiPart<Region> {
     private FlowPane paymentHistoryFlowPane;
 
     @FXML
+    private Hyperlink paymentHistoryToggleLink;
+
+    @FXML
     private FlowPane tagsFlowPane;
 
     @FXML
@@ -92,12 +99,28 @@ public class PersonDetailPanel extends UiPart<Region> {
     @FXML
     private Label academicsNotesLabel;
 
+    private Person currentPerson;
+    private boolean isPaymentHistoryExpanded;
+    private final Set<String> expandedAttendanceSessionKeys = new HashSet<>();
+
     /**
      * Creates a {@code PersonDetailPanel}.
      */
     public PersonDetailPanel() {
         super(FXML);
         showEmptyState();
+    }
+
+    @FXML
+    private void initialize() {
+        paymentHistoryToggleLink.setFocusTraversable(false);
+        paymentHistoryToggleLink.setOnAction(event -> {
+            if (currentPerson == null) {
+                return;
+            }
+            isPaymentHistoryExpanded = !isPaymentHistoryExpanded;
+            displayPerson(currentPerson);
+        });
     }
 
     /**
@@ -110,6 +133,11 @@ public class PersonDetailPanel extends UiPart<Region> {
         }
 
         requireNonNull(person);
+
+        if (currentPerson == null || !currentPerson.equals(person)) {
+            resetExpandedState();
+        }
+        currentPerson = person;
 
         nameLabel.setText(person.getName().fullName);
         phoneLabel.setText(person.getPhone().value);
@@ -191,14 +219,33 @@ public class PersonDetailPanel extends UiPart<Region> {
             Label noPaymentsLabel = new Label("No payment history");
             noPaymentsLabel.getStyleClass().add("detail-field-value");
             paymentHistoryFlowPane.getChildren().add(noPaymentsLabel);
+            paymentHistoryToggleLink.setManaged(false);
+            paymentHistoryToggleLink.setVisible(false);
         } else {
-            person.getPaymentHistory().getPaidDates().stream()
+            List<LocalDate> paymentDates = person.getPaymentHistory().getPaidDates().stream()
                     .sorted(java.util.Comparator.reverseOrder()) // Most recent first
-                    .forEach(date -> {
-                        Label paymentLabel = new Label(formatDate(date));
-                        paymentLabel.getStyleClass().add("detail-payment-date");
-                        paymentHistoryFlowPane.getChildren().add(paymentLabel);
-                    });
+                    .toList();
+
+            int visiblePayments = isPaymentHistoryExpanded
+                    ? paymentDates.size()
+                    : Math.min(MAX_VISIBLE_PAYMENT_HISTORY_RECORDS, paymentDates.size());
+            for (int index = 0; index < visiblePayments; index++) {
+                Label paymentLabel = new Label(formatDate(paymentDates.get(index)));
+                paymentLabel.getStyleClass().add("detail-payment-date");
+                paymentHistoryFlowPane.getChildren().add(paymentLabel);
+            }
+
+            if (paymentDates.size() > MAX_VISIBLE_PAYMENT_HISTORY_RECORDS) {
+                int hiddenPaymentCount = paymentDates.size() - MAX_VISIBLE_PAYMENT_HISTORY_RECORDS;
+                paymentHistoryToggleLink.setText(isPaymentHistoryExpanded
+                        ? "Show less"
+                        : "Show all (" + hiddenPaymentCount + " more)");
+                paymentHistoryToggleLink.setManaged(true);
+                paymentHistoryToggleLink.setVisible(true);
+            } else {
+                paymentHistoryToggleLink.setManaged(false);
+                paymentHistoryToggleLink.setVisible(false);
+            }
         }
 
         contentContainer.setManaged(true);
@@ -208,10 +255,14 @@ public class PersonDetailPanel extends UiPart<Region> {
     }
 
     private void showEmptyState() {
+        currentPerson = null;
+        resetExpandedState();
         appointmentListContainer.getChildren().clear();
         tagsFlowPane.getChildren().clear();
         subjectsFlowPane.getChildren().clear();
         paymentHistoryFlowPane.getChildren().clear();
+        paymentHistoryToggleLink.setManaged(false);
+        paymentHistoryToggleLink.setVisible(false);
         nextSessionSummaryLabel.setText("No upcoming sessions");
         attendanceSummaryLabel.setText("No attendance records");
         paymentStatusSummaryLabel.setText("No due date");
@@ -353,11 +404,15 @@ public class PersonDetailPanel extends UiPart<Region> {
             List<Attendance> attendanceRecords = session.getAttendanceHistory().getRecords().stream()
                     .sorted(Comparator.comparing(Attendance::getRecordedAt).reversed())
                     .toList();
+            String sessionKey = toSessionKey(session);
+            boolean isAttendanceExpanded = expandedAttendanceSessionKeys.contains(sessionKey);
 
             Label attendanceSummary = new Label(formatAttendanceSummary(attendanceRecords));
             attendanceSummary.getStyleClass().add("detail-attendance-summary");
 
-            int visibleRecords = Math.min(MAX_VISIBLE_ATTENDANCE_RECORDS, attendanceRecords.size());
+            int visibleRecords = isAttendanceExpanded
+                    ? attendanceRecords.size()
+                    : Math.min(MAX_VISIBLE_ATTENDANCE_RECORDS, attendanceRecords.size());
             for (int index = 0; index < visibleRecords; index++) {
                 Attendance attendance = attendanceRecords.get(index);
                 Label attendanceLabel = new Label(formatCompactAttendance(attendance));
@@ -367,19 +422,39 @@ public class PersonDetailPanel extends UiPart<Region> {
                 attendancePane.getChildren().add(attendanceLabel);
             }
 
-            int hiddenRecordCount = attendanceRecords.size() - visibleRecords;
-            if (hiddenRecordCount > 0) {
-                Label hiddenRecordsLabel = new Label("+" + hiddenRecordCount + " more");
-                hiddenRecordsLabel.getStyleClass().add("detail-attendance-more");
-                attendancePane.getChildren().add(hiddenRecordsLabel);
-            }
+            if (attendanceRecords.size() > MAX_VISIBLE_ATTENDANCE_RECORDS) {
+                int hiddenRecordCount = attendanceRecords.size() - MAX_VISIBLE_ATTENDANCE_RECORDS;
+                Hyperlink attendanceToggleLink = new Hyperlink(isAttendanceExpanded
+                        ? "Show less"
+                        : "Show all (" + hiddenRecordCount + " more)");
+                attendanceToggleLink.getStyleClass().add("detail-toggle-link");
+                attendanceToggleLink.setFocusTraversable(false);
+                attendanceToggleLink.setOnAction(event -> {
+                    if (isAttendanceExpanded) {
+                        expandedAttendanceSessionKeys.remove(sessionKey);
+                    } else {
+                        expandedAttendanceSessionKeys.add(sessionKey);
+                    }
+                    if (currentPerson != null) {
+                        displayPerson(currentPerson);
+                    }
+                });
 
-            appointmentSection.getChildren().addAll(
-                    appointmentLabel,
-                    scheduleLabel,
-                    recurrenceLabel,
-                    attendanceSummary,
-                    attendancePane);
+                appointmentSection.getChildren().addAll(
+                        appointmentLabel,
+                        scheduleLabel,
+                        recurrenceLabel,
+                        attendanceSummary,
+                        attendancePane,
+                        attendanceToggleLink);
+            } else {
+                appointmentSection.getChildren().addAll(
+                        appointmentLabel,
+                        scheduleLabel,
+                        recurrenceLabel,
+                        attendanceSummary,
+                        attendancePane);
+            }
         }
 
         return appointmentSection;
@@ -399,5 +474,14 @@ public class PersonDetailPanel extends UiPart<Region> {
     private String formatDayOfWeek(DayOfWeek dayOfWeek) {
         String lower = dayOfWeek.name().toLowerCase();
         return Character.toUpperCase(lower.charAt(0)) + lower.substring(1);
+    }
+
+    private void resetExpandedState() {
+        isPaymentHistoryExpanded = false;
+        expandedAttendanceSessionKeys.clear();
+    }
+
+    private String toSessionKey(ScheduledSession session) {
+        return session.getDescription() + "|" + session.getRecurrence() + "|" + session.getStart() + "|" + session.getNext();
     }
 }

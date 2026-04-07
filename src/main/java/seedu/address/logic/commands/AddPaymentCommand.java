@@ -61,7 +61,7 @@ public class AddPaymentCommand extends AddCommand {
 
         Billing updatedBilling;
         try {
-            updatedBilling = personToEdit.recordFeesPaidAndAdvanceBilling(paymentDate);
+            updatedBilling = personToEdit.getBilling().recordTuitionPaidAndAdvanceDueDate(paymentDate);
         } catch (IllegalArgumentException err) {
             String formattedDate = paymentDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
             throw new CommandException(String.format(MESSAGE_PAYMENT_DATE_IS_PRESENT,
