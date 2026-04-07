@@ -3,8 +3,11 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
 <?import javafx.scene.layout.VBox?>
 
 <ScrollPane fitToWidth="true" styleClass="detail-panel" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
@@ -17,102 +20,153 @@
   <Label fx:id="emptyStateLabel" text="Select a student to view details." styleClass="detail-empty-state" wrapText="true" />
 
   <VBox fx:id="contentContainer" spacing="10" visible="false" managed="false">
-    <!-- Personal Details Section -->
-    <VBox spacing="4" styleClass="detail-section">
-      <Label fx:id="nameLabel" styleClass="detail-name" text="-" />
-      <HBox spacing="10">
-        <Label text="Phone" styleClass="detail-field-label" />
-        <Label fx:id="phoneLabel" styleClass="detail-field-value" text="-" />
-      </HBox>
-      <HBox spacing="10">
-        <Label text="Email" styleClass="detail-field-label" />
-        <Label fx:id="emailLabel" styleClass="detail-field-value" text="-" wrapText="true" HBox.hgrow="ALWAYS" />
-      </HBox>
-      <HBox spacing="10">
-        <Label text="Address" styleClass="detail-field-label" />
-        <Label fx:id="addressLabel" styleClass="detail-field-value" text="-" wrapText="true" HBox.hgrow="ALWAYS" />
-      </HBox>
+    <VBox spacing="8" styleClass="detail-overview-card">
+      <Label fx:id="nameLabel" styleClass="detail-name" text="Not set" />
+      <GridPane hgap="10" vgap="6">
+        <columnConstraints>
+          <ColumnConstraints minWidth="110" />
+          <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
 
-      <VBox spacing="6">
-        <VBox.margin>
-          <Insets top="4" />
-        </VBox.margin>
-        <Label text="Tags" styleClass="detail-section-title" />
-        <FlowPane fx:id="tagsFlowPane" hgap="6" vgap="6" prefWrapLength="320" />
-      </VBox>
-    </VBox>
-
-    <!-- Academics Section -->
-    <VBox spacing="4">
-      <Label text="Academics" styleClass="detail-group-title" />
-
-      <!-- Subjects -->
-      <VBox spacing="6">
-        <VBox.margin>
-          <Insets top="4" />
-        </VBox.margin>
-        <Label text="Subjects" styleClass="detail-section-title" />
-        <FlowPane fx:id="subjectsFlowPane" hgap="6" vgap="6" prefWrapLength="320" />
-      </VBox>
-
-      <!-- Notes -->
-      <HBox spacing="10">
-        <Label text="Description" styleClass="detail-field-label" />
-        <Label fx:id="academicsNotesLabel"
-               styleClass="detail-field-value"
-               text="-"
+        <Label text="Next Session" styleClass="detail-field-label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <Label fx:id="nextSessionSummaryLabel"
+               styleClass="detail-summary-value"
+               text="No upcoming sessions"
                wrapText="true"
-               HBox.hgrow="ALWAYS" />
-      </HBox>
+               GridPane.columnIndex="1"
+               GridPane.rowIndex="0" />
+
+        <Label text="Attendance" styleClass="detail-field-label" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <Label fx:id="attendanceSummaryLabel"
+               styleClass="detail-summary-value"
+               text="No attendance records"
+               wrapText="true"
+               GridPane.columnIndex="1"
+               GridPane.rowIndex="1" />
+
+        <Label text="Payment" styleClass="detail-field-label" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <Label fx:id="paymentStatusSummaryLabel"
+               styleClass="detail-summary-value"
+               text="No due date"
+               wrapText="true"
+               GridPane.columnIndex="1"
+               GridPane.rowIndex="2" />
+      </GridPane>
     </VBox>
 
-    <!-- Parent Details Section -->
-    <VBox spacing="4">
-      <Label text="Parent Details" styleClass="detail-group-title" />
-      <HBox spacing="10">
-        <Label text="Parent Name" styleClass="detail-field-label" />
-        <Label fx:id="parentNameLabel" styleClass="detail-field-value" text="-" wrapText="true" HBox.hgrow="ALWAYS" />
-      </HBox>
-      <HBox spacing="10">
-        <Label text="Parent Phone" styleClass="detail-field-label" />
-        <Label fx:id="parentPhoneLabel" styleClass="detail-field-value" text="-" wrapText="true" HBox.hgrow="ALWAYS" />
-      </HBox>
-      <HBox spacing="10">
-        <Label text="Parent Email" styleClass="detail-field-label" />
-        <Label fx:id="parentEmailLabel" styleClass="detail-field-value" text="-" wrapText="true" HBox.hgrow="ALWAYS" />
-      </HBox>
-    </VBox>
+    <HBox spacing="10" fillHeight="true">
+      <VBox spacing="10" HBox.hgrow="ALWAYS">
+        <VBox spacing="8" styleClass="detail-card">
+          <Label text="Profile" styleClass="detail-group-title" />
+          <GridPane hgap="10" vgap="6">
+            <columnConstraints>
+              <ColumnConstraints minWidth="110" />
+              <ColumnConstraints hgrow="ALWAYS" />
+            </columnConstraints>
 
-    <!-- Appointment & Attendance Section -->
-    <VBox spacing="4">
-      <Label text="Appointments &amp; Attendance" styleClass="detail-group-title" />
-      <VBox spacing="6">
-        <VBox.margin>
-          <Insets top="4" />
-        </VBox.margin>
-        <VBox fx:id="appointmentListContainer" spacing="6" />
+            <Label text="Phone" styleClass="detail-field-label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <Label fx:id="phoneLabel" styleClass="detail-field-value" text="Not set" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+            <Label text="Email" styleClass="detail-field-label" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <Label fx:id="emailLabel"
+                   styleClass="detail-field-value"
+                   text="Not set"
+                   wrapText="true"
+                   GridPane.columnIndex="1"
+                   GridPane.rowIndex="1" />
+
+            <Label text="Address" styleClass="detail-field-label" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <Label fx:id="addressLabel"
+                   styleClass="detail-field-value"
+                   text="Not set"
+                   wrapText="true"
+                   GridPane.columnIndex="1"
+                   GridPane.rowIndex="2" />
+
+            <Label text="Parent Name" styleClass="detail-field-label" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+            <Label fx:id="parentNameLabel"
+                   styleClass="detail-field-value"
+                   text="Not set"
+                   wrapText="true"
+                   GridPane.columnIndex="1"
+                   GridPane.rowIndex="3" />
+
+            <Label text="Parent Phone" styleClass="detail-field-label" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+            <Label fx:id="parentPhoneLabel"
+                   styleClass="detail-field-value"
+                   text="Not set"
+                   wrapText="true"
+                   GridPane.columnIndex="1"
+                   GridPane.rowIndex="4" />
+
+            <Label text="Parent Email" styleClass="detail-field-label" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+            <Label fx:id="parentEmailLabel"
+                   styleClass="detail-field-value"
+                   text="Not set"
+                   wrapText="true"
+                   GridPane.columnIndex="1"
+                   GridPane.rowIndex="5" />
+          </GridPane>
+
+          <VBox spacing="6">
+            <Label text="Tags" styleClass="detail-section-title" />
+            <FlowPane fx:id="tagsFlowPane" hgap="6" vgap="6" prefWrapLength="280" />
+          </VBox>
+        </VBox>
+
+        <VBox spacing="8" styleClass="detail-card">
+          <Label text="Academics" styleClass="detail-group-title" />
+
+          <VBox spacing="6">
+            <Label text="Subjects" styleClass="detail-section-title" />
+            <FlowPane fx:id="subjectsFlowPane" hgap="6" vgap="6" prefWrapLength="280" />
+          </VBox>
+
+          <GridPane hgap="10" vgap="6">
+            <columnConstraints>
+              <ColumnConstraints minWidth="110" />
+              <ColumnConstraints hgrow="ALWAYS" />
+            </columnConstraints>
+
+            <Label text="Description" styleClass="detail-field-label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <Label fx:id="academicsNotesLabel"
+                   styleClass="detail-field-value"
+                   text="No description"
+                   wrapText="true"
+                   GridPane.columnIndex="1"
+                   GridPane.rowIndex="0" />
+          </GridPane>
+        </VBox>
       </VBox>
-    </VBox>
 
-    <!-- Payments Section -->
-    <VBox spacing="4">
-      <Label text="Payments" styleClass="detail-group-title" />
-      <HBox spacing="10">
-        <Label text="Payment Due" styleClass="detail-field-label" />
-        <Label fx:id="paymentDueDateLabel" styleClass="detail-field-value" text="-" />
-      </HBox>
-      <HBox spacing="10">
-        <Label text="Tuition Fees" styleClass="detail-field-label" />
-        <Label fx:id="paymentAmountLabel" styleClass="detail-field-value" text="-" />
-      </HBox>
-      <VBox spacing="6">
-        <VBox.margin>
-          <Insets top="4" />
-        </VBox.margin>
-        <Label text="Payment History" styleClass="detail-section-title" />
-        <FlowPane fx:id="paymentHistoryFlowPane" hgap="6" vgap="6" prefWrapLength="320" />
+      <VBox spacing="10" HBox.hgrow="ALWAYS">
+        <VBox spacing="8" styleClass="detail-card" VBox.vgrow="ALWAYS">
+          <Label text="Appointments &amp; Attendance" styleClass="detail-group-title" />
+          <VBox fx:id="appointmentListContainer" spacing="6" VBox.vgrow="ALWAYS" />
+        </VBox>
+
+        <VBox spacing="8" styleClass="detail-card">
+          <Label text="Payments" styleClass="detail-group-title" />
+          <GridPane hgap="10" vgap="6">
+            <columnConstraints>
+              <ColumnConstraints minWidth="110" />
+              <ColumnConstraints hgrow="ALWAYS" />
+            </columnConstraints>
+
+            <Label text="Payment Due" styleClass="detail-field-label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <Label fx:id="paymentDueDateLabel" styleClass="detail-field-value" text="Not set" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+            <Label text="Tuition Fees" styleClass="detail-field-label" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <Label fx:id="paymentAmountLabel" styleClass="detail-field-value" text="Not set" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+          </GridPane>
+
+          <VBox spacing="6">
+            <Label text="Payment History" styleClass="detail-section-title" />
+            <FlowPane fx:id="paymentHistoryFlowPane" hgap="6" vgap="6" prefWrapLength="280" />
+          </VBox>
+        </VBox>
       </VBox>
-    </VBox>
-    </VBox>
+    </HBox>
+  </VBox>
   </VBox>
 </ScrollPane>

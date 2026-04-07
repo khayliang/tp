@@ -351,6 +351,22 @@
     -fx-text-fill: white;
 }
 
+.detail-overview-card {
+    -fx-background-color: #34373a;
+    -fx-background-radius: 8;
+    -fx-border-color: #4d5155;
+    -fx-border-radius: 8;
+    -fx-padding: 10 12 10 12;
+}
+
+.detail-card {
+    -fx-background-color: #3a3d40;
+    -fx-background-radius: 8;
+    -fx-border-color: #4b4f53;
+    -fx-border-radius: 8;
+    -fx-padding: 10 12 10 12;
+}
+
 .detail-section-title {
     -fx-font-family: "Segoe UI Semibold";
     -fx-font-size: 12px;
@@ -379,9 +395,17 @@
     -fx-text-fill: #f1f1f1;
 }
 
+.detail-summary-value {
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-font-size: 12px;
+    -fx-text-fill: #f7f7f7;
+}
+
 .detail-appointment-card {
-    -fx-background-color: #3d3d3d;
+    -fx-background-color: #34373a;
     -fx-background-radius: 6;
+    -fx-border-color: #4b4f53;
+    -fx-border-radius: 6;
     -fx-padding: 8 10 8 10;
 }
 
@@ -395,6 +419,12 @@
     -fx-font-family: "Segoe UI";
     -fx-font-size: 11px;
     -fx-text-fill: #b8bdc2;
+}
+
+.detail-appointment-meta-secondary {
+    -fx-font-family: "Segoe UI";
+    -fx-font-size: 11px;
+    -fx-text-fill: #a8adb2;
 }
 
 .detail-attendance-summary {

@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class PersonDetailPanel extends UiPart<Region> {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("d MMM uuuu");
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("h:mma");
     private static final int MAX_VISIBLE_ATTENDANCE_RECORDS = 3;
+    private static final String NOT_SET_TEXT = "Not set";
 
     @FXML
     private VBox contentContainer;
@@ -40,6 +42,15 @@ public class PersonDetailPanel extends UiPart<Region> {
 
     @FXML
     private Label nameLabel;
+
+    @FXML
+    private Label nextSessionSummaryLabel;
+
+    @FXML
+    private Label attendanceSummaryLabel;
+
+    @FXML
+    private Label paymentStatusSummaryLabel;
 
     @FXML
     private Label phoneLabel;
@@ -104,11 +115,16 @@ public class PersonDetailPanel extends UiPart<Region> {
         emailLabel.setText(person.getEmail().value);
         addressLabel.setText(person.getAddress().value);
         parentNameLabel.setText(person.getGuardian()
-                .map(g -> g.getName().fullName).orElse("-"));
+            .map(g -> g.getName().fullName).orElse(NOT_SET_TEXT));
         parentPhoneLabel.setText(person.getGuardian()
-                .flatMap(g -> g.getPhone()).map(p -> p.value).orElse("-"));
+            .flatMap(g -> g.getPhone()).map(p -> p.value).orElse(NOT_SET_TEXT));
         parentEmailLabel.setText(person.getGuardian()
-                .flatMap(g -> g.getEmail()).map(e -> e.value).orElse("-"));
+            .flatMap(g -> g.getEmail()).map(e -> e.value).orElse(NOT_SET_TEXT));
+
+        nextSessionSummaryLabel.setText(formatNextSessionSummary(person));
+        attendanceSummaryLabel.setText(formatOverallAttendanceSummary(person));
+        paymentStatusSummaryLabel.setText(formatPaymentStatusSummary(person.getBilling().getCurrentDueDate()));
+
         paymentAmountLabel.setText(formatAmount(person.getBilling().getTuitionFee()));
         paymentDueDateLabel.setText(formatDate(person.getBilling().getCurrentDueDate()));
 
@@ -118,7 +134,7 @@ public class PersonDetailPanel extends UiPart<Region> {
         paymentHistoryFlowPane.getChildren().clear();
 
         if (person.getTags().isEmpty()) {
-            Label noTagsLabel = new Label("-");
+            Label noTagsLabel = new Label("No tags");
             noTagsLabel.getStyleClass().add("detail-field-value");
             tagsFlowPane.getChildren().add(noTagsLabel);
         } else {
@@ -135,7 +151,7 @@ public class PersonDetailPanel extends UiPart<Region> {
 
         // Academics
         if (person.getAcademics().getSubjects().isEmpty()) {
-            Label noSubjectsLabel = new Label("-");
+            Label noSubjectsLabel = new Label("No subjects");
             noSubjectsLabel.getStyleClass().add("detail-field-value");
             subjectsFlowPane.getChildren().add(noSubjectsLabel);
         } else {
@@ -151,16 +167,21 @@ public class PersonDetailPanel extends UiPart<Region> {
         }
 
         String description = person.getAcademics().getDescription().orElse("");
-        academicsNotesLabel.setText(description.isEmpty() ? "-" : description);
+        academicsNotesLabel.setText(description.isBlank() ? "No description" : description);
 
-        if (person.getAppointment().getSessions().isEmpty()) {
+        List<ScheduledSession> sortedSessions = person.getAppointment().getSessions().stream()
+                .sorted(Comparator.comparing(ScheduledSession::getNext,
+                        Comparator.nullsLast(Comparator.naturalOrder())))
+                .toList();
+
+        if (sortedSessions.isEmpty()) {
             Label noAppointmentsLabel = new Label("No appointments");
             noAppointmentsLabel.getStyleClass().add("detail-field-value");
             appointmentListContainer.getChildren().add(noAppointmentsLabel);
         } else {
-            for (int index = 0; index < person.getAppointment().getSessions().size(); index++) {
+            for (int index = 0; index < sortedSessions.size(); index++) {
                 appointmentListContainer.getChildren().add(
-                        createAppointmentSection(index + 1, person.getAppointment().getSessions().get(index)));
+                        createAppointmentSection(index + 1, sortedSessions.get(index)));
             }
         }
 
@@ -190,6 +211,9 @@ public class PersonDetailPanel extends UiPart<Region> {
         tagsFlowPane.getChildren().clear();
         subjectsFlowPane.getChildren().clear();
         paymentHistoryFlowPane.getChildren().clear();
+        nextSessionSummaryLabel.setText("No upcoming sessions");
+        attendanceSummaryLabel.setText("No attendance records");
+        paymentStatusSummaryLabel.setText("No due date");
         contentContainer.setManaged(false);
         contentContainer.setVisible(false);
         emptyStateLabel.setManaged(true);
@@ -198,14 +222,14 @@ public class PersonDetailPanel extends UiPart<Region> {
 
     private String formatDateTime(LocalDateTime value) {
         if (value == null) {
-            return "-";
+            return NOT_SET_TEXT;
         }
         return value.format(DATE_TIME_FORMATTER);
     }
 
     private String formatDate(LocalDate value) {
         if (value == null) {
-            return "-";
+            return NOT_SET_TEXT;
         }
         return value.format(DATE_FORMATTER);
     }
@@ -219,7 +243,11 @@ public class PersonDetailPanel extends UiPart<Region> {
     }
 
     private String formatAppointmentMeta(ScheduledSession session) {
-        return "Next: " + formatDateTime(session.getNext()) + " | " + formatRecurrenceSchedule(session);
+        return "Next: " + formatDateTime(session.getNext());
+    }
+
+    private String formatAppointmentRecurrence(ScheduledSession session) {
+        return "Recurs: " + formatRecurrenceSchedule(session);
     }
 
     private String formatAttendanceDate(LocalDateTime recordedAt) {
@@ -236,8 +264,53 @@ public class PersonDetailPanel extends UiPart<Region> {
     private String formatAttendanceSummary(List<Attendance> sortedAttendanceRecords) {
         long presentCount = sortedAttendanceRecords.stream().filter(Attendance::hasAttended).count();
         long absentCount = sortedAttendanceRecords.size() - presentCount;
+        int presentPercentage = (int) Math.round((presentCount * 100.0) / sortedAttendanceRecords.size());
         String latestAttendance = formatAttendanceDate(sortedAttendanceRecords.get(0).getRecordedAt());
-        return presentCount + " present, " + absentCount + " absent | Latest: " + latestAttendance;
+        return presentCount + " present, " + absentCount + " absent (" + presentPercentage + "%)"
+                + " | Latest: " + latestAttendance;
+    }
+
+    private String formatNextSessionSummary(Person person) {
+        return person.getAppointment().getSessions().stream()
+                .map(ScheduledSession::getNext)
+                .filter(next -> next != null)
+                .min(Comparator.naturalOrder())
+                .map(this::formatDateTime)
+                .orElse("No upcoming sessions");
+    }
+
+    private String formatOverallAttendanceSummary(Person person) {
+        List<Attendance> allAttendance = person.getAppointment().getSessions().stream()
+                .flatMap(session -> session.getAttendanceHistory().getRecords().stream())
+                .toList();
+
+        if (allAttendance.isEmpty()) {
+            return "No attendance records";
+        }
+
+        long presentCount = allAttendance.stream().filter(Attendance::hasAttended).count();
+        int presentPercentage = (int) Math.round((presentCount * 100.0) / allAttendance.size());
+        return presentCount + " / " + allAttendance.size() + " present (" + presentPercentage + "%)";
+    }
+
+    private String formatPaymentStatusSummary(LocalDate dueDate) {
+        if (dueDate == null) {
+            return "No due date";
+        }
+
+        LocalDate today = LocalDate.now();
+        if (dueDate.isEqual(today)) {
+            return "Due today";
+        }
+
+        long dayDifference = Math.abs(ChronoUnit.DAYS.between(today, dueDate));
+        String dayLabel = dayDifference == 1 ? "day" : "days";
+
+        if (dueDate.isBefore(today)) {
+            return "Overdue by " + dayDifference + " " + dayLabel;
+        }
+
+        return "Due in " + dayDifference + " " + dayLabel;
     }
 
     private VBox createAppointmentSection(int appointmentIndex, ScheduledSession session) {
@@ -252,10 +325,14 @@ public class PersonDetailPanel extends UiPart<Region> {
         scheduleLabel.getStyleClass().add("detail-appointment-meta");
         scheduleLabel.setWrapText(true);
 
+        Label recurrenceLabel = new Label(formatAppointmentRecurrence(session));
+        recurrenceLabel.getStyleClass().add("detail-appointment-meta-secondary");
+        recurrenceLabel.setWrapText(true);
+
         FlowPane attendancePane = new FlowPane();
         attendancePane.setHgap(6);
         attendancePane.setVgap(6);
-        attendancePane.setPrefWrapLength(320);
+        attendancePane.setPrefWrapLength(260);
 
         if (session.getAttendanceHistory().isEmpty()) {
             Label attendanceSummary = new Label("0 present, 0 absent");
@@ -265,7 +342,12 @@ public class PersonDetailPanel extends UiPart<Region> {
             noAttendanceLabel.getStyleClass().add("detail-field-value");
             attendancePane.getChildren().add(noAttendanceLabel);
 
-            appointmentSection.getChildren().addAll(appointmentLabel, scheduleLabel, attendanceSummary, attendancePane);
+            appointmentSection.getChildren().addAll(
+                    appointmentLabel,
+                    scheduleLabel,
+                    recurrenceLabel,
+                    attendanceSummary,
+                    attendancePane);
         } else {
             List<Attendance> attendanceRecords = session.getAttendanceHistory().getRecords().stream()
                     .sorted(Comparator.comparing(Attendance::getRecordedAt).reversed())
@@ -291,7 +373,12 @@ public class PersonDetailPanel extends UiPart<Region> {
                 attendancePane.getChildren().add(hiddenRecordsLabel);
             }
 
-            appointmentSection.getChildren().addAll(appointmentLabel, scheduleLabel, attendanceSummary, attendancePane);
+            appointmentSection.getChildren().addAll(
+                    appointmentLabel,
+                    scheduleLabel,
+                    recurrenceLabel,
+                    attendanceSummary,
+                    attendancePane);
         }
 
         return appointmentSection;
