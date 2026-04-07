@@ -12,31 +12,40 @@ class EditCommandParser
 class "SubcommandDispatcherParser<EditCommand>" as Dispatcher
 
 class EditPersonCommandParser
-class EditApptCommandParser
-class EditAttdCommandParser
+class EditTagCommandParser
+class EditAcademicsCommandParser
+class EditParentCommandParser
+class EditBillingCommandParser
 
 abstract class "{abstract}\nEditCommand" as EditCommand
 class EditPersonCommand
-class EditApptCommand
-class EditAttdCommand
+class EditTagCommand
+class EditAcademicsCommand
+class EditParentCommand
+class EditBillingCommand
 }
 
 EditCommandParser .up.|> Parser
 EditPersonCommandParser .up.|> Parser
-EditApptCommandParser .up.|> Parser
-EditAttdCommandParser .up.|> Parser
+EditTagCommandParser .up.|> Parser
+EditAcademicsCommandParser .up.|> Parser
+EditParentCommandParser .up.|> Parser
+EditBillingCommandParser .up.|> Parser
 
 EditCommandParser *--> Dispatcher : owns
 Dispatcher ..> Parser : dispatches to
 EditCommandParser ..> EditCommand : <<returns>>
 
 EditPersonCommandParser ..> EditPersonCommand : <<create>>
-EditApptCommandParser ..> EditApptCommand : <<create>>
-EditAttdCommandParser ..> EditAttdCommand : <<create>>
+EditTagCommandParser ..> EditTagCommand : <<create>>
+EditAcademicsCommandParser ..> EditAcademicsCommand : <<create>>
+EditParentCommandParser ..> EditParentCommand : <<create>>
+EditBillingCommandParser ..> EditBillingCommand : <<create>>
 
 note right of Dispatcher
 Maps each edit subcommand word
-such as `student`, `appt`, and `attd`
+such as `student`, `tag`, `acad`,
+`parent`, and `billing`
 to its concrete parser.
 end note
 

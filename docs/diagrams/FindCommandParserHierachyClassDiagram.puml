@@ -13,9 +13,11 @@ class FindCommandParser
 class "SubcommandDispatcherParser<FindCommand>" as Dispatcher
 
 class FindPersonCommandParser
+class FindApptCommandParser
 class FindTagCommandParser
-class FindSubjectCommandParser
-class FindPaymentCommandParser
+class FindAcadCommandParser
+class FindBillingCommandParser
+class FindParentCommandParser
 
 }
 
@@ -24,9 +26,11 @@ AddressBookParser --> FindCommandParser : parseCommand(...)
 FindCommandParser --> Dispatcher
 
 Dispatcher --> FindPersonCommandParser
+Dispatcher --> FindApptCommandParser
 Dispatcher --> FindTagCommandParser
-Dispatcher --> FindSubjectCommandParser
-Dispatcher --> FindPaymentCommandParser
+Dispatcher --> FindAcadCommandParser
+Dispatcher --> FindBillingCommandParser
+Dispatcher --> FindParentCommandParser
 
 note right of FindCommandParser
 Dispatches to concrete subcommand parsers
@@ -35,7 +39,7 @@ end note
 
 note right of Dispatcher
 Maps subcommand strings (e.g. "tag",
-"person", "payment") to their
+"student", "appt", "billing") to their
 corresponding parsers.
 end note
 

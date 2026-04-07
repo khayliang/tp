@@ -12,16 +12,20 @@ abstract class "{abstract}\nIndexedPersonCommand" as IndexedPersonCommand
 abstract class "{abstract}\nEditCommand" as EditCommand
 
 class EditPersonCommand
-class EditApptCommand
-class EditAttdCommand
+class EditTagCommand
+class EditAcademicsCommand
+class EditParentCommand
+class EditBillingCommand
 }
 
 IndexedPersonCommand -up-|> Command
 EditCommand -up-|> IndexedPersonCommand
 
 EditPersonCommand -up-|> EditCommand
-EditApptCommand -up-|> EditCommand
-EditAttdCommand -up-|> EditCommand
+EditTagCommand -up-|> EditCommand
+EditAcademicsCommand -up-|> EditCommand
+EditParentCommand -up-|> EditCommand
+EditBillingCommand -up-|> EditCommand
 
 note right of EditCommand
 All edit subcommands share the same
@@ -31,7 +35,7 @@ end note
 note right of EditPersonCommand
 Other concrete edit commands such as
 `EditTagCommand`, `EditAcademicsCommand`,
-`EditParentCommand`, and `EditPaymentCommand`
+`EditParentCommand`, and `EditBillingCommand`
 follow the same inheritance pattern.
 end note
 

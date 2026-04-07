@@ -9,7 +9,9 @@ title: Developer Guide
 
 ## **Acknowledgements**
 
-* {list here sources of all reused/adapted ideas, code, documentation, and third-party libraries -- include links to the original source as well}
+* TutorFlow is based on [AddressBook-Level3](https://se-education.org/addressbook-level3/) by the [SE-EDU initiative](https://se-education.org).
+* The GUI is built with [JavaFX](https://openjfx.io/).
+* JSON persistence is implemented with [Jackson](https://github.com/FasterXML/jackson).
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -51,14 +53,17 @@ The bulk of the app's work is done by the following four components:
 
 **How the architecture components interact with each other**
 
-The *Sequence Diagram* below shows how the components interact with each other for the scenario where the user issues the command `delete 1`.
+For a typical mutating command such as `delete student 1`, the components interact in this order:
 
-<img src="images/ArchitectureSequenceDiagram.png" width="574" />
+1. The `UI` passes the raw command text to `Logic`.
+1. `Logic` parses the command and executes it against the `Model`.
+1. If the command changes the address book data, `Logic` asks `Storage` to persist the updated state.
+1. The `UI` observes the updated `Model` state and refreshes the displayed list and detail panels.
 
 Each of the four main components (also shown in the diagram above),
 
 * defines its *API* in an `interface` with the same name as the Component.
-* implements its functionality using a concrete `{Component Name}Manager` class (which follows the corresponding API `interface` mentioned in the previous point.
+* implements its functionality using a concrete manager class that follows the corresponding component `interface`.
 
 For example, the `Logic` component defines its API in the `Logic.java` interface and implements its functionality using the `LogicManager.java` class which follows the `Logic` interface. Other components interact with a given component through its interface rather than the concrete class (reason: to prevent outside component's being coupled to the implementation of a component), as illustrated in the (partial) class diagram below.
 
@@ -72,16 +77,16 @@ The **API** of this component is specified in [`Ui.java`](https://github.com/AY2
 
 ![Structure of the UI Component](images/UiClassDiagram.png)
 
-The UI consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `PersonListPanel`, `StatusBarFooter` etc. All these, including the `MainWindow`, inherit from the abstract `UiPart` class which captures the commonalities between classes that represent parts of the visible GUI.
+The UI consists of a `MainWindow` that is made up of parts such as `CommandBox`, `ResultDisplay`, `PersonListPanel`, `PersonDetailPanel`, and `StatusBarFooter`. All these, including the `MainWindow`, inherit from the abstract `UiPart` class which captures the commonalities between classes that represent parts of the visible GUI.
 
-The `UI` component uses the JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/AY2526S2-CS2103T-T09-3/tp/tree/master/src/main/java/seedu/address/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/AY2526S2-CS2103T-T09-3/tp/tree/master/src/main/resources/view/MainWindow.fxml)
+The `UI` component uses the JavaFX UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/AY2526S2-CS2103T-T09-3/tp/tree/master/src/main/java/seedu/address/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/AY2526S2-CS2103T-T09-3/tp/tree/master/src/main/resources/view/MainWindow.fxml)
 
 The `UI` component,
 
 * executes user commands using the `Logic` component.
 * listens for changes to `Model` data so that the UI can be updated with the modified data.
 * keeps a reference to the `Logic` component, because the `UI` relies on the `Logic` to execute commands.
-* depends on some classes in the `Model` component, as it displays `Person` object residing in the `Model`.
+* depends on some classes in the `Model` component, as it displays `Person` objects residing in the `Model`.
 
 ### Logic component
 
@@ -91,17 +96,14 @@ Here's a (partial) class diagram of the `Logic` component:
 
 <img src="images/LogicClassDiagram.png" width="550"/>
 
-The sequence diagram below illustrates the interactions within the `Logic` component, taking `execute("delete 1")` API call as an example.
-
-![Interactions Inside the Logic Component for the `delete 1` Command](images/DeleteSequenceDiagram.png)
-
-<div markdown="span" class="alert alert-info">:information_source: **Note:** The lifeline for `DeleteCommandParser` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
-</div>
+The `Logic` component receives raw command text such as `delete student 1`, parses it into a concrete `Command` object, executes that command, and returns a `CommandResult`.
 
 How the `Logic` component works:
 
-1. When `Logic` is called upon to execute a command, it is passed to an `AddressBookParser` object which in turn creates a parser that matches the command (e.g., `DeleteCommandParser`) and uses it to parse the command.
-1. This results in a `Command` object (more precisely, an object of one of its subclasses e.g., `DeleteCommand`) which is executed by the `LogicManager`.
+1. When `Logic` is called upon to execute a command, it forwards the raw input to `AddressBookParser`.
+1. `AddressBookParser` identifies the top-level command word and delegates to the matching parser family such as `AddCommandParser`, `EditCommandParser`, `DeleteCommandParser`, or `FindCommandParser`.
+1. For command families that support subcommands, the family parser uses `SubcommandDispatcherParser` to route the remaining input to the correct concrete parser such as `DeletePersonCommandParser` or `FindTagCommandParser`.
+1. Parsing produces a concrete `Command` object which is then executed by `LogicManager`.
 1. The command can communicate with the `Model` when it is executed (e.g. to delete a person).<br>
    Note that although this is shown as a single step in the diagram above (for simplicity), in the code it can take several interactions (between the command object and the `Model`) to achieve.
 1. The result of the command execution is encapsulated as a `CommandResult` object which is returned back from `Logic`.
@@ -111,8 +113,9 @@ Here are the other classes in `Logic` (omitted from the class diagram above) tha
 <img src="images/ParserClasses.png" width="600"/>
 
 How the parsing works:
-* When called upon to parse a user command, the `AddressBookParser` class creates an `XYZCommandParser` (`XYZ` is a placeholder for the specific command name e.g., `AddCommandParser`) which uses the other classes shown above to parse the user command and create a `XYZCommand` object (e.g., `AddCommand`) which the `AddressBookParser` returns back as a `Command` object.
-* All `XYZCommandParser` classes (e.g., `AddCommandParser`, `DeleteCommandParser`, ...) inherit from the `Parser` interface so that they can be treated similarly where possible e.g, during testing.
+* `AddressBookParser` first dispatches on the top-level command word.
+* Family parsers for `add`, `edit`, `delete`, and `find` then dispatch on the first subcommand token using `SubcommandDispatcherParser`.
+* All concrete parser classes implement the `Parser<T>` interface so they can be used consistently in production code and tests.
 
 ### Model component
 **API** : [`Model.java`](https://github.com/AY2526S2-CS2103T-T09-3/tp/tree/master/src/main/java/seedu/address/model/Model.java)
@@ -123,8 +126,10 @@ How the parsing works:
 The `Model` component,
 
 * stores the address book data i.e., all `Person` objects (which are contained in a `UniquePersonList` object).
-* stores the currently 'selected' `Person` objects (e.g., results of a search query) as a separate _filtered_ list which is exposed to outsiders as an unmodifiable `ObservableList<Person>` that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.
-* stores a `UserPref` object that represents the user’s preferences. This is exposed to the outside as a `ReadOnlyUserPref` objects.
+* stores the currently displayed `Person` objects as a separate _filtered_ list that is exposed as an unmodifiable `ObservableList<Person>`. The UI binds to this list so it updates automatically when the model changes.
+* supports both replacing the current filter and narrowing the currently displayed list further with an additional predicate.
+* preserves edited persons temporarily when a filter is active so an edited record does not disappear from the UI immediately after an edit.
+* stores a `UserPrefs` object that represents the user’s preferences. This is exposed to the outside as a `ReadOnlyUserPrefs` object.
 * does not depend on any of the other three components (as the `Model` represents data entities of the domain, they should make sense on their own without depending on other components)
 
 <div markdown="span" class="alert alert-info">:information_source: **Note:** An alternative (arguably, a more OOP) model is given below. It has a `Tag` list in the `AddressBook`, which `Person` references. This allows `AddressBook` to only require one `Tag` object per unique tag, instead of each `Person` needing their own `Tag` objects.<br>
@@ -157,63 +162,33 @@ This section describes some noteworthy details on how certain features are imple
 
 ### Edit command
 
-The `edit` family uses subcommand dispatch. To keep the diagrams readable, the flow is split into two smaller sequence diagrams using `edit student 1 p/98765432` as the representative example.
-
-The two class diagrams below split the `edit` feature into its command hierarchy and parser-dispatch structure. This keeps the overview readable while still generalizing the shared pattern across edit subcommands.
-
-<img src="images/EditCommandHierarchyClassDiagram.png" width="520" />
-
-<img src="images/EditCommandParserClassDiagram.png" width="720" />
-
-The first diagram shows how `AddressBookParser` routes the input to `EditCommandParser`, which then delegates to the concrete subcommand parser.
-
-<img src="images/EditCommandParsingSequenceDiagram.png" width="700" />
-
-The second diagram shows the successful execution path after parsing. Error paths such as invalid indices and duplicate students are omitted to keep the diagram compact.
-
-<img src="images/EditCommandExecutionSequenceDiagram.png" width="760" />
+The `edit` family uses subcommand dispatch. A representative example is `edit student 1 p/98765432`.
 
 How the `edit` command works:
 
 1. `AddressBookParser` recognizes `edit` as the command word and forwards the remaining input to `EditCommandParser`.
-1. `EditCommandParser` dispatches by subcommand name (`student`, `appt`, `attd`, `payment`, etc.) and invokes the matching concrete parser.
-1. The concrete parser validates the index and prefixed arguments, then constructs the corresponding `Edit...Command`.
+1. `EditCommandParser` dispatches by subcommand name and currently supports `student`, `tag`, `acad`, `parent`, and `billing`.
+1. The concrete parser parses the target index and command-specific prefixed arguments, then constructs the corresponding `Edit...Command`.
 1. During execution, the command resolves the target student from the currently displayed list, builds the edited `Person`, and checks any command-specific constraints.
-1. The command updates the `Model`, which replaces the target `Person` in the `AddressBook` while preserving the active filter.
+1. The command updates the `Model`, which replaces the target `Person` in the `AddressBook`. If a filter is active, the edited person is temporarily preserved in the displayed list.
 1. `LogicManager` detects that the address book changed and persists the updated state through `Storage`.
 
 
 ### Find command
 
-The `find` family uses subcommand dispatch similar to `edit`. To keep the diagrams readable, the flow is split into smaller diagrams using `find tag t/JC` as the representative example.
-
-The class diagram below shows the `find` command hierarchy. All concrete find commands share the same top-level command word `find`, while each subcommand encapsulates its own filtering logic.
-
-<img src="images/FindCommandHierachyClassDiagram.png" width="520" />
-
-The following diagram shows the parser structure for `find`. `AddressBookParser` identifies `find` as the command word and forwards the remaining input to `FindCommandParser`, which uses a dispatcher to route to the appropriate subcommand parser.
-
-<img src="images/FindCommandParserHierachyClassDiagram.png" width="720" />
-
-The next diagram illustrates how parsing is performed. `FindCommandParser` delegates to the appropriate concrete parser (e.g., `FindTagCommandParser`) based on the subcommand.
-
-<img src="images/FindTagCommandParsingSequenceDiagram.png" width="700" />
-
-The final diagram shows the successful execution path after parsing. Error paths such as invalid formats or missing prefixes are omitted to keep the diagram compact.
-
-<img src="images/FindTagCommandExecutionSequenceDiagram.png" width="760" />
+The `find` family uses subcommand dispatch similar to `edit`. A representative example is `find tag t/JC`.
 
 How the `find` command works:
 
 1. `AddressBookParser` recognizes `find` as the command word and forwards the remaining input to `FindCommandParser`.
-1. `FindCommandParser` uses a dispatcher to route the input by subcommand name (`person`, `tag`, `subject`, `payment`, etc.) to the appropriate concrete parser.
+1. `FindCommandParser` uses a dispatcher to route the input by subcommand name and currently supports `student`, `appt`, `tag`, `acad`, `billing`, and `parent`.
 1. The concrete parser validates the input arguments and constructs the corresponding `Find...Command` with an appropriate predicate.
-1. During execution, the command applies the predicate to the `Model` using `updateFilteredPersonList(...)`, which updates the currently displayed list.
+1. During execution, the command applies the predicate to the `Model` using `updateFilteredPersonListWithAnd(...)`, which narrows the currently displayed list further instead of resetting it to the full address book.
 1. `LogicManager` checks whether the underlying `AddressBook` has changed. Since `find` only modifies transient model state (the filtered list), no changes are detected in the `AddressBook`, and the storage step is therefore skipped.
 
 ### Find appointments command
 
-The `find appt` command is simpler than `edit`, so a single sequence diagram is enough. The example below uses `find appt d/2026-02-13`. The PlantUML source is in `docs/diagrams/FindApptSequenceDiagram.puml`.
+The example command for this flow is `find appt d/2026-02-13`.
 
 How the `find appt` command works:
 
@@ -221,138 +196,39 @@ How the `find appt` command works:
 1. `FindCommandParser` dispatches the `appt` subcommand to `FindApptCommandParser`.
 1. `FindApptCommandParser` parses the optional `d/DATE` value. If omitted, it uses the current local date.
 1. `FindApptCommand` constructs an `AppointmentInWeekPredicate`, which computes the Monday-Sunday week containing the target date.
-1. During execution, the command updates the filtered person list using that predicate so that only students with appointments in the target week remain visible.
+1. During execution, the command applies that predicate with `updateFilteredPersonListWithAnd(...)`, so only students already in the displayed list and also matching the target week remain visible.
 1. The command returns a `CommandResult` containing the number of matching appointments and the computed week range.
 1. Unlike `edit`, `find appt` does not modify the address book, so `LogicManager` does not save any data to storage after execution.
 
 ### Subject-related commands
 
-The subject-related feature is centered on `edit acad`, which parses subject and level tokens into an academic profile and assigns that profile to a student.
-
-The first class diagram shows the command and parser side of the feature.
-
-<img src="images/SubjectCommandClassDiagram.png" width="720" />
-
-The second class diagram shows the academic model objects used by that command.
-
-<img src="images/AcademicModelClassDiagram.png" width="600" />
+The subject-related feature is centered on `edit acad`, which updates a student's `Academics` object.
 
 How the subject-related feature works:
 
-1. `EditAcademicsCommandParser` reads `s/` subject tokens and optional `l/` level tokens from `edit acad`.
-1. The parser validates subject names, enforces that a level must follow a subject, and rejects duplicate subject names.
-1. The parsed subjects are wrapped in an `Academics` object.
-1. `EditAcademicsCommand` applies that `Academics` object to the selected student by rebuilding the `Person` with updated academics.
-1. Each `Subject` stores a mandatory name and an optional `Level`, while `Academics` stores the set of subjects for that student.
+1. `EditAcademicsCommandParser` parses the student index first, then extracts an optional `dsc/` description field and the `s/` and `l/` subject-level sequence.
+1. The parser validates subject names, enforces that a level must follow a subject, rejects duplicate subject names, and supports clearing the subject list or description by passing an empty prefixed value.
+1. `EditAcademicsCommand` merges the parsed updates with the student's existing `Academics` object and rebuilds the `Person`.
+1. `Academics` stores a set of `Subject` objects and an optional description, while each `Subject` stores a mandatory name and an optional `Level`.
 
 ### Payment and billing commands
 
-The payment and billing feature covers two related workflows:
-`edit payment`, which records a payment and updates billing data, and `find payment`, which filters students by billing due month.
-
-The first class diagram shows the command and parser structure for these workflows.
-
-<img src="images/PaymentBillingCommandClassDiagram.png" width="720" />
-
-The second class diagram shows the billing model objects used by those commands.
-
-<img src="images/BillingModelClassDiagram.png" width="620" />
+The payment and billing feature covers four related workflows:
+`edit billing`, `add payment`, `delete payment`, and `find billing`.
 
 How the payment and billing feature works:
 
-1. `EditPaymentCommandParser` parses a required `d/DATE` and an optional `a/AMOUNT` from `edit payment`.
-1. `EditPaymentCommand` updates the selected student's `Billing` by recording the payment date, advancing the next due date, and optionally changing the tuition fee.
-1. `FindPaymentCommandParser` parses `d/YYYY-MM` and creates a `PaymentDueMonthPredicate`.
-1. `FindPaymentCommand` applies that predicate to the displayed list so only students with matching billing due months remain visible.
+1. `EditBillingCommandParser` parses the student index together with optional `a/AMOUNT` and `d/DATE` fields.
+1. `EditBillingCommand` updates the student's tuition fee, payment due date, or both, without touching payment history.
+1. `AddPaymentCommandParser` parses `add payment INDEX d/DATE`, and `AddPaymentCommand` records that payment date and advances the billing due date by one recurrence cycle.
+1. `DeletePaymentCommandParser` parses `delete payment INDEX d/DATE`, and `DeletePaymentCommand` removes that recorded payment date. If the removed date is the latest recorded payment, the due date is rolled back by one recurrence cycle.
+1. `FindBillingCommandParser` parses `find billing d/YYYY-MM` and creates a `PaymentDueMonthPredicate`.
+1. `FindBillingCommand` applies that predicate to the displayed list so only students with matching billing due months remain visible.
 1. `Billing` stores the recurrence schedule, current due date, tuition fee, and `PaymentHistory`, while `PaymentHistory` stores the set of recorded paid dates.
 
-### \[Proposed\] Undo/redo feature
+### Future work
 
-#### Proposed Implementation
-
-The proposed undo/redo mechanism is facilitated by `VersionedAddressBook`. It extends `AddressBook` with an undo/redo history, stored internally as an `addressBookStateList` and `currentStatePointer`. Additionally, it implements the following operations:
-
-* `VersionedAddressBook#commit()` — Saves the current address book state in its history.
-* `VersionedAddressBook#undo()` — Restores the previous address book state from its history.
-* `VersionedAddressBook#redo()` — Restores a previously undone address book state from its history.
-
-These operations are exposed in the `Model` interface as `Model#commitAddressBook()`, `Model#undoAddressBook()` and `Model#redoAddressBook()` respectively.
-
-Given below is an example usage scenario and how the undo/redo mechanism behaves at each step.
-
-Step 1. The user launches the application for the first time. The `VersionedAddressBook` will be initialized with the initial address book state, and the `currentStatePointer` pointing to that single address book state.
-
-![UndoRedoState0](images/UndoRedoState0.png)
-
-Step 2. The user executes `delete 5` command to delete the 5th person in the address book. The `delete` command calls `Model#commitAddressBook()`, causing the modified state of the address book after the `delete 5` command executes to be saved in the `addressBookStateList`, and the `currentStatePointer` is shifted to the newly inserted address book state.
-
-![UndoRedoState1](images/UndoRedoState1.png)
-
-Step 3. The user executes `add n/David …​` to add a new person. The `add` command also calls `Model#commitAddressBook()`, causing another modified address book state to be saved into the `addressBookStateList`.
-
-![UndoRedoState2](images/UndoRedoState2.png)
-
-<div markdown="span" class="alert alert-info">:information_source: **Note:** If a command fails its execution, it will not call `Model#commitAddressBook()`, so the address book state will not be saved into the `addressBookStateList`.
-
-</div>
-
-Step 4. The user now decides that adding the person was a mistake, and decides to undo that action by executing the `undo` command. The `undo` command will call `Model#undoAddressBook()`, which will shift the `currentStatePointer` once to the left, pointing it to the previous address book state, and restores the address book to that state.
-
-![UndoRedoState3](images/UndoRedoState3.png)
-
-<div markdown="span" class="alert alert-info">:information_source: **Note:** If the `currentStatePointer` is at index 0, pointing to the initial AddressBook state, then there are no previous AddressBook states to restore. The `undo` command uses `Model#canUndoAddressBook()` to check if this is the case. If so, it will return an error to the user rather
-than attempting to perform the undo.
-
-</div>
-
-The following sequence diagram shows how an undo operation goes through the `Logic` component:
-
-![UndoSequenceDiagram](images/UndoSequenceDiagram-Logic.png)
-
-<div markdown="span" class="alert alert-info">:information_source: **Note:** The lifeline for `UndoCommand` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline reaches the end of diagram.
-
-</div>
-
-Similarly, how an undo operation goes through the `Model` component is shown below:
-
-![UndoSequenceDiagram](images/UndoSequenceDiagram-Model.png)
-
-The `redo` command does the opposite — it calls `Model#redoAddressBook()`, which shifts the `currentStatePointer` once to the right, pointing to the previously undone state, and restores the address book to that state.
-
-<div markdown="span" class="alert alert-info">:information_source: **Note:** If the `currentStatePointer` is at index `addressBookStateList.size() - 1`, pointing to the latest address book state, then there are no undone AddressBook states to restore. The `redo` command uses `Model#canRedoAddressBook()` to check if this is the case. If so, it will return an error to the user rather than attempting to perform the redo.
-
-</div>
-
-Step 5. The user then decides to execute the command `list`. Commands that do not modify the address book, such as `list`, will usually not call `Model#commitAddressBook()`, `Model#undoAddressBook()` or `Model#redoAddressBook()`. Thus, the `addressBookStateList` remains unchanged.
-
-![UndoRedoState4](images/UndoRedoState4.png)
-
-Step 6. The user executes `clear`, which calls `Model#commitAddressBook()`. Since the `currentStatePointer` is not pointing at the end of the `addressBookStateList`, all address book states after the `currentStatePointer` will be purged. Reason: It no longer makes sense to redo the `add n/David …​` command. This is the behavior that most modern desktop applications follow.
-
-![UndoRedoState5](images/UndoRedoState5.png)
-
-The following activity diagram summarizes what happens when a user executes a new command:
-
-<img src="images/CommitActivityDiagram.png" width="250" />
-
-#### Design considerations:
-
-**Aspect: How undo & redo executes:**
-
-* **Alternative 1 (current choice):** Saves the entire address book.
-  * Pros: Easy to implement.
-  * Cons: May have performance issues in terms of memory usage.
-
-* **Alternative 2:** Individual command knows how to undo/redo by
-  itself.
-  * Pros: Will use less memory (e.g. for `delete`, just save the person being deleted).
-  * Cons: We must ensure that the implementation of each individual command are correct.
-
-_{more aspects and alternatives to be added}_
-
-### \[Proposed\] Data archiving
-
-_{Explain here how the data archiving feature will be implemented}_
+Undo/redo and data archiving are not implemented in the current codebase.
 
 
 --------------------------------------------------------------------------------------------------------------------
@@ -395,10 +271,8 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `* *` | tutor | view the payment dates | know when my clients have paid for lessons |
 | `* *` | tutor | add and view student attendance | evaluate lesson attendance and consistency |
 | `* *` | tutor | store the name of the tutee alongside the parent’s name | easily identify the student and their guardian |
-| `*` | tutor | filter students by subject tags | quickly see which students take which subjects |
+| `*` | tutor | filter students by tags or subject keywords | quickly narrow the displayed student list |
 | `*` | tutor with multiple students | tag students based on subject or level | organize students for possible group tuition |                                 |
-
-*{More to be added}*
 
 ### Use cases
 
@@ -445,8 +319,8 @@ Use case ends.
 **Use case: Add appointment details for a student**
 
 **MSS**
-1. Tutor **View all students.**
-2. Tutor selects a student.
+1. Tutor requests to view all students.
+2. Tutor identifies the target student by index.
 3. Tutor enters appointment details for the student.
 4. TutorFlow records the appointment details and displays confirmation.
 
@@ -454,10 +328,11 @@ Use case ends.
 
 **Extensions**
 
-* 4a. The tutor enters invalid appointment details.
-    * 4a1. TutorFlow requests for correct data.
-    * 4a2. Step 4-4a2 are repeated until the tutor enters valid appointment details.
-* Use case resumes at step 5.
+* 3a. The tutor enters invalid appointment details.
+    * 3a1. TutorFlow shows an error message.
+    * 3a2. Tutor re-enters the appointment details.
+    * Steps 3a1 to 3a2 are repeated until the tutor enters valid appointment details.
+* Use case resumes at step 4.
 
 ---
 **Use case: Record student attendance**
@@ -483,30 +358,6 @@ Use case ends.
 * Use case resumes from step 5.
 
 ---
-**Use case: View student attendance for the week**
-
-**MSS**
-1. Tutor requests to view all students
-2. TutorFlow shows all students
-3. Tutor selects a student
-4. Tutor requests to view the student’s attendance for the current week
-5. TutorFlow shows the student’s attendance
-
-Use case ends.
-
-** Extensions**
-
-* 3a. Tutor requests to view the student’s attendance for another week
-* Use case resumes from step 5.
-
-* 4a. TutorFlow detects an error in the entered data.
-   * 4a1. TutorFlow requests for the correct data.
-   * 4a2. Tutor enters new data.
-* Steps 4a1-4a2 are repeated until the data entered are correct.
-* Use case resumes from step 5.
-
----
-
 **Use case: Record tuition payment for a student**
 
 **MSS**
@@ -535,53 +386,26 @@ Use case ends.
 
 ---
 
-  **Use case: Add Parent Details with Student Contact**
+**Use case: Edit parent details for a student**
 
-  **MSS**
+**MSS**
 
-  1. Tutor requests to add a parent together with a student contact.
-  2. Tutorflow requests for the parent and contact details.
-  3. Tutor provides parent name, student name, phone number, email and address.
-  4. Tutorflow validates the provided details.
-  5. Tutorflow checks for any duplicate entries.
-  6. Tutorflow stores the new parent and student contact information.
-  7. Tutor confirms that the parent and student contact has been added.
+1. Tutor requests to view all students.
+2. TutorFlow shows the list of students.
+3. Tutor identifies the target student by index.
+4. Tutor enters the parent's or guardian's details to add or update them.
+5. TutorFlow validates the provided details and updates the student record.
+6. TutorFlow displays confirmation.
 
+Use case ends.
 
-  Use case ends.
+**Extensions**
 
-  **Extensions**
-
-  * 4a. Parent name is empty or invalid
-
-     * 4a1. Tutorflow detects an error in the entered data.
-     * 4a2. Tutorflow requests the tutor to provide valid details.
-
-   * Use case resumes from step 3.
-
-  * 4b. Extremely long or invalid input detected
-
-     * 4b1. Tutorflow rejects the input and informs tutor that the input is invalid.
-
-  * Use case ends.
-
-  * 5a. Student name is empty or invalid
-
-     * 5a1. Tutorflow informs the tutor that the parent-student pair already exists.
-
-  * Use case ends.
-
-  * 5b. Duplicate field detected
-
-     * 5b1. Tutorflow detects duplicate fields in the entered data.
-     * 5b2. Tutorflow requests the tutor to provide the details again.
-
-  * Use case resumes from step 3.
-
-
----
-
-*{More to be added}*
+* 4a. The tutor enters invalid parent details.
+    * 4a1. TutorFlow shows an error message.
+    * 4a2. Tutor re-enters the parent details.
+    * Steps 4a1 to 4a2 are repeated until the tutor enters valid details.
+* Use case resumes at step 5.
 
 ### Non-Functional Requirements
 
@@ -593,25 +417,23 @@ Use case ends.
 6.  Not required to handle communication between Tutors and Students.
 7.  Not required to handle payments between Tutors and Students.
 
-
-*{More to be added}*
-
 ### Glossary
 
 * **Mainstream OS**: Windows, Linux, Unix, MacOS
-* **Tutor**: A freelance private tutor who uses Tutorflow to manage their students and schedules
+* **Tutor**: A freelance private tutor who uses TutorFlow to manage students, schedules, and billing
 * **Student**: A person who is being taught by the tutor
 * **Tuition Fee**: Amount of money that is owed or paid by a student to the tutor for the lessons
 * **Appointment**: A scheduled tutoring session between a tutor and student, including date, time and subject
-* **Attendance**: A record of wheter a student was absent or present for the scheduled lesson
-* **Subject Tag**: A label attached to a student's contact details indicating the academic subject being taught
-* **Level Tag**: A label attached to a student's contact details indicating the student's academic level (e.g., Primary 6, Secondary 3)
-* **Parent-Student Pair**: A linked relationship between a parent contact and a child's entry
+* **Attendance**: A record of whether a student attended a scheduled lesson
+* **Tag**: A label attached to a student's contact details for grouping or filtering
+* **Subject**: An academic subject stored in a student's academics profile
+* **Level**: An optional level associated with a subject
+* **Parent / Guardian**: Optional adult contact details linked to a student
 * **CLI (Command Line Interface)**: A text-based interface where the user interacts with the application by typing commands
 * **GUI (Graphical User Interface)**: A visual interface that allows interaction through graphical elements such as windows and buttons
 * **API (Application Programming Interface)**: A defined set of methods and contracts through which software components communicate with each other
-* **JSON**: Javascript Object Notation, a data format and is used to persist data to disk
-* **ObservableList**: A list data structure that notifies listeners (e.g. the UI) automatically when its contents changes
+* **JSON**: JavaScript Object Notation, a data format used to persist data to disk
+* **ObservableList**: A list data structure that notifies listeners (e.g. the UI) automatically when its contents change
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -630,7 +452,8 @@ testers are expected to do more *exploratory* testing.
 
    1. Download the jar file and copy into an empty folder
 
-   1. Double-click the jar file Expected: Shows the GUI with a set of sample contacts. The window size may not be optimum.
+   1. Double-click the jar file.<br>
+      Expected: Shows the GUI with a set of sample contacts. The window size may not be optimum.
 
 1. Saving window preferences
 
@@ -639,7 +462,7 @@ testers are expected to do more *exploratory* testing.
    1. Re-launch the app by double-clicking the jar file.<br>
        Expected: The most recent window size and location is retained.
 
-1. _{ more test cases …​ }_
+1. Additional launch tests should cover starting the app from the command line and closing it after making edits.
 
 ### Deleting a person
 
@@ -647,21 +470,25 @@ testers are expected to do more *exploratory* testing.
 
    1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
 
-   1. Test case: `delete 1`<br>
+   1. Test case: `delete student 1`<br>
       Expected: First contact is deleted from the list. Details of the deleted contact shown in the status message. Timestamp in the status bar is updated.
 
-   1. Test case: `delete 0`<br>
+   1. Test case: `delete student 0`<br>
       Expected: No person is deleted. Error details shown in the status message. Status bar remains the same.
 
-   1. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
+   1. Other incorrect delete commands to try: `delete`, `delete student`, `delete student x`, `delete student 999`<br>
       Expected: Similar to previous.
 
-1. _{ more test cases …​ }_
+1. Additional deletion tests should cover deleting a student from a filtered list.
 
 ### Saving data
 
 1. Dealing with missing/corrupted data files
 
-   1. _{explain how to simulate a missing/corrupted file, and the expected behavior}_
+   1. Missing data file:
+      Delete or rename `data/tutorflow.json`, then launch the app.<br>
+      Expected: The app starts with sample data and recreates the data file on the next successful save.
 
-1. _{ more test cases …​ }_
+   1. Corrupted data file:
+      Edit `data/tutorflow.json` and replace part of the file with invalid JSON, then launch the app.<br>
+      Expected: The app starts with an empty address book, and the log records that the data file could not be loaded.

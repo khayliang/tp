@@ -22,7 +22,7 @@ activate LogicManager
 LogicManager -> FindTagCommand : execute(m)
 activate FindTagCommand
 
-FindTagCommand -> Model : updateFilteredPersonList(predicate)
+FindTagCommand -> Model : updateFilteredPersonListWithAnd(predicate)
 activate Model
 Model --> FindTagCommand
 deactivate Model
@@ -35,18 +35,6 @@ deactivate CommandResult
 
 FindTagCommand --> LogicManager : r
 deactivate FindTagCommand
-
-LogicManager -> Model : getAddressBook()
-activate Model
-Model --> LogicManager : address book
-deactivate Model
-
-alt AddressBook modified
-    LogicManager -> Storage : saveAddressBook(...)
-    activate Storage
-    Storage --> LogicManager
-    deactivate Storage
-end
 
 [<-- LogicManager
 deactivate LogicManager

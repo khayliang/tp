@@ -50,7 +50,7 @@ payment dates for a student.
 end note
 
 note right of PaymentDueMonthPredicate
-Used by `find payment` to match
+Used by `find billing` to match
 students whose due date falls
 within a target `YearMonth`.
 end note
