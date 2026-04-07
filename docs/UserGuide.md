@@ -74,6 +74,11 @@ For commands such as `delete tag`, `delete acad`, `delete appt`, and `add attd`,
 * For commands that use prefixes, the order of prefixed fields usually does not matter.  
   Example: `p/91234567 n/John Doe` is accepted for commands that expect both fields.
 
+* `find` commands narrow the **currently displayed list** instead of always searching all students.
+  This means you can combine multiple `find` commands to refine results step by step.
+  Use `list` if you want to reset the view and search from the full student list again.
+
+
 * Whenever a command uses `INDEX`, it must be a positive integer such as `1`, `2`, or `3`.
 
 * Unless stated otherwise, `INDEX` refers to the **currently displayed student list**, not to a permanent student ID.
