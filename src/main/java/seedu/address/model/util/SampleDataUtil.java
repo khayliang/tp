@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import seedu.address.commons.util.AppClock;
 import seedu.address.model.AddressBook;
 import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.academic.Academics;
@@ -33,6 +34,8 @@ import seedu.address.model.tag.Tag;
  */
 public class SampleDataUtil {
     public static Person[] getSamplePersons() {
+        LocalDate today = AppClock.today();
+
         return new Person[] {
             new PersonBuilder(new Name("Alex Yeoh"), new Phone("87438807"), new Email("alexyeoh@example.com"),
                     new Address("Blk 30 Geylang Street 29, #06-40"), getTagSet("Primary"))
@@ -42,13 +45,30 @@ public class SampleDataUtil {
                     .withGuardian(new Guardian(
                             new Name("Janet Yeoh"), new Phone("98765432"),
                             new Email("janet@example.com")))
-                    .withAppointment(Appointment.defaultAppointment().addSession(new ScheduledSession(Recurrence.WEEKLY,
-                            LocalDateTime.of(2026, 3, 21, 15, 30),
-                            LocalDateTime.of(2026, 4, 11, 15, 30),
-                            new AttendanceHistory(new Attendance(true, LocalDate.of(2026, 4, 4))),
-                            "Mathematics and English")))
-                    .withBilling(new Billing(Recurrence.MONTHLY, LocalDate.of(2026, 3, 15), 25.0,
-                            new PaymentHistory(LocalDate.of(2026, 3, 15))))
+                    .withAppointment(getAppointment(
+                            new ScheduledSession(Recurrence.WEEKLY,
+                                    relativeDateTime(today, -49, 15, 30),
+                                    relativeDateTime(today, 4, 15, 30),
+                                    getAttendanceHistory(
+                                            attendance(true, today, -31),
+                                            attendance(true, today, -24),
+                                            attendance(false, today, -17),
+                                            attendance(true, today, -10),
+                                            attendance(true, today, -3)),
+                                    "Math and English Core Lesson"),
+                            new ScheduledSession(Recurrence.MONTHLY,
+                                    relativeDateTime(today, -90, 17, 0),
+                                    relativeDateTime(today, 18, 17, 0),
+                                    getAttendanceHistory(
+                                            attendance(true, today, -90),
+                                            attendance(true, today, -60),
+                                            attendance(true, today, -30)),
+                                    "Parent Progress Review")))
+                    .withBilling(new Billing(Recurrence.MONTHLY, relativeDate(today, 13), 45.0,
+                            getPaymentHistory(
+                                    relativeDate(today, -82),
+                                    relativeDate(today, -53),
+                                    relativeDate(today, -24))))
                     .build(),
             new PersonBuilder(new Name("Bernice Yu"), new Phone("99272758"), new Email("berniceyu@example.com"),
                     new Address("Blk 30 Lorong 3 Serangoon Gardens, #07-18"),
@@ -59,14 +79,28 @@ public class SampleDataUtil {
                     .withGuardian(new Guardian(
                             new Name("Ming Yu"), new Phone("97654321"),
                             new Email("ming@example.com")))
-                    .withAppointment(Appointment.defaultAppointment().addSession(
-                        new ScheduledSession(Recurrence.BIWEEKLY,
-                            LocalDateTime.of(2026, 3, 22, 16, 0),
-                            LocalDateTime.of(2026, 4, 19, 16, 0),
-                            new AttendanceHistory(new Attendance(true, LocalDate.of(2026, 4, 5))),
-                            "Physics and Chemistry")))
-                    .withBilling(new Billing(Recurrence.MONTHLY, LocalDate.of(2026, 3, 10), 25.0,
-                            new PaymentHistory(LocalDate.of(2026, 3, 10))))
+                    .withAppointment(getAppointment(
+                            new ScheduledSession(Recurrence.BIWEEKLY,
+                                    relativeDateTime(today, -70, 16, 0),
+                                    relativeDateTime(today, 12, 16, 0),
+                                    getAttendanceHistory(
+                                            attendance(true, today, -56),
+                                            attendance(true, today, -42),
+                                            attendance(false, today, -28),
+                                            attendance(true, today, -14)),
+                                    "Physics and Chemistry Main Session"),
+                            new ScheduledSession(Recurrence.MONTHLY,
+                                    relativeDateTime(today, -84, 10, 30),
+                                    relativeDateTime(today, 6, 10, 30),
+                                    getAttendanceHistory(
+                                            attendance(true, today, -56),
+                                            attendance(true, today, -28)),
+                                    "Practical Lab Revision")))
+                    .withBilling(new Billing(Recurrence.MONTHLY, relativeDate(today, 3), 55.0,
+                            getPaymentHistory(
+                                    relativeDate(today, -88),
+                                    relativeDate(today, -58),
+                                    relativeDate(today, -28))))
                     .build(),
             new PersonBuilder(new Name("Charlotte Oliveiro"), new Phone("93210283"),
                     new Email("charlotte@example.com"), new Address("Blk 11 Ang Mo Kio Street 74, #11-04"),
@@ -77,13 +111,27 @@ public class SampleDataUtil {
                     .withGuardian(new Guardian(
                             new Name("Patricia Oliveiro"), new Phone("96543210"),
                             new Email("patricia@example.com")))
-                    .withAppointment(Appointment.defaultAppointment().addSession(new ScheduledSession(Recurrence.NONE,
-                            LocalDateTime.of(2026, 3, 23, 14, 30),
-                            LocalDateTime.of(2026, 3, 23, 14, 30),
-                            new AttendanceHistory(new Attendance(true, LocalDate.of(2026, 3, 16))),
-                            "English and Literature")))
-                    .withBilling(new Billing(Recurrence.MONTHLY, LocalDate.of(2026, 3, 5), 25.0,
-                            new PaymentHistory(LocalDate.of(2026, 3, 5))))
+                    .withAppointment(getAppointment(
+                            new ScheduledSession(Recurrence.WEEKLY,
+                                    relativeDateTime(today, -63, 14, 30),
+                                    relativeDateTime(today, 7, 14, 30),
+                                    getAttendanceHistory(
+                                            attendance(true, today, -49),
+                                            attendance(false, today, -42),
+                                            attendance(true, today, -28),
+                                            attendance(true, today, -14)),
+                                    "English and Literature Weekly Session"),
+                            new ScheduledSession(Recurrence.NONE,
+                                    relativeDateTime(today, -5, 16, 0),
+                                    relativeDateTime(today, -5, 16, 0),
+                                    getAttendanceHistory(
+                                            attendance(true, today, -5)),
+                                    "Essay Consult")))
+                    .withBilling(new Billing(Recurrence.MONTHLY, relativeDate(today, 28), 48.0,
+                            getPaymentHistory(
+                                    relativeDate(today, -75),
+                                    relativeDate(today, -45),
+                                    relativeDate(today, -15))))
                     .build(),
             new PersonBuilder(new Name("David Li"), new Phone("91031282"), new Email("lidavid@example.com"),
                     new Address("Blk 436 Serangoon Gardens Street 26, #16-43"), getTagSet("JC"))
@@ -93,13 +141,29 @@ public class SampleDataUtil {
                     .withGuardian(new Guardian(
                             new Name("Mary Li"), new Phone("95432109"),
                             new Email("mary@example.com")))
-                    .withAppointment(Appointment.defaultAppointment().addSession(new ScheduledSession(Recurrence.NONE,
-                            LocalDateTime.of(2026, 3, 24, 10, 0),
-                            LocalDateTime.of(2026, 3, 24, 10, 0),
-                            new AttendanceHistory(new Attendance(true, LocalDate.of(2026, 3, 19))),
-                            "Mathematics and Economics")))
-                    .withBilling(new Billing(Recurrence.MONTHLY, LocalDate.of(2026, 3, 1), 25.0,
-                            new PaymentHistory(LocalDate.of(2026, 3, 1))))
+                    .withAppointment(getAppointment(
+                            new ScheduledSession(Recurrence.WEEKLY,
+                                    relativeDateTime(today, -70, 10, 0),
+                                    relativeDateTime(today, 5, 10, 0),
+                                    getAttendanceHistory(
+                                            attendance(true, today, -49),
+                                            attendance(true, today, -35),
+                                            attendance(false, today, -21),
+                                            attendance(true, today, -7)),
+                                    "Mathematics and Economics Core Session"),
+                            new ScheduledSession(Recurrence.BIWEEKLY,
+                                    relativeDateTime(today, -56, 19, 30),
+                                    relativeDateTime(today, 5, 19, 30),
+                                    getAttendanceHistory(
+                                            attendance(true, today, -42),
+                                            attendance(true, today, -28),
+                                            attendance(true, today, -14)),
+                                    "Exam Strategy Session")))
+                    .withBilling(new Billing(Recurrence.MONTHLY, relativeDate(today, 25), 65.0,
+                            getPaymentHistory(
+                                    relativeDate(today, -90),
+                                    relativeDate(today, -60),
+                                    relativeDate(today, -30))))
                     .build(),
             new PersonBuilder(new Name("Irfan Ibrahim"), new Phone("92492021"), new Email("irfan@example.com"),
                     new Address("Blk 47 Tampines Street 20, #17-35"), getTagSet("Primary"))
@@ -109,13 +173,23 @@ public class SampleDataUtil {
                     .withGuardian(new Guardian(
                             new Name("Zahra Ibrahim"), new Phone("94321098"),
                             new Email("zahra@example.com")))
-                    .withAppointment(Appointment.defaultAppointment().addSession(new ScheduledSession(Recurrence.NONE,
-                            LocalDateTime.of(2026, 3, 25, 11, 30),
-                            LocalDateTime.of(2026, 3, 25, 11, 30),
-                            new AttendanceHistory(new Attendance(true, LocalDate.of(2026, 3, 15))),
-                            "Science and Mathematics")))
-                    .withBilling(new Billing(Recurrence.MONTHLY, LocalDate.of(2026, 2, 28), 25.0,
-                            new PaymentHistory(LocalDate.of(2026, 2, 27))))
+                    .withAppointment(getAppointment(
+                            new ScheduledSession(Recurrence.WEEKLY,
+                                    relativeDateTime(today, -77, 11, 30),
+                                    relativeDateTime(today, 2, 11, 30),
+                                    getAttendanceHistory(
+                                            attendance(true, today, -56),
+                                            attendance(true, today, -49),
+                                            attendance(false, today, -42),
+                                            attendance(true, today, -35),
+                                            attendance(true, today, -28),
+                                            attendance(true, today, -21)),
+                                    "Science and Mathematics Weekly Session")))
+                    .withBilling(new Billing(Recurrence.MONTHLY, relativeDate(today, 20), 40.0,
+                            getPaymentHistory(
+                                    relativeDate(today, -84),
+                                    relativeDate(today, -56),
+                                    relativeDate(today, -27))))
                     .build(),
             new PersonBuilder(new Name("Roy Balakrishnan"), new Phone("92624417"), new Email("royb@example.com"),
                     new Address("Blk 45 Aljunied Street 85, #11-31"), getTagSet("JC"))
@@ -125,15 +199,59 @@ public class SampleDataUtil {
                     .withGuardian(new Guardian(
                             new Name("Priya Balakrishnan"), new Phone("93210987"),
                             new Email("priya@example.com")))
-                    .withAppointment(Appointment.defaultAppointment().addSession(new ScheduledSession(Recurrence.WEEKLY,
-                            LocalDateTime.of(2026, 3, 26, 17, 0),
-                            LocalDateTime.of(2026, 4, 9, 17, 0),
-                            new AttendanceHistory(new Attendance(true, LocalDate.of(2026, 4, 2))),
-                            "Physics and Mathematics")))
-                    .withBilling(new Billing(Recurrence.MONTHLY, LocalDate.of(2026, 2, 25), 25.0,
-                        new PaymentHistory(LocalDate.of(2026, 2, 24))))
+                    .withAppointment(getAppointment(
+                            new ScheduledSession(Recurrence.WEEKLY,
+                                    relativeDateTime(today, -63, 17, 0),
+                                    relativeDateTime(today, 3, 17, 0),
+                                    getAttendanceHistory(
+                                            attendance(true, today, -49),
+                                            attendance(false, today, -42),
+                                            attendance(true, today, -35),
+                                            attendance(true, today, -28),
+                                            attendance(true, today, -14)),
+                                    "Physics and Mathematics Main Session"),
+                            new ScheduledSession(Recurrence.MONTHLY,
+                                    relativeDateTime(today, -90, 19, 30),
+                                    relativeDateTime(today, 10, 19, 30),
+                                    getAttendanceHistory(
+                                            attendance(true, today, -60),
+                                            attendance(true, today, -30)),
+                                    "Mock Paper Review")))
+                    .withBilling(new Billing(Recurrence.MONTHLY, relativeDate(today, 24), 60.0,
+                            getPaymentHistory(
+                                    relativeDate(today, -89),
+                                    relativeDate(today, -59),
+                                    relativeDate(today, -29))))
                     .build()
         };
+    }
+
+    private static Attendance attendance(boolean hasAttended, LocalDate today, int daysOffset) {
+        return new Attendance(hasAttended, relativeDate(today, daysOffset));
+    }
+
+    private static LocalDate relativeDate(LocalDate today, int daysOffset) {
+        return today.plusDays(daysOffset);
+    }
+
+    private static LocalDateTime relativeDateTime(LocalDate today, int daysOffset, int hour, int minute) {
+        return relativeDate(today, daysOffset).atTime(hour, minute);
+    }
+
+    private static Appointment getAppointment(ScheduledSession... sessions) {
+        Appointment appointment = Appointment.defaultAppointment();
+        for (ScheduledSession session : sessions) {
+            appointment = appointment.addSession(session);
+        }
+        return appointment;
+    }
+
+    private static AttendanceHistory getAttendanceHistory(Attendance... attendances) {
+        return new AttendanceHistory(attendances);
+    }
+
+    private static PaymentHistory getPaymentHistory(LocalDate... paymentDates) {
+        return new PaymentHistory(paymentDates);
     }
 
     public static ReadOnlyAddressBook getSampleAddressBook() {
