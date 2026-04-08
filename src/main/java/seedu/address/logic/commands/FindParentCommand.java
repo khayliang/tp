@@ -48,6 +48,11 @@ public class FindParentCommand extends FindCommand {
     }
 
     @Override
+    public int hashCode() {
+        return java.util.Objects.hash(predicate);
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .add("predicate", predicate)

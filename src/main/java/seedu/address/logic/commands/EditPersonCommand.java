@@ -107,6 +107,11 @@ public class EditPersonCommand extends EditCommand {
     }
 
     @Override
+    public int hashCode() {
+        return java.util.Objects.hash(index, editPersonDescriptor);
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .add("index", index)
@@ -200,6 +205,11 @@ public class EditPersonCommand extends EditCommand {
                     && Objects.equals(phone, otherEditPersonDescriptor.phone)
                     && Objects.equals(email, otherEditPersonDescriptor.email)
                     && Objects.equals(address, otherEditPersonDescriptor.address);
+        }
+
+        @Override
+        public int hashCode() {
+            return java.util.Objects.hash(name, phone, email, address);
         }
 
         @Override

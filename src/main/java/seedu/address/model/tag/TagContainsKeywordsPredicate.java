@@ -45,4 +45,9 @@ public class TagContainsKeywordsPredicate implements Predicate<Person> {
                 || (other instanceof TagContainsKeywordsPredicate
                 && keywords.equals(((TagContainsKeywordsPredicate) other).keywords));
     }
+
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(keywords);
+    }
 }

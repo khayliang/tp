@@ -40,4 +40,9 @@ public class PaymentDueMonthPredicate implements Predicate<Person> {
                 || (other instanceof PaymentDueMonthPredicate
                 && targetMonth.equals(((PaymentDueMonthPredicate) other).targetMonth));
     }
+
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(targetMonth);
+    }
 }

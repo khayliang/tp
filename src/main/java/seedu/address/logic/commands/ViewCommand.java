@@ -51,4 +51,9 @@ public class ViewCommand extends Command {
                 || (other instanceof ViewCommand // instanceof handles nulls
                 && targetIndex.equals(((ViewCommand) other).targetIndex)); // state check
     }
+
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(targetIndex);
+    }
 }

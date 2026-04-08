@@ -97,6 +97,11 @@ public class EditAcademicsCommand extends EditCommand {
     }
 
     @Override
+    public int hashCode() {
+        return java.util.Objects.hash(index, descriptor);
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .add("index", index)
@@ -154,6 +159,11 @@ public class EditAcademicsCommand extends EditCommand {
             EditAcademicsDescriptor otherDesc = (EditAcademicsDescriptor) other;
             return Objects.equals(subjects, otherDesc.subjects)
                     && Objects.equals(note, otherDesc.note);
+        }
+
+        @Override
+        public int hashCode() {
+            return java.util.Objects.hash(subjects, note);
         }
 
         @Override

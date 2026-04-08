@@ -104,6 +104,11 @@ public class EditParentCommand extends EditCommand {
     }
 
     @Override
+    public int hashCode() {
+        return java.util.Objects.hash(index, editParentDescriptor);
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .add("index", index)
@@ -184,6 +189,11 @@ public class EditParentCommand extends EditCommand {
             return Objects.equals(parentName, e.parentName)
                     && Objects.equals(parentPhone, e.parentPhone)
                     && Objects.equals(parentEmail, e.parentEmail);
+        }
+
+        @Override
+        public int hashCode() {
+            return java.util.Objects.hash(parentName, parentPhone, parentEmail);
         }
 
         @Override

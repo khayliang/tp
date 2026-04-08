@@ -44,4 +44,9 @@ public class SubjectContainsKeywordsPredicate implements Predicate<Person> {
                 || (other instanceof SubjectContainsKeywordsPredicate
                 && keywords.equals(((SubjectContainsKeywordsPredicate) other).keywords));
     }
+
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(keywords);
+    }
 }

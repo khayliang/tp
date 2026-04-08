@@ -99,6 +99,11 @@ public class DeleteApptCommand extends DeleteCommand {
     }
 
     @Override
+    public int hashCode() {
+        return java.util.Objects.hash(index, sessionIndices);
+    }
+
+    @Override
     public String toString() {
         if (sessionIndices.size() == 1) {
             return new ToStringBuilder(this)

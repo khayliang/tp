@@ -51,6 +51,11 @@ public class DeletePersonCommand extends DeleteCommand {
     }
 
     @Override
+    public int hashCode() {
+        return java.util.Objects.hash(index);
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .add("index", index)

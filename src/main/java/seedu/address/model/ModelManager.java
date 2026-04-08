@@ -187,6 +187,11 @@ public class ModelManager implements Model {
                 && filteredPersons.equals(otherModelManager.filteredPersons);
     }
 
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(addressBook, userPrefs, filteredPersons);
+    }
+
     private boolean hasActiveFilter() {
         return currentFilterPredicate != PREDICATE_SHOW_ALL_PERSONS;
     }

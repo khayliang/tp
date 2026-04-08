@@ -29,6 +29,11 @@ public class SubcommandDispatcherParserTest {
             return other == this || (other instanceof DummyCommand
                    && args.equals(((DummyCommand) other).args));
         }
+
+        @Override
+        public int hashCode() {
+            return java.util.Objects.hash(args);
+        }
     }
 
     private SubcommandDispatcherParser<DummyCommand> parser = new SubcommandDispatcherParser<>(

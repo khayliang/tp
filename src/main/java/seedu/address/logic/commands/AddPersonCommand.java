@@ -76,6 +76,11 @@ public class AddPersonCommand extends AddCommand {
     }
 
     @Override
+    public int hashCode() {
+        return java.util.Objects.hash(toAdd);
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .add("toAdd", toAdd)

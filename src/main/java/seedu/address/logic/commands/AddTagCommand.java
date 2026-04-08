@@ -82,6 +82,11 @@ public class AddTagCommand extends AddCommand {
     }
 
     @Override
+    public int hashCode() {
+        return java.util.Objects.hash(index, tagsToAdd);
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .add("index", index)

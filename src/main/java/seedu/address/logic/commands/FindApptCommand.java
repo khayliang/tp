@@ -61,6 +61,11 @@ public class FindApptCommand extends FindCommand {
     }
 
     @Override
+    public int hashCode() {
+        return java.util.Objects.hash(targetDate);
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .add("targetDate", targetDate)

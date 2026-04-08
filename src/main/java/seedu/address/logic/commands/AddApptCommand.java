@@ -93,6 +93,11 @@ public class AddApptCommand extends AddCommand {
     }
 
     @Override
+    public int hashCode() {
+        return java.util.Objects.hash(index, appointmentStart, recurrence, description);
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .add("index", index)

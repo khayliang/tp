@@ -171,6 +171,11 @@ public class AddAttdCommand extends AddCommand {
     }
 
     @Override
+    public int hashCode() {
+        return java.util.Objects.hash(personIndex, sessionIndex, hasAttended, recordedAt);
+    }
+
+    @Override
     public String toString() {
         String formattedRecordedAt = recordedAt
                 .map(this::formatRecordedAt)
