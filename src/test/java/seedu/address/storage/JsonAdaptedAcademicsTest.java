@@ -66,7 +66,7 @@ public class JsonAdaptedAcademicsTest {
     }
 
     @Test
-        public void constructor_roundTrip_returnsEquivalentAcademics() throws Exception {
+    public void constructor_roundTrip_returnsEquivalentAcademics() throws Exception {
         Academics source = new Academics(
                 Set.of(new Subject("Math", Level.STRONG)),
                 Optional.of("Progressing steadily"));

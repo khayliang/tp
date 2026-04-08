@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.ResolverStyle;
 
 /**
- * Utility methods for working with {@link LocalDateTime} values.
+ * Utility constants and methods for working with date and date-time values.
  */
 public class DateTimeUtil {
 
