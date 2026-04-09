@@ -7,11 +7,27 @@ TutorFlow is a **desktop app for freelance private tutors who need to manage stu
 
 TutorFlow keeps your student list, parent / guardian details, academics, tuition billing, payment history, appointments, and attendance records together in a single interface.
 
-* Table of Contents
-{:toc}
+**Table of Contents**
+
+* [Quick start](#quick-start)
+* [TutorFlow at a glance](#tutorflow-at-a-glance)
+* [Reading command formats](#reading-command-formats)
+* [Student Management](#student-management)
+* [Tag Management](#tag-management)
+* [Academic Management](#academic-management)
+* [Parent / Guardian Management](#parent-guardian-management)
+* [Billing & Payment Management](#billing-payment-management)
+* [Appointment & Attendance Management](#appointment-attendance-management)
+* [General Commands](#general-commands)
+* [Data Management](#data-management)
+* [FAQ](#faq)
+* [Known issues](#known-issues)
+* [Command summary](#command-summary)
+* [Prefix reference](#prefix-reference)
 
 --------------------------------------------------------------------------------------------------------------------
 
+<a id="quick-start"></a>
 ## Quick start
 
 1. Ensure that Java `17` or above is installed on your computer.
@@ -39,6 +55,7 @@ TutorFlow keeps your student list, parent / guardian details, academics, tuition
 
 --------------------------------------------------------------------------------------------------------------------
 
+<a id="tutorflow-at-a-glance"></a>
 ## TutorFlow at a glance
 
 ![TutorFlow interface](images/UI_v1.5_annotated.png)
@@ -56,6 +73,7 @@ For commands such as `delete tag`, `delete acad`, `delete appt`, and `add attd`,
 
 --------------------------------------------------------------------------------------------------------------------
 
+<a id="reading-command-formats"></a>
 ## Reading command formats
 
 <div markdown="block" class="alert alert-info">
@@ -91,6 +109,7 @@ For commands such as `delete tag`, `delete acad`, `delete appt`, and `add attd`,
 
 --------------------------------------------------------------------------------------------------------------------
 
+<a id="student-management"></a>
 ## Student Management
 
 Use these commands to add, update, view, list, find, and remove student records.
@@ -181,6 +200,7 @@ Examples:
 
 --------------------------------------------------------------------------------------------------------------------
 
+<a id="tag-management"></a>
 ## Tag Management
 
 Use tags to group students by level, stream, exam target, or any other label that fits your teaching workflow.
@@ -252,6 +272,7 @@ Examples:
 
 --------------------------------------------------------------------------------------------------------------------
 
+<a id="academic-management"></a>
 ## Academic Management
 
 Use academic records to keep track of the subjects a student takes and any overall academic notes.
@@ -330,6 +351,7 @@ Examples:
 
 --------------------------------------------------------------------------------------------------------------------
 
+<a id="parent-guardian-management"></a>
 ## Parent / Guardian Management
 
 Use these commands to store and search for the parent or guardian details linked to each student.
@@ -374,6 +396,7 @@ Examples:
 
 --------------------------------------------------------------------------------------------------------------------
 
+<a id="billing-payment-management"></a>
 ## Billing & Payment Management
 
 Use billing commands to track tuition fees, next payment due dates, and payment history.
@@ -445,6 +468,7 @@ Examples:
 
 --------------------------------------------------------------------------------------------------------------------
 
+<a id="appointment-attendance-management"></a>
 ## Appointment & Attendance Management
 
 Use these commands to schedule lessons, see weekly appointments, and record whether a lesson happened.
@@ -563,6 +587,7 @@ Examples:
 
 --------------------------------------------------------------------------------------------------------------------
 
+<a id="general-commands"></a>
 ## General Commands
 
 ### Viewing help : `help`
@@ -595,6 +620,7 @@ The `up` and `down` arrow keys on your keyboard can be used to navigate through 
 
 --------------------------------------------------------------------------------------------------------------------
 
+<a id="data-management"></a>
 ## Data Management
 
 ### Saving the data
@@ -615,6 +641,7 @@ If you edit the data file into an invalid format, TutorFlow may fail to load the
 
 --------------------------------------------------------------------------------------------------------------------
 
+<a id="faq"></a>
 ## FAQ
 
 **Q:** How do I move my TutorFlow data to another computer?
@@ -622,6 +649,7 @@ If you edit the data file into an invalid format, TutorFlow may fail to load the
 
 --------------------------------------------------------------------------------------------------------------------
 
+<a id="known-issues"></a>
 ## Known issues
 
 1. **Multiple screens:** if you move the app to a secondary display and later switch back to a single-display setup, the window may reopen off-screen. Delete the `preferences.json` file before launching TutorFlow again.
@@ -629,6 +657,7 @@ If you edit the data file into an invalid format, TutorFlow may fail to load the
 
 --------------------------------------------------------------------------------------------------------------------
 
+<a id="command-summary"></a>
 ## Command summary
 
 ### Student Management
@@ -698,6 +727,7 @@ Action | Format | Example
 
 --------------------------------------------------------------------------------------------------------------------
 
+<a id="prefix-reference"></a>
 ## Prefix reference
 
 Prefix | Stands for | Used in
