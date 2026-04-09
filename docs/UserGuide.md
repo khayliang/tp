@@ -737,7 +737,7 @@ Prefix | Stands for | Used in
 `e/` | Email | `add student`, `edit student`, `edit parent`, `find parent`
 `a/` | Address / Amount | Address: `add student`, `edit student` · Amount: `edit billing`
 `t/` | Tag / Tag index | Tag value: `add student`, `add tag`, `edit tag` · Tag index: `delete tag` · Keyword: `find tag`
-`s/` | Subject / Subject index | Subject value: `add acad`, `edit acad` · Subject index: `delete acad` · Keyword: `find acad` · Session index (no prefix): `add attd`, `delete appt`
+`s/` | Subject / Subject index / Session index | Subject value: `add acad`, `edit acad` · Subject index: `delete acad` · Keyword: `find acad` · Session index: `add attd`, `delete appt`
 `l/` | Level | `add acad`, `edit acad` — must immediately follow the `s/` it applies to; accepted values are `basic` and `strong`
 `d/` | Date / Date-time / Year-month | Date: `add payment`, `delete payment`, `find appt` · Date-time: `add appt` · Date or date-time: `add attd` · Year-month (`YYYY-MM`): `find billing`
 `r/` | Recurrence | `add appt` — accepted values are `NONE`, `WEEKLY`, `BIWEEKLY`, `MONTHLY`
