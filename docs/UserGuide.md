@@ -125,6 +125,7 @@ Format: `add student n/NAME p/PHONE e/EMAIL a/ADDRESS [t/TAG]...`
 Details:
 * `n/`, `p/`, `e/`, and `a/` are required.
 * `t/` is optional and can be repeated.
+* Phone numbers must be 8 digits long, and there is no support for international numbers.
 * A student can be created without any tags. You can add tags later with `add tag`.
 
 Examples:
@@ -141,6 +142,7 @@ Details:
 * Edits the student at the specified `INDEX`.
 * At least one field must be provided.
 * Only the fields you provide are updated. Unspecified fields stay unchanged.
+* Phone numbers must be 8 digits long, and there is no support for international numbers.
 
 Examples:
 * `edit student 1 p/91234567 e/johndoe@example.com`
@@ -366,6 +368,7 @@ Format: `edit parent INDEX [n/PARENT_NAME] [p/PARENT_PHONE] [e/PARENT_EMAIL]`
 
 Details:
 * At least one field must be provided.
+* Phone numbers must be 8 digits long, and there is no support for international numbers.
 * Existing parent fields stay unchanged unless you replace them.
 * If the student does not already have a parent / guardian record, include `n/PARENT_NAME` so TutorFlow can create one.
 
