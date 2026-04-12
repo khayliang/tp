@@ -63,7 +63,7 @@ public class AddAcademicsCommand extends AddCommand {
 
         // Upsert: for each new subject, remove existing with same name, then add
         for (Subject newSub : subjectsToAdd) {
-            updatedSubjects.removeIf(s -> s.getName().equals(newSub.getName()));
+            updatedSubjects.removeIf(s -> s.getName().equalsIgnoreCase(newSub.getName()));
             updatedSubjects.add(newSub);
         }
 

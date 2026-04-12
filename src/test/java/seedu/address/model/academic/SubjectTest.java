@@ -23,19 +23,19 @@ public class SubjectTest {
     @Test
     public void constructor_validNameWithSpaces_success() {
         Subject subject = new Subject("data structures", null);
-        assertEquals("Data Structures", subject.getName());
+        assertEquals("data structures", subject.getName());
     }
 
     @Test
     public void constructor_trimsWhitespace_success() {
         Subject subject = new Subject("   discrete math   ", null);
-        assertEquals("Discrete Math", subject.getName());
+        assertEquals("discrete math", subject.getName());
     }
 
     @Test
-    public void constructor_normalizesCase_success() {
+    public void constructor_preservesCase_success() {
         Subject subject = new Subject("mIxEd CaSe", null);
-        assertEquals("Mixed Case", subject.getName());
+        assertEquals("mIxEd CaSe", subject.getName());
     }
 
     @Test
@@ -51,13 +51,13 @@ public class SubjectTest {
     @Test
     public void toString_noLevel_returnsNameOnly() {
         Subject subject = new Subject("math", null);
-        assertEquals("Math", subject.toString());
+        assertEquals("math", subject.toString());
     }
 
     @Test
     public void toString_withLevel_returnsFormatted() {
         Subject subject = new Subject("math", Level.STRONG);
-        assertEquals("Math-Strong", subject.toString());
+        assertEquals("math-Strong", subject.toString());
     }
 
     @Test
@@ -65,7 +65,7 @@ public class SubjectTest {
         Subject s1 = new Subject("math", Level.STRONG);
         Subject s2 = new Subject("Math", Level.STRONG);
 
-        // after normalization → equal
+        // equality ignores case
         assert(s1.equals(s2));
     }
 

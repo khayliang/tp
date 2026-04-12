@@ -63,7 +63,7 @@ public class AddAcademicsCommandParser implements Parser<AddAcademicsCommand> {
         // Check for duplicate subject names
         Set<String> seen = new HashSet<>();
         for (Subject s : subjects) {
-            if (!seen.add(s.getName())) {
+            if (!seen.add(s.getName().toLowerCase())) {
                 throw new ParseException("Duplicate subjects are not allowed.");
             }
         }

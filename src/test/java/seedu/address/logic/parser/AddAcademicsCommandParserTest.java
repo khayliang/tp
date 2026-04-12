@@ -118,4 +118,17 @@ public class AddAcademicsCommandParserTest {
         assertParseFailure(parser, "1 s/Math s/Math",
                 "Duplicate subjects are not allowed.");
     }
+
+    @Test
+    public void parse_duplicateSubjectsDifferentCase_failure() {
+        assertParseFailure(parser, "1 s/Math s/mAtH",
+                "Duplicate subjects are not allowed.");
+    }
+
+    @Test
+    public void parse_unknownPrefixLikeToken_failure() {
+        String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                AddAcademicsCommand.MESSAGE_USAGE);
+        assertParseFailure(parser, "1 s/Math desc/progress", expectedMessage);
+    }
 }

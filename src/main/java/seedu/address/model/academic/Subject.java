@@ -6,8 +6,6 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
 import java.util.Objects;
 import java.util.Optional;
 
-import seedu.address.model.util.StringUtil;
-
 /**
  * Represents a Subject with an optional level.
  * Guarantees: immutable; name is valid; level is optional.
@@ -34,10 +32,9 @@ public class Subject {
         String trimmed = name.trim();
         checkArgument(!trimmed.isEmpty(), MESSAGE_CONSTRAINTS);
 
-        String normalized = StringUtil.toTitleCase(trimmed);
-        checkArgument(isValidSubjectName(normalized), MESSAGE_CONSTRAINTS);
+        checkArgument(isValidSubjectName(trimmed), MESSAGE_CONSTRAINTS);
 
-        this.name = normalized;
+        this.name = trimmed;
         this.level = level;
     }
 
@@ -81,12 +78,12 @@ public class Subject {
         }
 
         Subject otherSubject = (Subject) other;
-        return name.equals(otherSubject.name)
+        return name.equalsIgnoreCase(otherSubject.name)
                 && Objects.equals(level, otherSubject.level);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, level);
+        return Objects.hash(name.toLowerCase(), level);
     }
 }
