@@ -60,6 +60,9 @@ public class GuardianContainsKeywordsPredicateTest {
         GuardianContainsKeywordsPredicate namePredicate =
                 new GuardianContainsKeywordsPredicate(
                         List.of("Alice"), Collections.emptyList(), Collections.emptyList());
+        GuardianContainsKeywordsPredicate partialNamePredicate =
+                new GuardianContainsKeywordsPredicate(
+                        List.of("lic"), Collections.emptyList(), Collections.emptyList());
         GuardianContainsKeywordsPredicate phonePredicate =
                 new GuardianContainsKeywordsPredicate(
                         Collections.emptyList(), List.of("1234"), Collections.emptyList());
@@ -68,6 +71,7 @@ public class GuardianContainsKeywordsPredicateTest {
                         List.of("EXAMPLE.COM"));
 
         assertTrue(namePredicate.test(personWithGuardian));
+        assertTrue(partialNamePredicate.test(personWithGuardian));
         assertTrue(phonePredicate.test(personWithGuardian));
         assertTrue(emailPredicate.test(personWithGuardian));
     }

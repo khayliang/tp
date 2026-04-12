@@ -140,6 +140,17 @@ public class FindParentCommandTest {
     }
 
     @Test
+    public void execute_matchByGuardianNamePartial_onePersonFound() {
+        String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 1);
+        GuardianContainsKeywordsPredicate predicate = makePredicate(
+                List.of("usa"), Collections.emptyList(), Collections.emptyList());
+        FindParentCommand command = new FindParentCommand(predicate);
+        expectedModel.updateFilteredPersonListWithAnd(predicate);
+        assertCommandSuccess(command, model, expectedMessage, expectedModel);
+        assertEquals(Collections.singletonList(BENSON), model.getFilteredPersonList());
+    }
+
+    @Test
     public void execute_matchByGuardianPhone_onePersonFound() {
         // Add a person with a guardian phone to a fresh model
         Person personWithParentPhone = getPersonBuilder("Test Student")
