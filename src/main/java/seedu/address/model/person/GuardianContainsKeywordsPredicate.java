@@ -1,16 +1,16 @@
 package seedu.address.model.person;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import seedu.address.commons.util.StringUtil;
 import seedu.address.commons.util.ToStringBuilder;
 
 /**
  * Tests that a {@code Person}'s {@code Guardian} matches the given name, phone, and/or email keywords.
- * Name matching is case-insensitive full-word; phone and email matching is case-insensitive substring.
+ * Name matching, phone and email matching are case-insensitive substring.
  * A match in any supplied field is sufficient.
  */
 public class GuardianContainsKeywordsPredicate implements Predicate<Person> {
@@ -42,20 +42,32 @@ public class GuardianContainsKeywordsPredicate implements Predicate<Person> {
         boolean matchesAnyField = false;
 
         if (!nameKeywords.isEmpty()) {
+            String name = guardian.getName().fullName.toLowerCase(Locale.ROOT);
             matchesAnyField = matchesAnyField || nameKeywords.stream()
-                    .anyMatch(kw -> StringUtil.containsWordIgnoreCase(guardian.getName().fullName, kw));
+                    .map(String::trim)
+                    .filter(keyword -> !keyword.isEmpty())
+                    .map(keyword -> keyword.toLowerCase(Locale.ROOT))
+                    .anyMatch(name::contains);
         }
 
         if (!phoneKeywords.isEmpty()) {
             String phone = guardian.getPhone().map(p -> p.value).orElse("");
+            String lowerCasePhone = phone.toLowerCase(Locale.ROOT);
             matchesAnyField = matchesAnyField || phoneKeywords.stream()
-                    .anyMatch(kw -> phone.toLowerCase().contains(kw.toLowerCase()));
+                    .map(String::trim)
+                    .filter(keyword -> !keyword.isEmpty())
+                    .map(keyword -> keyword.toLowerCase(Locale.ROOT))
+                    .anyMatch(lowerCasePhone::contains);
         }
 
         if (!emailKeywords.isEmpty()) {
             String email = guardian.getEmail().map(e -> e.value).orElse("");
+            String lowerCaseEmail = email.toLowerCase(Locale.ROOT);
             matchesAnyField = matchesAnyField || emailKeywords.stream()
-                    .anyMatch(kw -> email.toLowerCase().contains(kw.toLowerCase()));
+                    .map(String::trim)
+                    .filter(keyword -> !keyword.isEmpty())
+                    .map(keyword -> keyword.toLowerCase(Locale.ROOT))
+                    .anyMatch(lowerCaseEmail::contains);
         }
 
         return hasFilters && matchesAnyField;
