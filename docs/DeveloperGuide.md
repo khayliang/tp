@@ -126,6 +126,10 @@ How the parsing works:
 The `Model` component,
 
 * stores TutorFlow's core student data i.e., all `Person` objects (which are contained in a `UniquePersonList` object).
+* represents student and guardian names with the `Name` value object, which requires at least one alphabetic character and
+  allows only letters, numbers, spaces, apostrophes (`'`), hyphens (`-`), and periods (`.`).
+* treats a student's identity as the combination of `Name` and `Email`; add, edit, and storage loading reject
+  duplicate students that share both fields.
 * stores the currently displayed `Person` objects as a separate _filtered_ list that is exposed as an unmodifiable `ObservableList<Person>`. The UI binds to this list so it updates automatically when the model changes.
 * supports both replacing the current filter and narrowing the currently displayed list further with an additional predicate.
 * preserves edited persons temporarily when a filter is active so an edited record does not disappear from the UI immediately after an edit.

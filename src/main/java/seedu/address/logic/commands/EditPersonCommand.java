@@ -38,11 +38,13 @@ public class EditPersonCommand extends EditCommand {
             + "[" + PREFIX_EMAIL + "EMAIL] "
             + "[" + PREFIX_ADDRESS + "ADDRESS] "
             + "Example: " + COMMAND_WORD + " " + EditPersonCommand.SUB_COMMAND_WORD + " 1 "
+            + PREFIX_NAME + "John Doe "
             + PREFIX_PHONE + "91234567 "
             + PREFIX_EMAIL + "johndoe@example.com";
 
     public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Updated student details: %1$s.";
-    public static final String MESSAGE_DUPLICATE_PERSON = "This student already exists in the address book.";
+    public static final String MESSAGE_DUPLICATE_PERSON =
+            "A student with the same name and email already exists in TutorFlow.";
 
     private final EditPersonDescriptor editPersonDescriptor;
 

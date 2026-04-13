@@ -94,6 +94,9 @@ For commands such as `delete tag`, `delete acad`, `delete appt`, and `add attd`,
 * For commands that use prefixes, the order of prefixed fields usually does not matter.
   Example: `p/91234567 n/John Doe` is accepted for commands that expect both fields.
 
+* For `NAME` values in `add student`, `edit student`, and `edit parent`, the value must contain at least one alphabetic character.
+  It may use letters, numbers, spaces, apostrophes (`'`), hyphens (`-`), and periods (`.`).
+
 * `find` commands narrow the **currently displayed list** instead of always searching all students.
   This means you can combine multiple `find` commands to refine results step by step.
   Use `list` if you want to reset the view and search from the full student list again.
@@ -126,6 +129,7 @@ Details:
 * `n/`, `p/`, `e/`, and `a/` are required.
 * `t/` is optional and can be repeated.
 * Phone numbers must be at least 8 digits long (digits only), and there is no support for international numbers.
+* TutorFlow treats two students with the same `NAME` and `EMAIL` as duplicates, so such a student cannot be added.
 * A student can be created without any tags. You can add tags later with `add tag`.
 
 Examples:
@@ -143,9 +147,10 @@ Details:
 * At least one field must be provided.
 * Only the fields you provide are updated. Unspecified fields stay unchanged.
 * Phone numbers must be at least 8 digits long (digits only), and there is no support for international numbers.
+* The edit is rejected if it would make the student have the same `NAME` and `EMAIL` as another student.
 
 Examples:
-* `edit student 1 p/91234567 e/johndoe@example.com`
+* `edit student 1 n/John Doe p/91234567 e/johndoe@example.com`
 * `edit student 2 n/Betsy Crowe`
 
 ### Deleting a student : `delete student`
@@ -741,7 +746,7 @@ Action | Format | Example
 
 Prefix | Stands for | Used in
 -------|------------|--------
-`n/` | Name | `add student`, `edit student`, `edit parent`, `find parent`
+`n/` | Name / Name keywords | `add student`, `edit student`, `edit parent`, `find parent`
 `p/` | Phone | `add student`, `edit student`, `edit parent`, `find parent`
 `e/` | Email | `add student`, `edit student`, `edit parent`, `find parent`
 `a/` | Address / Amount | Address: `add student`, `edit student` · Amount: `edit billing`

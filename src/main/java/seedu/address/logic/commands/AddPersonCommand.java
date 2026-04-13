@@ -37,7 +37,8 @@ public class AddPersonCommand extends AddCommand {
             + PREFIX_TAG + "owesMoney";
 
     public static final String MESSAGE_SUCCESS = "Added student to TutorFlow: %1$s.";
-    public static final String MESSAGE_DUPLICATE_PERSON = "This student already exists in the address book";
+    public static final String MESSAGE_DUPLICATE_PERSON =
+            "A student with the same name and email already exists in TutorFlow.";
 
     private final Person toAdd;
 

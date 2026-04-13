@@ -19,7 +19,8 @@ import seedu.address.model.person.Person;
 @JsonRootName(value = "addressbook")
 class JsonSerializableAddressBook {
 
-    public static final String MESSAGE_DUPLICATE_PERSON = "Persons list contains duplicate person(s).";
+    public static final String MESSAGE_DUPLICATE_PERSON =
+            "Persons list contains duplicate person(s) with the same name and email.";
 
     private final List<JsonAdaptedPerson> persons = new ArrayList<>();
 
