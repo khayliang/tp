@@ -157,7 +157,7 @@ public class ParserUtil {
     }
 
     /**
-     * Parses a {@code String amount} into a positive {@code double} that is greater than 0.
+     * Parses a {@code String amount} into a positive {@code double} that is greater than or equals to 0.
      * Leading and trailing whitespaces will be trimmed.
      *
      * @throws ParseException if the given {@code amount} is invalid.
