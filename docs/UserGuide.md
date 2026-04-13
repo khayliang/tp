@@ -37,7 +37,7 @@ TutorFlow keeps your student list, parent / guardian details, academics, tuition
 
 1. Move the jar file into the folder you want TutorFlow to use as its home folder.
 
-1. Open a terminal, `cd` into that folder, and run:
+1. Open a terminal, `cd` into that folder, for example, `cd target_directory/tutorflow_app`, and run:
 
    `java -jar tutorflow.jar`
 
@@ -79,6 +79,8 @@ For commands such as `delete tag`, `delete acad`, `delete appt`, and `add attd`,
 <div markdown="block" class="alert alert-info">
 
 **Command format notes**
+
+* Command words and subcommand words are **case insensitive**. For example, `dElEte STUdenT 1` works the same as `delete student 1`. Prefixes such as `n/` and `p/` must still be entered exactly as shown.
 
 * Words in `UPPER_CASE` are values you must supply.
   Example: in `add student n/NAME`, replace `NAME` with an actual name such as `John Doe`.
@@ -123,6 +125,7 @@ Format: `add student n/NAME p/PHONE e/EMAIL a/ADDRESS [t/TAG]...`
 Details:
 * `n/`, `p/`, `e/`, and `a/` are required.
 * `t/` is optional and can be repeated.
+* Phone numbers must be at least 8 digits long (digits only), and there is no support for international numbers.
 * A student can be created without any tags. You can add tags later with `add tag`.
 
 Examples:
@@ -139,6 +142,7 @@ Details:
 * Edits the student at the specified `INDEX`.
 * At least one field must be provided.
 * Only the fields you provide are updated. Unspecified fields stay unchanged.
+* Phone numbers must be at least 8 digits long (digits only), and there is no support for international numbers.
 
 Examples:
 * `edit student 1 p/91234567 e/johndoe@example.com`
@@ -364,6 +368,7 @@ Format: `edit parent INDEX [n/PARENT_NAME] [p/PARENT_PHONE] [e/PARENT_EMAIL]`
 
 Details:
 * At least one field must be provided.
+* Phone numbers must be at least 8 digits long (digits only), and there is no support for international numbers.
 * Existing parent fields stay unchanged unless you replace them.
 * If the student does not already have a parent / guardian record, include `n/PARENT_NAME` so TutorFlow can create one.
 
@@ -429,6 +434,8 @@ Details:
 * The payment date cannot be later than today.
 * Recording a payment advances the student's billing due date by one billing cycle only when the new payment date
   is later than the latest recorded payment date.
+* A billing cycle is one recurrence cycle (monthly by default). Each advancement brings the due date forward by one 
+  recurrence cycle.
 * If you add an older (backfilled) payment date, TutorFlow records it but keeps the due date unchanged.
 
 Examples:
@@ -445,6 +452,8 @@ Details:
 * The date cannot be later than today.
 * The specified date must already exist in that student's payment history.
 * If you delete the most recent recorded payment date, TutorFlow rolls the due date back by one billing cycle.
+* A billing cycle is one recurrence cycle (monthly by default). Each advancement brings the due date forward by one 
+  recurrence cycle.
 * If you delete an older payment date, the due date stays unchanged.
 
 Examples:
