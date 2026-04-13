@@ -1,6 +1,7 @@
 ---
 layout: default.md
 title: User Guide
+pageNav: 3
 ---
 
 <p align="center">
@@ -10,25 +11,6 @@ title: User Guide
 TutorFlow is a **desktop app for freelance private tutors who need to manage students, parents, billing, and lesson schedules in one place**. It is optimized for keyboard-first use, so tutors who are comfortable typing commands can update records faster than with a mouse-only workflow.
 
 TutorFlow keeps your student list, parent / guardian details, academics, tuition billing, payment history, appointments, and attendance records together in a single interface.
-
-**Table of Contents**
-
-* [Quick start](#quick-start)
-* [TutorFlow at a glance](#tutorflow-at-a-glance)
-* [Reading command formats](#reading-command-formats)
-* [Student Management](#student-management)
-* [Tag Management](#tag-management)
-* [Academic Management](#academic-management)
-* [Parent / Guardian Management](#parent-guardian-management)
-* [Billing & Payment Management](#billing-payment-management)
-* [Appointment & Attendance Management](#appointment-attendance-management)
-* [General Commands](#general-commands)
-* [Data Management](#data-management)
-* [FAQ](#faq)
-* [Troubleshooting](#troubleshooting)
-* [Known issues](#known-issues)
-* [Command summary](#command-summary)
-* [Prefix reference](#prefix-reference)
 
 --------------------------------------------------------------------------------------------------------------------
 
