@@ -21,13 +21,29 @@ public class AddApptCommandParser implements Parser<AddApptCommand> {
     @Override
     public AddApptCommand parse(String args) throws ParseException {
         requireNonNull(args);
-        ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args,
-                PREFIX_DATE, PREFIX_RECURRENCE, PREFIX_DESCRIPTION);
+        String descriptionPrefix = PREFIX_DESCRIPTION.getPrefix();
+        int descriptionPrefixPosition = args.indexOf(" " + descriptionPrefix);
+        if (descriptionPrefixPosition >= 0) {
+            descriptionPrefixPosition++;
+        } else if (args.startsWith(descriptionPrefix)) {
+            descriptionPrefixPosition = 0;
+        }
+
+        if (descriptionPrefixPosition == -1) {
+            throw new ParseException(String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT,
+                    AddApptCommand.MESSAGE_USAGE));
+        }
+
+        String argsBeforeDescription = args.substring(0, descriptionPrefixPosition);
+        String rawDescription = args.substring(descriptionPrefixPosition + descriptionPrefix.length());
+
+        ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(argsBeforeDescription,
+                PREFIX_DATE, PREFIX_RECURRENCE);
 
         Index index = ParserUtil.parseIndex(argMultimap.getPreamble(), AddApptCommand.MESSAGE_USAGE);
-        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_DATE, PREFIX_RECURRENCE, PREFIX_DESCRIPTION);
+        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_DATE, PREFIX_RECURRENCE);
 
-        if (argMultimap.getValue(PREFIX_DATE).isEmpty() || argMultimap.getValue(PREFIX_DESCRIPTION).isEmpty()) {
+        if (argMultimap.getValue(PREFIX_DATE).isEmpty()) {
             throw new ParseException(String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT,
                     AddApptCommand.MESSAGE_USAGE));
         }
@@ -39,7 +55,7 @@ public class AddApptCommandParser implements Parser<AddApptCommand> {
             recurrence = ParserUtil.parseRecurrence(argMultimap.getValue(PREFIX_RECURRENCE).get());
         }
 
-        String description = argMultimap.getValue(PREFIX_DESCRIPTION).get().trim();
+        String description = rawDescription.trim();
         if (description.isEmpty()) {
             throw new ParseException(String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT,
                     AddApptCommand.MESSAGE_USAGE));
