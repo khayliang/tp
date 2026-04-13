@@ -5,7 +5,7 @@
   <img src="docs/images/tutorflow-logo.png" alt="TutorFlow logo" width="260">
 </p>
 
-![Ui](docs/images/UI_v1.5.png)
+![Ui](docs/images/UI_v1.6.png)
 
 # TutorFlow
 
