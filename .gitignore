@@ -27,3 +27,6 @@ docs/_site/
 
 # bin files
 /bin/
+
+# markbind logs
+docs/_markbind/logs/
