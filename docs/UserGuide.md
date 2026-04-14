@@ -788,8 +788,8 @@ If a command fails, go to the matching section below for common fixes:
 
 1. **Multiple screens:** if you move the app to a secondary display and later switch back to a single-display setup, the window may reopen off-screen. Delete the `preferences.json` file before launching TutorFlow again.
 2. **Help window:** if the Help window is minimized and you run `help` again, TutorFlow does not open a second Help window. Restore the minimized Help window manually.
-3. **Parsing limitations:** in appointment and academic commands: certain input formats may not be handled correctly by the parser, leading to ignored or misinterpreted fields (e.g., description `dsc/`). Users should ensure inputs follow the expected command format strictly to avoid unexpected behavior.
-4. **Lack of detailed error feedback**: Generic error messages: some command failures return general error messages without specifying the exact cause, making it harder for users to correct their input.
+3. **Parsing limitations:** In appointment and academic commands, certain input formats may not be handled correctly by the parser, leading to ignored or misinterpreted fields such as `dsc/`. Follow the documented command formats closely to avoid unexpected behavior.
+4. **Limited error detail:** Some command failures return general error messages without identifying the exact cause, which can make corrections harder.
 
 --------------------------------------------------------------------------------------------------------------------
 

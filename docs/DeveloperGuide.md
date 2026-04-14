@@ -199,7 +199,7 @@ The flow is shown in these UML sequence diagrams:
 How the `edit` command works:
 
 1. `AddressBookParser` recognizes `edit` as the command word and forwards the remaining input to `EditCommandParser`.
-1. `EditCommandParser` dispatches by subcommand name and currently supports `student`, `tag`, `acad`, `parent`, and `billing`.
+1. `EditCommandParser` dispatches by subcommand name and currently supports `student`, `tag`, `acad`, `parent`, `billing`, and `appt`.
 1. The concrete parser parses the target index and command-specific prefixed arguments, then constructs the corresponding `Edit...Command`.
 1. During execution, the command resolves the target student from the currently displayed list, builds the edited `Person`, and checks any command-specific constraints.
 1. The command updates the `Model`, which replaces the target `Person` in the student registry. If a filter is active, the edited person is temporarily preserved in the displayed list.
@@ -216,7 +216,7 @@ The sequence diagram below shows the high-level execution flow.
 How the `delete` command works:
 
 1. `AddressBookParser` recognizes `delete` as the command word and forwards the remaining input to `DeleteCommandParser`.
-1. `DeleteCommandParser` dispatches by subcommand name and currently supports `student`, `tag`, `acad`, `parent`, `billing`, `appt`, and `attd`.
+1. `DeleteCommandParser` dispatches by subcommand name and currently supports `student`, `tag`, `acad`, `payment`, `appt`, and `attd`.
 1. The concrete parser parses the target index and command-specific arguments, then constructs the corresponding `Delete...Command`.
 1. During execution, the command resolves the target student from the currently displayed list and checks any command-specific constraints.
 1. The command updates the `Model`, which removes the target data from the student registry.
@@ -280,7 +280,7 @@ How the `find appt` command works:
 
 1. `AddressBookParser` recognizes `find` and delegates the remaining input to `FindCommandParser`.
 1. `FindCommandParser` dispatches the `appt` subcommand to `FindApptCommandParser`.
-1. `FindApptCommandParser` parses the optional `d/DATE` value. If omitted, it uses the current local date.
+1. `FindApptCommandParser` parses the optional `d/DATE` value. If omitted, it uses the current Singapore date.
 1. `FindApptCommand` constructs an `AppointmentInWeekPredicate`, which computes the Monday-Sunday week containing the target date.
 1. During execution, the command applies that predicate with `updateFilteredPersonListWithAnd(...)`, so only students already in the displayed list and also matching the target week remain visible.
 1. The command returns a `CommandResult` containing the number of matching appointments and the computed week range.
@@ -680,10 +680,82 @@ testers are expected to do more *exploratory* testing.
       Expected: The student list is filtered to students with appointments in that Monday-Sunday week. Result message shows number of matches.
 
    1. Test case: `find appt`<br>
-      Expected: Uses current local date and filters by the current week.
+      Expected: Uses the current Singapore date and filters by the current week.
 
    1. Invalid input to try: `find appt d/13-02-2026`<br>
       Expected: No list changes. Error message with command format guidance is shown.
+
+### Tag and academic updates
+
+1. Editing tags for a student
+
+   1. Prerequisites: List all students and choose a valid student index.
+
+   1. Test case: `edit tag 1 t/Upper Sec t/Math`<br>
+      Expected: Student 1's tags are replaced with `Upper Sec` and `Math`.
+
+   1. Test case: `edit tag 1 t/`<br>
+      Expected: All tags for student 1 are cleared.
+
+2. Adding and removing subjects
+
+   1. Prerequisites: List all students and choose a valid student index.
+
+   1. Test case: `add acad 1 s/Math l/Strong s/Science`<br>
+      Expected: Student 1 gains or updates the listed subjects. Existing unrelated subjects remain unchanged.
+
+   1. Test case: `edit acad 1 dsc/Needs more timed practice`<br>
+      Expected: The academic description is updated without changing the subject list.
+
+   1. Invalid input to try: `add acad 1 s/Math l/Strong s/Math`<br>
+      Expected: No data changes. Error indicates duplicate subjects in one command are not allowed.
+
+### Parent details
+
+1. Editing parent / guardian details
+
+   1. Prerequisites: List all students and choose a valid student index.
+
+   1. Test case: `edit parent 1 n/Jane Tan p/91234567 e/janetan@example.com`<br>
+      Expected: Student 1's parent / guardian details are created or updated.
+
+   1. Invalid input to try: `edit parent 1 p/abcd`<br>
+      Expected: No data changes. Error message indicates phone format is invalid.
+
+### Appointment and attendance updates
+
+1. Adding and editing appointments
+
+   1. Prerequisites: List all students and choose a valid student index.
+
+   1. Test case: `add appt 1 d/2026-04-16T15:00:00 r/WEEKLY dsc/Math revision`<br>
+      Expected: A recurring appointment is added for student 1.
+
+   1. Test case: `edit appt 1 s/1 d/2026-04-17T15:00:00 dsc/Math revision at library`<br>
+      Expected: Session 1 for student 1 is updated with the new date-time and description.
+
+   1. Invalid input to try: `add appt 1 d/2026/04/16 15:00 dsc/Math revision`<br>
+      Expected: No data changes. Error message indicates the required ISO date-time format.
+
+2. Deleting appointments
+
+   1. Prerequisites: Student 1 has at least one appointment visible in the detail panel after `view 1`.
+
+   1. Test case: `delete appt 1 s/1`<br>
+      Expected: The specified session is removed from student 1.
+
+3. Recording and deleting attendance
+
+   1. Prerequisites: Student 1 has at least one appointment visible in the detail panel after `view 1`.
+
+   1. Test case: `add attd 1 s/1 y d/2026-04-10`<br>
+      Expected: A present attendance record is added for the selected session.
+
+   1. Test case: `delete attd 1 s/1 d/2026-04-10`<br>
+      Expected: Attendance records on that date for the selected session are removed.
+
+   1. Invalid input to try: `add attd 1 s/1 maybe`<br>
+      Expected: No data changes. Error message indicates only `y` or `n` is accepted as status.
 
 ### Billing and payment updates
 
@@ -733,29 +805,21 @@ testers are expected to do more *exploratory* testing.
 
 Team size: 5
 
-1. Fix inconsistent parsing behavior in appointment and academic commands
+1. Make `dsc/` handling stricter in appointment commands
 
-   The current parser for appointment and academic commands may incorrectly handle certain input sequences, leading to unexpected parsing results or ignored fields (e.g., description `dsc/` being misinterpreted or dropped).
-   We plan to refine the parser logic to enforce stricter prefix handling and ensure all valid fields are correctly captured and validated during parsing.
+   In some `add appt` and `edit appt` inputs, malformed prefix sequences can cause the description field to be ignored or parsed unexpectedly. We plan to tighten parser validation so that invalid prefix order or malformed trailing text is rejected with a clear error instead of being silently misinterpreted.
 
-2. Improve appointment model and date-time handling to enforce temporal consistency
+2. Make `dsc/` handling stricter in academic commands
 
-   The current appointment model and date-time handling do not strictly enforce logical constraints such as start time being before end time, may allow overlapping appointments, and have limited validation for edge cases (e.g., invalid formats or boundary values).
-   We plan to standardize date-time parsing, enhance validation for invalid or ambiguous inputs, enforce temporal consistency (e.g., `start < end`), and introduce checks to prevent conflicting appointments, supported by improved test coverage.
+   In some `edit acad` inputs, malformed subject-level sequences can interfere with how `dsc/` is interpreted. We plan to validate the boundary between repeated `s/` `l/` pairs and the single `dsc/` field more strictly so that invalid combinations fail clearly and valid descriptions are always preserved.
 
-3. Extend academic model to better support subject-level details and tutor requirements
+3. Reject overlapping appointments for the same student
 
-   The current academic model has limited flexibility in representing subject-related information (e.g., levels, notes, or multiple attributes per subject), which may not fully meet tutor needs.
-   We plan to refine the model structure to better support richer subject metadata while maintaining compatibility with existing commands.
+   TutorFlow currently allows a student to have appointments whose time slots can overlap, which can produce unrealistic schedules. We plan to detect overlaps when adding or editing an appointment and reject the command with an error that identifies the conflicting existing session.
 
-4. Lack of detailed error feedback
+4. Make invalid-index error messages more specific
 
-   Several parser failures currently surface the same generic message in the command result display: `Invalid command format!` followed only by usage text.
-   For example:
-   * `add attd` uses the same generic message for different causes such as missing `s/SESSION_INDEX`, malformed preamble/session arguments, or conflicting attendance status placement.
-   * `delete attd` uses the same generic message for missing/blank `d/DATE_OR_DATE_TIME` and other argument format or structure errors.
-   * `find billing` uses the same generic message for missing `d/` prefix, blank month values, and invalid month formats.
-   We plan to return cause-specific messages (e.g., missing required prefix vs invalid date/month format) so users can correct inputs faster.
+   Some commands currently report index-related failures in a generic way, which makes recovery slower for users. We plan to update these messages so they state whether the student index or sub-item index was invalid and remind the user whether the value should come from the current list or the selected student's detail panel.
 
 5. Use of `BigDecimal` for amount in `Billing` and `Payment` models for accuracy
 
