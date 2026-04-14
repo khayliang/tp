@@ -1,0 +1,41 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant "c:FindTagCommand" as FindTagCommand LOGIC_COLOR
+participant "r:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant "m:Model" as Model MODEL_COLOR
+end box
+
+box Storage STORAGE_COLOR_T1
+participant ":Storage" as Storage STORAGE_COLOR
+end box
+
+[-> LogicManager : execute("find tag t/JC")
+activate LogicManager
+
+LogicManager -> FindTagCommand : execute(m)
+activate FindTagCommand
+
+FindTagCommand -> Model : updateFilteredPersonListWithAnd(predicate)
+activate Model
+Model --> FindTagCommand
+deactivate Model
+
+create CommandResult
+FindTagCommand -> CommandResult : CommandResult(...)
+activate CommandResult
+CommandResult --> FindTagCommand : r
+deactivate CommandResult
+
+FindTagCommand --> LogicManager : r
+deactivate FindTagCommand
+
+[<-- LogicManager
+deactivate LogicManager
+@enduml

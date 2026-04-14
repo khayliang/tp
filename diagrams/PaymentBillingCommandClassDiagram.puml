@@ -1,0 +1,77 @@
+@startuml
+!include style.puml
+!pragma layout smetana
+skinparam arrowThickness 1.1
+skinparam arrowColor LOGIC_COLOR_T4
+skinparam classBackgroundColor LOGIC_COLOR
+top to bottom direction
+
+package "Payment and billing command structure" {
+abstract class "{abstract}\nCommand" as Command
+abstract class "{abstract}\nIndexedPersonCommand" as IndexedPersonCommand
+abstract class "{abstract}\nAddCommand" as AddCommand
+abstract class "{abstract}\nDeleteCommand" as DeleteCommand
+abstract class "{abstract}\nEditCommand" as EditCommand
+abstract class "{abstract}\nFindCommand" as FindCommand
+
+class EditBillingCommand
+class AddPaymentCommand
+class DeletePaymentCommand
+class FindBillingCommand
+
+interface "<<interface>>\nParser<T>" as Parser
+class EditBillingCommandParser
+class AddPaymentCommandParser
+class DeletePaymentCommandParser
+class FindBillingCommandParser
+
+class Billing
+class PaymentHistory
+class PaymentDueMonthPredicate
+}
+
+IndexedPersonCommand -up-|> Command
+AddCommand -up-|> Command
+DeleteCommand -up-|> IndexedPersonCommand
+EditCommand -up-|> IndexedPersonCommand
+FindCommand -up-|> Command
+
+EditBillingCommand -up-|> EditCommand
+AddPaymentCommand -up-|> AddCommand
+DeletePaymentCommand -up-|> DeleteCommand
+FindBillingCommand -up-|> FindCommand
+
+EditBillingCommandParser .up.|> Parser
+AddPaymentCommandParser .up.|> Parser
+DeletePaymentCommandParser .up.|> Parser
+FindBillingCommandParser .up.|> Parser
+
+EditBillingCommandParser ..> EditBillingCommand : <<create>>
+AddPaymentCommandParser ..> AddPaymentCommand : <<create>>
+DeletePaymentCommandParser ..> DeletePaymentCommand : <<create>>
+FindBillingCommandParser ..> FindBillingCommand : <<create>>
+
+EditBillingCommand ..> Billing : <<updates>>
+AddPaymentCommand ..> Billing : <<records payment>>
+DeletePaymentCommand ..> Billing : <<removes payment>>
+Billing ..> PaymentHistory : <<stores>>
+
+FindBillingCommandParser ..> PaymentDueMonthPredicate : <<create>>
+FindBillingCommand ..> PaymentDueMonthPredicate : <<use>>
+
+note right of EditBillingCommandParser
+Parses optional `d/DATE` and `a/AMOUNT`
+for `edit billing`.
+end note
+
+note right of AddPaymentCommand
+Records a payment date and advances
+the due date by one recurrence cycle.
+end note
+
+note right of FindBillingCommand
+Filters displayed students by
+billing due month.
+end note
+
+@enduml

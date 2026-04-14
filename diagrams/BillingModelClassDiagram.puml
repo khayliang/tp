@@ -1,0 +1,58 @@
+@startuml
+!include style.puml
+!pragma layout smetana
+skinparam arrowThickness 1.1
+skinparam arrowColor LOGIC_COLOR_T4
+skinparam classBackgroundColor MODEL_COLOR
+top to bottom direction
+
+package "Billing model" #FFFFFF {
+class Billing MODEL_COLOR {
+  +getCurrentDueDate()
+  +getTuitionFee()
+  +getPaymentHistory()
+  +updateRate(newTuitionFees)
+  +advanceDueDate()
+  +recordTuitionPaid(paymentDate)
+}
+
+class PaymentHistory MODEL_COLOR {
+  +getPaidDates()
+  +recordPayment(date)
+  +hasPaidOn(date)
+}
+
+enum Recurrence MODEL_COLOR {
+  WEEKLY
+  BIWEEKLY
+  MONTHLY
+  NONE
+}
+
+class PaymentDueMonthPredicate MODEL_COLOR {
+  +test(person)
+}
+}
+
+Billing "1" *--> "1" PaymentHistory : paymentHistory
+Billing --> "1" Recurrence : recurrence
+PaymentDueMonthPredicate ..> Billing : checks due date
+
+note right of Billing
+Immutable value object storing
+recurrence, current due date,
+tuition fee, and payment history.
+end note
+
+note right of PaymentHistory
+Stores the set of recorded
+payment dates for a student.
+end note
+
+note right of PaymentDueMonthPredicate
+Used by `find billing` to match
+students whose due date falls
+within a target `YearMonth`.
+end note
+
+@enduml

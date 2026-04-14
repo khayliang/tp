@@ -1,0 +1,45 @@
+@startuml
+!include style.puml
+!pragma layout smetana
+skinparam arrowThickness 1.1
+skinparam arrowColor LOGIC_COLOR_T4
+skinparam classBackgroundColor MODEL_COLOR
+top to bottom direction
+
+package "Academic model" #FFFFFF {
+class Academics MODEL_COLOR {
+  +getSubjects()
+  +getNotes()
+}
+
+class Subject MODEL_COLOR {
+  +getName()
+  +getLevel()
+  +withLevel(newLevel)
+}
+
+enum Level MODEL_COLOR {
+  BASIC
+  STRONG
+}
+
+class LevelUtil MODEL_COLOR {
+  +levelFromString(input)
+}
+}
+
+Academics "1" *--> "*" Subject : subjects
+Subject --> "0..1" Level : level
+LevelUtil ..> Level : parses
+
+note right of Academics
+Represents the academic profile
+stored inside a `Person`.
+end note
+
+note right of Subject
+A `Subject` always has a name and
+may optionally carry a `Level`.
+end note
+
+@enduml

@@ -1,0 +1,57 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":FindCommandParser" as FindCommandParser LOGIC_COLOR
+participant ":FindTagCommandParser" as FindTagCommandParser LOGIC_COLOR
+participant "c:FindTagCommand" as FindTagCommand LOGIC_COLOR
+end box
+
+[-> LogicManager : execute("find tag t/JC")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand(commandText)
+activate AddressBookParser
+
+create FindCommandParser
+AddressBookParser -> FindCommandParser
+activate FindCommandParser
+
+FindCommandParser --> AddressBookParser
+deactivate FindCommandParser
+
+AddressBookParser -> FindCommandParser : parse("tag t/JC")
+activate FindCommandParser
+
+create FindTagCommandParser
+FindCommandParser -> FindTagCommandParser
+activate FindTagCommandParser
+
+FindTagCommandParser --> FindCommandParser
+deactivate FindTagCommandParser
+
+FindCommandParser -> FindTagCommandParser : parse("t/JC")
+activate FindTagCommandParser
+
+create FindTagCommand
+FindTagCommandParser -> FindTagCommand
+activate FindTagCommand
+
+FindTagCommand --> FindTagCommandParser
+deactivate FindTagCommand
+
+FindTagCommandParser --> FindCommandParser : c
+deactivate FindTagCommandParser
+
+FindCommandParser --> AddressBookParser : c
+deactivate FindCommandParser
+
+AddressBookParser --> LogicManager : c
+deactivate AddressBookParser
+
+[<-- LogicManager
+deactivate LogicManager
+@enduml

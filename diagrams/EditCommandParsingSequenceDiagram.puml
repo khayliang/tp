@@ -1,0 +1,57 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":EditCommandParser" as EditCommandParser LOGIC_COLOR
+participant ":EditPersonCommandParser" as EditPersonCommandParser LOGIC_COLOR
+participant "c:EditPersonCommand" as EditPersonCommand LOGIC_COLOR
+end box
+
+[-> LogicManager : execute("edit student 1 p/98765432")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand(commandText)
+activate AddressBookParser
+
+create EditCommandParser
+AddressBookParser -> EditCommandParser
+activate EditCommandParser
+
+EditCommandParser --> AddressBookParser
+deactivate EditCommandParser
+
+AddressBookParser -> EditCommandParser : parse("student 1 p/98765432")
+activate EditCommandParser
+
+create EditPersonCommandParser
+EditCommandParser -> EditPersonCommandParser
+activate EditPersonCommandParser
+
+EditPersonCommandParser --> EditCommandParser
+deactivate EditPersonCommandParser
+
+EditCommandParser -> EditPersonCommandParser : parse("1 p/98765432")
+activate EditPersonCommandParser
+
+create EditPersonCommand
+EditPersonCommandParser -> EditPersonCommand
+activate EditPersonCommand
+
+EditPersonCommand --> EditPersonCommandParser
+deactivate EditPersonCommand
+
+EditPersonCommandParser --> EditCommandParser : c
+deactivate EditPersonCommandParser
+
+EditCommandParser --> AddressBookParser : c
+deactivate EditCommandParser
+
+AddressBookParser --> LogicManager : c
+deactivate AddressBookParser
+
+[<-- LogicManager
+deactivate LogicManager
+@enduml

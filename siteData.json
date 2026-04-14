@@ -1,0 +1,200 @@
+{
+  "enableSearch": true,
+  "pages": [
+    {
+      "src": "AboutUs.md",
+      "title": "About Us",
+      "headings": {
+        "about-us": "About Us",
+        "project-team": "Project team",
+        "khay-liang": "Khay Liang",
+        "minh-duc": "Minh Duc",
+        "tang-zhi-xiang": "Tang Zhi Xiang",
+        "tan-yu-quan": "Tan Yu Quan",
+        "judah-pang": "Judah Pang"
+      },
+      "headingKeywords": {}
+    },
+    {
+      "src": "Configuration.md",
+      "title": "Configuration guide",
+      "headings": {
+        "configuration-guide": "Configuration guide"
+      },
+      "headingKeywords": {}
+    },
+    {
+      "src": "DevOps.md",
+      "title": "DevOps guide",
+      "headings": {
+        "devops-guide": "DevOps guide",
+        "build-automation": "Build automation",
+        "continuous-integration-ci": "Continuous integration (CI)",
+        "code-coverage": "Code coverage",
+        "repository-wide-checks": "Repository-wide checks",
+        "making-a-release": "Making a release"
+      },
+      "headingKeywords": {}
+    },
+    {
+      "src": "DeveloperGuide.md",
+      "title": "Developer Guide",
+      "headings": {
+        "acknowledgements": "Acknowledgements",
+        "setting-up-getting-started": "Setting up, getting started",
+        "design": "Design",
+        "diagram-conventions-used-in-this-guide": "Diagram conventions used in this guide",
+        "architecture": "Architecture",
+        "ui-component": "UI component",
+        "logic-component": "Logic component",
+        "model-component": "Model component",
+        "storage-component": "Storage component",
+        "common-classes": "Common classes",
+        "implementation": "Implementation",
+        "edit-command": "Edit command",
+        "delete-command": "Delete command",
+        "find-command": "Find command",
+        "find-tag-command": "Find tag command",
+        "find-appointments-command": "Find appointments command",
+        "subject-related-commands": "Subject-related commands",
+        "payment-and-billing-commands": "Payment and billing commands",
+        "appointment-and-attendance-commands": "Appointment and attendance commands",
+        "future-work": "Future work",
+        "documentation-logging-testing-configuration-dev-ops": "Documentation, logging, testing, configuration, dev-ops",
+        "appendix-requirements": "Appendix: Requirements",
+        "product-scope": "Product scope",
+        "user-stories": "User stories",
+        "use-cases": "Use cases",
+        "non-functional-requirements": "Non-Functional Requirements",
+        "glossary": "Glossary",
+        "appendix-instructions-for-manual-testing": "Appendix: Instructions for manual testing",
+        "launch-and-shutdown": "Launch and shutdown",
+        "deleting-a-student": "Deleting a student",
+        "finding-appointments": "Finding appointments",
+        "billing-and-payment-updates": "Billing and payment updates",
+        "saving-data": "Saving data",
+        "planned-enhancements": "Planned Enhancements"
+      },
+      "headingKeywords": {}
+    },
+    {
+      "src": "Documentation.md",
+      "title": "Documentation guide",
+      "headings": {
+        "documentation-guide": "Documentation Guide"
+      },
+      "headingKeywords": {}
+    },
+    {
+      "src": "Logging.md",
+      "title": "Logging guide",
+      "headings": {
+        "logging-guide": "Logging guide"
+      },
+      "headingKeywords": {}
+    },
+    {
+      "src": "SettingUp.md",
+      "title": "Setting up and getting started",
+      "headings": {
+        "setting-up-and-getting-started": "Setting up and getting started",
+        "setting-up-the-project-in-your-computer": "Setting up the project in your computer",
+        "before-writing-code": "Before writing code"
+      },
+      "headingKeywords": {}
+    },
+    {
+      "src": "Testing.md",
+      "title": "Testing guide",
+      "headings": {
+        "testing-guide": "Testing guide",
+        "running-tests": "Running tests",
+        "types-of-tests": "Types of tests"
+      },
+      "headingKeywords": {}
+    },
+    {
+      "src": "UserGuide.md",
+      "title": "User Guide",
+      "headings": {
+        "quick-start": "Quick start",
+        "tutorflow-at-a-glance": "TutorFlow at a glance",
+        "guide-conventions-and-behaviour": "Guide conventions and behaviour",
+        "student-management": "Student Management",
+        "adding-a-student-add-student": "Adding a student : add student",
+        "editing-a-student-edit-student": "Editing a student : edit student",
+        "deleting-a-student-delete-student": "Deleting a student : delete student",
+        "viewing-a-student-s-details-view": "Viewing a student's details : view",
+        "listing-all-students-list": "Listing all students : list",
+        "locating-students-by-name-find-student": "Locating students by name : find student",
+        "common-mistakes-and-recovery": "Common mistakes and recovery",
+        "tag-management": "Tag Management",
+        "adding-tags-to-a-student-add-tag": "Adding tags to a student : add tag",
+        "editing-a-student-s-tags-edit-tag": "Editing a student's tags : edit tag",
+        "deleting-tags-from-a-student-delete-tag": "Deleting tags from a student : delete tag",
+        "locating-students-by-tag-find-tag": "Locating students by tag : find tag",
+        "common-mistakes-and-recovery-2": "Common mistakes and recovery",
+        "academic-management": "Academic Management",
+        "adding-subjects-to-a-student-add-acad": "Adding subjects to a student : add acad",
+        "editing-a-student-s-academics-edit-acad": "Editing a student's academics : edit acad",
+        "deleting-subjects-from-a-student-delete-acad": "Deleting subjects from a student : delete acad",
+        "locating-students-by-subject-find-acad": "Locating students by subject : find acad",
+        "common-mistakes-and-recovery-3": "Common mistakes and recovery",
+        "parent-guardian-management": "Parent / Guardian Management",
+        "editing-parent-details-edit-parent": "Editing parent details : edit parent",
+        "locating-students-by-parent-find-parent": "Locating students by parent : find parent",
+        "common-mistakes-and-recovery-4": "Common mistakes and recovery",
+        "billing-and-amp-payment-management": "Billing &amp; Payment Management",
+        "editing-billing-details-edit-billing": "Editing billing details : edit billing",
+        "recording-a-payment-add-payment": "Recording a payment : add payment",
+        "deleting-a-payment-record-delete-payment": "Deleting a payment record : delete payment",
+        "finding-students-by-payment-due-month-find-billing": "Finding students by payment due month : find billing",
+        "common-mistakes-and-recovery-5": "Common mistakes and recovery",
+        "appointment-and-amp-attendance-management": "Appointment &amp; Attendance Management",
+        "adding-an-appointment-add-appt": "Adding an appointment : add appt",
+        "deleting-an-appointment-delete-appt": "Deleting an appointment : delete appt",
+        "editing-an-appointment-edit-appt": "Editing an appointment : edit appt",
+        "finding-students-with-appointments-for-a-week-find-appt": "Finding students with appointments for a week : find appt",
+        "recording-appointment-attendance-add-attd": "Recording appointment attendance : add attd",
+        "deleting-appointment-attendance-delete-attd": "Deleting appointment attendance : delete attd",
+        "common-mistakes-and-recovery-6": "Common mistakes and recovery",
+        "general-commands": "General Commands",
+        "viewing-help-help": "Viewing help : help",
+        "clearing-all-entries-clear": "Clearing all entries : clear",
+        "exiting-the-program-exit": "Exiting the program : exit",
+        "navigating-command-history": "Navigating command history",
+        "common-mistakes-and-recovery-7": "Common mistakes and recovery",
+        "data-management": "Data Management",
+        "saving-the-data": "Saving the data",
+        "editing-the-data-file": "Editing the data file",
+        "faq": "FAQ",
+        "troubleshooting": "Troubleshooting",
+        "known-issues": "Known issues",
+        "command-summary": "Command summary",
+        "student-management-2": "Student Management",
+        "tag-management-2": "Tag Management",
+        "academic-management-2": "Academic Management",
+        "parent-guardian-management-2": "Parent / Guardian Management",
+        "billing-and-amp-payment-management-2": "Billing &amp; Payment Management",
+        "appointment-and-amp-attendance-management-2": "Appointment &amp; Attendance Management",
+        "general": "General",
+        "prefix-reference": "Prefix reference"
+      },
+      "headingKeywords": {}
+    },
+    {
+      "src": "index.md",
+      "title": "TutorFlow",
+      "headings": {},
+      "headingKeywords": {}
+    },
+    {
+      "src": "team/johndoe.md",
+      "title": "John Doe's Project Portfolio Page",
+      "headings": {
+        "project-tutorflow": "Project: TutorFlow"
+      },
+      "headingKeywords": {}
+    }
+  ]
+}

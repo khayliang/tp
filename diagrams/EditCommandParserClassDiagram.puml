@@ -1,0 +1,57 @@
+@startuml
+!include style.puml
+!pragma layout smetana
+skinparam arrowThickness 1.1
+skinparam arrowColor LOGIC_COLOR_T4
+skinparam classBackgroundColor LOGIC_COLOR
+top to bottom direction
+
+package "Edit parser structure" {
+interface "<<interface>>\nParser<T>" as Parser
+class EditCommandParser
+class "SubcommandDispatcherParser<EditCommand>" as Dispatcher
+
+class EditPersonCommandParser
+class EditTagCommandParser
+class EditAcademicsCommandParser
+class EditParentCommandParser
+class EditBillingCommandParser
+
+abstract class "{abstract}\nEditCommand" as EditCommand
+class EditPersonCommand
+class EditTagCommand
+class EditAcademicsCommand
+class EditParentCommand
+class EditBillingCommand
+}
+
+EditCommandParser .up.|> Parser
+EditPersonCommandParser .up.|> Parser
+EditTagCommandParser .up.|> Parser
+EditAcademicsCommandParser .up.|> Parser
+EditParentCommandParser .up.|> Parser
+EditBillingCommandParser .up.|> Parser
+
+EditCommandParser *--> Dispatcher : owns
+Dispatcher ..> Parser : dispatches to
+EditCommandParser ..> EditCommand : <<returns>>
+
+EditPersonCommandParser ..> EditPersonCommand : <<create>>
+EditTagCommandParser ..> EditTagCommand : <<create>>
+EditAcademicsCommandParser ..> EditAcademicsCommand : <<create>>
+EditParentCommandParser ..> EditParentCommand : <<create>>
+EditBillingCommandParser ..> EditBillingCommand : <<create>>
+
+note right of Dispatcher
+Maps each edit subcommand word
+such as `student`, `tag`, `acad`,
+`parent`, and `billing`
+to its concrete parser.
+end note
+
+note right of EditPersonCommandParser
+The omitted concrete parsers follow
+the same parser-to-command creation pattern.
+end note
+
+@enduml
