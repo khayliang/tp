@@ -25,6 +25,7 @@ TutorFlow keeps your student list, parent / guardian details, academics, tuition
 * [General Commands](#general-commands)
 * [Data Management](#data-management)
 * [FAQ](#faq)
+* [Troubleshooting](#troubleshooting)
 * [Known issues](#known-issues)
 * [Command summary](#command-summary)
 * [Prefix reference](#prefix-reference)
@@ -62,7 +63,7 @@ TutorFlow keeps your student list, parent / guardian details, academics, tuition
 <a id="tutorflow-at-a-glance"></a>
 ## TutorFlow at a glance
 
-![TutorFlow interface](images/UI_v1.5_annotated.png)
+![TutorFlow interface](images/UI_v1.6_annotated.png)
 
 TutorFlow is organized around a few core areas:
 
@@ -109,6 +110,16 @@ For commands such as `delete tag`, `delete acad`, `delete appt`, and `add attd`,
 * Commands without parameters, such as `help`, `list`, `clear`, and `exit`, ignore extra text after the command word.
 
 * If you are using a PDF version of this guide, be careful when copying multi-line commands. Some PDF viewers may remove spaces around line breaks.
+
+</div>
+
+<div markdown="block" class="alert alert-info">
+
+**Date and timezone behavior**
+
+* TutorFlow interprets all `d/` date and date-time inputs using **Singapore time (SGT, UTC+08:00)**.
+* Enter date-time values without a timezone offset (for example, use `2026-01-29T08:00:00`, not `2026-01-29T08:00:00Z`).
+* Relative checks such as "today", "current date", and "future date/time" are also based on **Singapore time**.
 
 </div>
 
@@ -174,7 +185,6 @@ Format: `delete student INDEX`
 
 Details:
 * Deletes the student at the specified `INDEX`.
-* The index must refer to a student in the current displayed list.
 
 Examples:
 * `list` followed by `delete student 2`
@@ -219,6 +229,18 @@ Examples:
 * `find student John`
 * `find student bernice david`
   ![Result for 'find student bernice david'](images/find_student_bernice_david.png)
+
+<a id="student-common-mistakes"></a>
+### Common mistakes and recovery
+
+* **`edit student`, `delete student`, or `view` says the student index is invalid**
+  Run `list` first, then use the index from the currently displayed list.
+* **`find student` does not show someone you expected**
+  `find` works on the current filtered list. Run `list` to reset, then run `find student` again.
+* **Phone number is rejected in `add student` or `edit student`**
+  Use digits only, at least 8 digits, with no `+`, spaces, or dashes.
+* **`add student` says the student already exists**
+  This usually means another record already has the same `NAME` and `EMAIL`. Use a different email or correct the existing record with `edit student`.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -266,7 +288,6 @@ Deletes specific tags from a student by tag index.
 Format: `delete tag INDEX t/TAG_INDEX [t/TAG_INDEX]...`
 
 Details:
-* `INDEX` is the student index in the current displayed list.
 * Each `TAG_INDEX` is taken from the numbered tag list in that student's detail panel.
 * Tag names keep the user's input casing and are listed in **case-insensitive alphabetical order**.
 * At least one `t/` prefix is required.
@@ -294,6 +315,16 @@ Details:
 Examples:
 * `find tag t/JC`
 * `find tag t/Upper t/Programming`
+
+<a id="tag-common-mistakes"></a>
+### Common mistakes and recovery
+
+* **`add tag`, `delete tag`, or `find tag` fails even though the command looks close**
+  Check that each tag input uses `t/`.
+* **`delete tag` removes the wrong tag or says index is invalid**
+  Use `view INDEX` first and take `TAG_INDEX` from that selected student's tag list.
+* **`edit tag` with `t/` behaves differently from expected**
+  Use `edit tag INDEX t/` to clear all tags. Do not mix an empty `t/` with normal tag values.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -348,7 +379,6 @@ Deletes specific subjects from a student by subject index.
 Format: `delete acad INDEX s/SUBJECT_INDEX [s/SUBJECT_INDEX]...`
 
 Details:
-* `INDEX` is the student index in the current displayed list.
 * Each `SUBJECT_INDEX` is taken from the numbered subject list in that student's detail panel.
 * Subject names keep the user's input casing and are listed in **case-insensitive alphabetical order**.
 * At least one `s/` prefix is required.
@@ -374,6 +404,18 @@ Details:
 Examples:
 * `find acad s/Math`
 * `find acad s/Math s/Science`
+
+<a id="academic-common-mistakes"></a>
+### Common mistakes and recovery
+
+* **`add acad` or `edit acad` fails because of `l/LEVEL`**
+  `l/` must come after the subject it belongs to, and level must be `basic` or `strong`.
+* **`add acad` or `edit acad` rejects duplicate subjects**
+  In one command, each subject name can appear only once.
+* **`delete acad` says subject index is invalid**
+  Run `view INDEX` first and use the numbered `SUBJECT_INDEX` shown for that student.
+* **Need to clear academics**
+  Use `edit acad INDEX s/` to clear all subjects. Use `dsc/` with no value to clear the academic description.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -412,13 +454,25 @@ Details:
 * Parent name, phone, and email matching are case-insensitive and based on partial text.
 * Within a single field, multiple keywords behave as an `OR` search.
   Example: `n/Susan Meier` matches a parent name containing either `Susan` or `Meier`.
-* If you supply more than one field, the student must match **every supplied field**.
-  Example: `n/Susan p/9999` requires both a matching name keyword and a matching phone keyword.
+* If you supply more than one field, the student is returned if **any supplied field** matches.
+  Example: `n/Susan p/9999` matches if the parent name matches `Susan` or the phone matches `9999`.
 
 Examples:
 * `find parent n/Susan`
 * `find parent n/Susan p/9999`
 * `find parent e/example.com`
+
+<a id="parent-common-mistakes"></a>
+### Common mistakes and recovery
+
+* **`edit parent` fails when adding parent phone/email for the first time**
+  If the student has no parent record yet, include `n/PARENT_NAME` in the same command.
+* **Parent phone or email is rejected**
+  Phone must be digits only and at least 8 digits. Email must be in a valid email format.
+* **`find parent` results are unexpected**
+  Use one prefix once (`n/`, `p/`, or `e/`) and put multiple words inside that one prefix, for example `n/Susan Meier`.
+* **`find parent n/... p/...` seems too broad**
+  When multiple fields are provided, TutorFlow returns students matching any provided field.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -438,7 +492,7 @@ Format: `edit billing INDEX [a/AMOUNT] [d/DATE]`
 Details:
 * At least one of `a/` or `d/` must be provided.
 * `a/AMOUNT` must be a non-negative number.
-* `d/DATE` must be in ISO 8601 local date format: `YYYY-MM-DD`.
+* `d/DATE` must be in ISO 8601 date format: `YYYY-MM-DD`.
 * This command changes billing settings only. It does not add a payment record.
 
 Examples:
@@ -453,11 +507,12 @@ Records that a student paid on a specific date.
 Format: `add payment INDEX d/DATE`
 
 Details:
-* `d/DATE` must be in ISO 8601 local date format: `YYYY-MM-DD`.
+* `d/DATE` must be in ISO 8601 date format: `YYYY-MM-DD`.
 * The payment date cannot be later than today.
+* Each payment date can be recorded only once per student; adding the same date again is rejected as a duplicate.
 * Recording a payment advances the student's billing due date by one billing cycle only when the new payment date
   is later than the latest recorded payment date.
-* A billing cycle is one recurrence cycle (monthly by default). Each advancement brings the due date forward by one 
+* A billing cycle is one recurrence cycle (monthly by default). Each advancement brings the due date forward by one
   recurrence cycle.
 * If you add an older (backfilled) payment date, TutorFlow records it but keeps the due date unchanged.
 
@@ -471,11 +526,11 @@ Deletes a previously recorded payment date.
 Format: `delete payment INDEX d/DATE`
 
 Details:
-* `d/DATE` must be in ISO 8601 local date format: `YYYY-MM-DD`.
+* `d/DATE` must be in ISO 8601 date format: `YYYY-MM-DD`.
 * The date cannot be later than today.
 * The specified date must already exist in that student's payment history.
 * If you delete the most recent recorded payment date, TutorFlow rolls the due date back by one billing cycle.
-* A billing cycle is one recurrence cycle (monthly by default). Each advancement brings the due date forward by one 
+* A billing cycle is one recurrence cycle (monthly by default). Each advancement brings the due date forward by one
   recurrence cycle.
 * If you delete an older payment date, the due date stays unchanged.
 
@@ -498,6 +553,18 @@ Examples:
 * `find billing d/2026-03`
 * `find billing d/2025-12`
 
+<a id="billing-common-mistakes"></a>
+### Common mistakes and recovery
+
+* **Date input is rejected in billing or payment commands**
+  Use `YYYY-MM-DD` for `edit billing`, `add payment`, and `delete payment`.
+* **`find billing` date is rejected**
+  Use `d/YYYY-MM` (year and month only, no day).
+* **`add payment` does not always move due date forward**
+  The due date advances only when the new payment date is later than the latest recorded payment date.
+* **`delete payment` does not always roll due date back**
+  Only deleting the latest recorded payment date rolls due date back by one billing cycle.
+
 --------------------------------------------------------------------------------------------------------------------
 
 <a id="appointment-attendance-management"></a>
@@ -512,7 +579,7 @@ Adds an appointment to a student.
 Format: `add appt INDEX d/DATETIME [r/RECURRENCE] dsc/DESCRIPTION`
 
 Details:
-* `d/DATETIME` must be in ISO 8601 local date-time format: `YYYY-MM-DDTHH:MM:SS`.
+* `d/DATETIME` must be in ISO 8601 date-time format: `YYYY-MM-DDTHH:MM:SS`.
 * `r/RECURRENCE` is optional. Valid values are `NONE`, `WEEKLY`, `BIWEEKLY`, and `MONTHLY`.
 * If `r/` is omitted, TutorFlow uses `NONE`.
 * `dsc/` is required and should describe the session.
@@ -547,7 +614,7 @@ Details:
 * Edits the selected session for the student at `INDEX`.
 * `SESSION_INDEX` refers to the numbered session shown for that student in the app.
 * At least one of `d/`, `r/`, or `dsc/` must be provided.
-* `d/DATETIME` must be in ISO 8601 local date-time format (`YYYY-MM-DDTHH:MM:SS`).
+* `d/DATETIME` must be in ISO 8601 date-time format (`YYYY-MM-DDTHH:MM:SS`).
 * `r/RECURRENCE` supports `NONE`, `WEEKLY`, `BIWEEKLY`, and `MONTHLY`.
 * `dsc/DESCRIPTION` updates the session description.
 * Any field you omit remains unchanged.
@@ -563,8 +630,8 @@ Shows students whose next appointment falls within the Monday-to-Sunday week con
 Format: `find appt [d/DATE]`
 
 Details:
-* If `d/DATE` is omitted, TutorFlow uses the current local date.
-* `DATE` must be in ISO 8601 local date format: `YYYY-MM-DD`.
+* If `d/DATE` is omitted, TutorFlow uses the current date (SGT) and searches that date's Monday-to-Sunday week.
+* `DATE` must be in ISO 8601 date format: `YYYY-MM-DD`.
 
 Examples:
 * `find appt`
@@ -576,23 +643,24 @@ Examples:
 
 Records attendance for a specific session.
 
-Format: `add attd INDEX s/SESSION_INDEX [y|n] [d/DATE_OR_DATE_TIME]`
+Format: `add attd INDEX s/SESSION_INDEX [STATUS] [d/DATE_OR_DATE_TIME]`
 
 Details:
 * Records attendance for the student at `INDEX`.
 * `SESSION_INDEX` refers to the numbered session shown for that student in the app.
-* If `y` or `n` is omitted, `y` (attended) is assumed.
+* `STATUS` is optional and must be typed as a literal `y` (attended) or `n` (absent).
+* If `STATUS` is omitted, `y` (attended) is assumed.
 * `y` records that the student attended the selected session.
 * `n` records that the student was absent for the selected session.
 * If `d/DATE_OR_DATE_TIME` is omitted, the selected session's `next` date is used.
 * `d/DATE_OR_DATE_TIME` can be used with both `y` and `n`.
-* `d/DATE_OR_DATE_TIME` must be in ISO local date (`YYYY-MM-DD`) or date-time (`YYYY-MM-DDTHH:MM:SS`) format.
+* `d/DATE_OR_DATE_TIME` must be in ISO date (`YYYY-MM-DD`) or date-time (`YYYY-MM-DDTHH:MM:SS`) format.
 * Attendance cannot be recorded for a future date or time.
-* Recurring sessions allow only one attendance record per calendar date.
 * Recording attendance for a recurring session advances its next scheduled occurrence by one recurrence cycle only
   when the new attendance date-time is later than the latest recorded attendance.
 * If you add older (backfilled) attendance, TutorFlow records it but keeps the session's next occurrence unchanged.
 * Non-recurring sessions can only have attendance recorded once.
+* Recurring sessions allow only one attendance record per calendar date; additional records on the same date are rejected as duplicates.
 
 Examples:
 * `add attd 1 s/1` records attendance (present) for the 1st session of student 1.
@@ -610,7 +678,7 @@ Format: `delete attd INDEX s/SESSION_INDEX d/DATE_OR_DATE_TIME`
 Details:
 * Deletes attendance for the selected session of the student at `INDEX`.
 * `SESSION_INDEX` refers to the numbered session shown for that student in the app.
-* `d/` accepts either ISO local date (`YYYY-MM-DD`) or local date-time (`YYYY-MM-DDTHH:MM:SS`).
+* `d/` accepts either ISO date (`YYYY-MM-DD`) or date-time (`YYYY-MM-DDTHH:MM:SS`).
 * If deleting by date, records on that date are removed.
 * If deleting by date-time, only the exact record is removed.
 * If the deleted attendance is the latest attendance for the session, recurring sessions roll back by one cycle.
@@ -618,6 +686,22 @@ Details:
 Examples:
 * `delete attd 1 s/2 d/2026-01-29`
 * `delete attd 1 s/2 d/2026-01-29T08:00:00`
+
+<a id="appt-common-mistakes"></a>
+### Common mistakes and recovery
+
+* **`add appt` or `edit appt` rejects date-time input**
+  Use ISO date-time format: `YYYY-MM-DDTHH:MM:SS`.
+* **`add appt` or `edit appt` rejects recurrence value**
+  Use only `NONE`, `WEEKLY`, `BIWEEKLY`, or `MONTHLY`.
+* **Appointment or attendance command says session index is invalid**
+  Run `view INDEX` first and use the session index from that selected student's detail panel.
+* **`add attd` status is not accepted**
+  Type literal `y` for attended or `n` for absent.
+* **`add attd` fails for date/time reasons**
+  Use a past or current date/time, not a future one. Recurring sessions allow only one attendance record per date.
+* **`delete attd` does not remove what you expected**
+  Use `d/YYYY-MM-DD` to remove records on that date, or exact date-time to remove only one specific record.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -652,6 +736,16 @@ Format: `exit`
 
 The `up` and `down` arrow keys on your keyboard can be used to navigate through the past commands you have entered.
 
+<a id="general-common-mistakes"></a>
+### Common mistakes and recovery
+
+* **A new search starts returning too few students**
+  Run `list` first to reset to the full student list before your next `find`.
+* **Accidentally cleared data with `clear`**
+  `clear` is irreversible. If you need recovery, restore from a backup copy of `data/tutorflow.json`.
+* **Running `help` does not show a new window**
+  If Help is minimized, restore that existing Help window (TutorFlow does not open a second one).
+
 --------------------------------------------------------------------------------------------------------------------
 
 <a id="data-management"></a>
@@ -680,6 +774,21 @@ If you edit the data file into an invalid format, TutorFlow may fail to load the
 
 **Q:** How do I move my TutorFlow data to another computer?
 **A:** Install TutorFlow on the other computer, run it once, then replace the new `data/tutorflow.json` file with the one from your old TutorFlow folder.
+
+--------------------------------------------------------------------------------------------------------------------
+
+<a id="troubleshooting"></a>
+## Troubleshooting
+
+If a command fails, go to the matching section below for common fixes:
+
+* [Student Management common mistakes](#student-common-mistakes)
+* [Tag Management common mistakes](#tag-common-mistakes)
+* [Academic Management common mistakes](#academic-common-mistakes)
+* [Parent / Guardian Management common mistakes](#parent-common-mistakes)
+* [Billing & Payment Management common mistakes](#billing-common-mistakes)
+* [Appointment & Attendance Management common mistakes](#appt-common-mistakes)
+* [General Commands common mistakes](#general-common-mistakes)
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -747,7 +856,7 @@ Action | Format | Example
 **Delete appointment** | `delete appt INDEX s/SESSION_INDEX [s/SESSION_INDEX]...` | `delete appt 1 s/2 s/3`
 **Edit appointment** | `edit appt INDEX s/SESSION_INDEX [d/DATETIME] [r/RECURRENCE] [dsc/DESCRIPTION]` | `edit appt 1 s/2 r/MONTHLY dsc/Physics consultation`
 **Find weekly appointments** | `find appt [d/DATE]` | `find appt d/2026-02-13`
-**Add attendance** | `add attd INDEX s/SESSION_INDEX [y\|n] [d/DATE_OR_DATE_TIME]` | `add attd 1 s/2 y d/2026-01-29`
+**Add attendance** | `add attd INDEX s/SESSION_INDEX [STATUS] [d/DATE_OR_DATE_TIME]` | `add attd 1 s/2 y d/2026-01-29`
 **Delete attendance** | `delete attd INDEX s/SESSION_INDEX d/DATE_OR_DATE_TIME` | `delete attd 1 s/2 d/2026-01-29T08:00:00`
 
 ### General
@@ -767,12 +876,12 @@ Action | Format | Example
 Prefix | Stands for | Used in
 -------|------------|--------
 `n/` | Name / Name keywords | `add student`, `edit student`, `edit parent`, `find parent`
-`p/` | Phone | `add student`, `edit student`, `edit parent`, `find parent`
-`e/` | Email | `add student`, `edit student`, `edit parent`, `find parent`
+`p/` | Phone / Phone keywords | `add student`, `edit student`, `edit parent`, `find parent`
+`e/` | Email / Email keywords | `add student`, `edit student`, `edit parent`, `find parent`
 `a/` | Address / Amount | Address: `add student`, `edit student` · Amount: `edit billing`
 `t/` | Tag / Tag index | Tag value: `add student`, `add tag`, `edit tag` · Tag index: `delete tag` · Keyword: `find tag`
-`s/` | Subject / Subject index / Session index | Subject value: `add acad`, `edit acad` · Subject index: `delete acad` · Keyword: `find acad` · Session index: `add attd`, `delete appt`
+`s/` | Subject / Subject index / Session index | Subject value: `add acad`, `edit acad` · Subject index: `delete acad` · Keyword: `find acad` · Session index: `add attd`, `delete appt`, `edit appt`, `delete attd`
 `l/` | Level | `add acad`, `edit acad` — must immediately follow the `s/` it applies to; accepted values are `basic` and `strong`
-`d/` | Date / Date-time / Year-month | Date: `add payment`, `delete payment`, `find appt` · Date-time: `add appt` · Date or date-time: `add attd` · Year-month (`YYYY-MM`): `find billing`
-`r/` | Recurrence | `add appt` — accepted values are `NONE`, `WEEKLY`, `BIWEEKLY`, `MONTHLY`
-`dsc/` | Description | `add appt`, `edit acad`
+`d/` | Date / Date-time / Year-month | Date: `edit billing`, `add payment`, `delete payment`, `find appt` · Date-time: `add appt`, `edit appt` · Date or date-time: `add attd`, `delete attd` · Year-month (`YYYY-MM`): `find billing`
+`r/` | Recurrence | `add appt`, `edit appt` — accepted values are `NONE`, `WEEKLY`, `BIWEEKLY`, `MONTHLY`
+`dsc/` | Description | `add appt`, `edit appt`, `edit acad`
