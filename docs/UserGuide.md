@@ -13,8 +13,7 @@ TutorFlow keeps your student list, parent / guardian details, academics, tuition
 
 --------------------------------------------------------------------------------------------------------------------
 
-<a id="quick-start"></a>
-## Quick start
+## <span id="quick-start">Quick start</span>
 
 1. Ensure that Java `17` or above is installed on your computer.
    **Mac users:** follow the setup notes [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
@@ -41,8 +40,7 @@ TutorFlow keeps your student list, parent / guardian details, academics, tuition
 
 --------------------------------------------------------------------------------------------------------------------
 
-<a id="tutorflow-at-a-glance"></a>
-## TutorFlow at a glance
+## <span id="tutorflow-at-a-glance">TutorFlow at a glance</span>
 
 ![TutorFlow interface](images/Ui_v1.6_annotated.png)
 
@@ -60,8 +58,7 @@ For commands such as `delete tag`, `delete acad`, `delete appt`, and `add attd`,
 
 --------------------------------------------------------------------------------------------------------------------
 
-<a id="reading-command-formats"></a>
-## Guide conventions and behaviour
+## <span id="reading-command-formats">Guide conventions and behaviour</span>
 
 <box type="info" seamless header="**Command format notes**">
 <md>
@@ -120,8 +117,7 @@ For commands such as `delete tag`, `delete acad`, `delete appt`, and `add attd`,
 
 --------------------------------------------------------------------------------------------------------------------
 
-<a id="student-management"></a>
-## Student Management
+## <span id="student-management">Student Management</span>
 
 Use these commands to add, update, view, list, find, and remove student records.
 
@@ -214,8 +210,7 @@ Format: `find student KEYWORD [MORE_KEYWORDS]`
 
 ![Result for 'find student bernice david'](images/find_student_bernice_david.png)
 
-<a id="student-common-mistakes"></a>
-### Common mistakes and recovery
+### <span id="student-common-mistakes">Common mistakes and recovery</span>
 
 <panel type="seamless" header="Quick fixes" minimized>
 <ul>
@@ -228,8 +223,7 @@ Format: `find student KEYWORD [MORE_KEYWORDS]`
 
 --------------------------------------------------------------------------------------------------------------------
 
-<a id="tag-management"></a>
-## Tag Management
+## <span id="tag-management">Tag Management</span>
 ![Highlighted tags](images/highlighted-tags.png =518x)
 
 Use tags to group students by level, stream, exam target, or any other label that fits your teaching workflow.
@@ -301,8 +295,7 @@ Format: `find tag t/TAG [t/TAG]...`
 * `find tag t/JC`
 * `find tag t/Upper t/Programming`
 
-<a id="tag-common-mistakes"></a>
-### Common mistakes and recovery
+### <span id="tag-common-mistakes">Common mistakes and recovery</span>
 
 <panel type="seamless" header="Quick fixes" minimized>
 <ul>
@@ -314,8 +307,7 @@ Format: `find tag t/TAG [t/TAG]...`
 
 --------------------------------------------------------------------------------------------------------------------
 
-<a id="academic-management"></a>
-## Academic Management
+## <span id="academic-management">Academic Management</span>
 ![highlighted academics](images/highlight-acad.png =489x)
 
 Use academic records to keep track of the subjects a student takes and any overall academic notes.
@@ -392,8 +384,7 @@ Format: `find acad s/SUBJECT [s/SUBJECT]...`
 * `find acad s/Math`
 * `find acad s/Math s/Science`
 
-<a id="academic-common-mistakes"></a>
-### Common mistakes and recovery
+### <span id="academic-common-mistakes">Common mistakes and recovery</span>
 
 <panel type="seamless" header="Quick fixes" minimized>
 <ul>
@@ -406,8 +397,7 @@ Format: `find acad s/SUBJECT [s/SUBJECT]...`
 
 --------------------------------------------------------------------------------------------------------------------
 
-<a id="parent-guardian-management"></a>
-## Parent / Guardian Management
+## <span id="parent-guardian-management">Parent / Guardian Management</span>
 
 Use these commands to store and search for the parent or guardian details linked to each student.
 
@@ -449,8 +439,7 @@ Format: `find parent [n/NAME_KEYWORDS] [p/PHONE_KEYWORDS] [e/EMAIL_KEYWORDS]`
 * `find parent n/Susan p/9999`
 * `find parent e/example.com`
 
-<a id="parent-common-mistakes"></a>
-### Common mistakes and recovery
+### <span id="parent-common-mistakes">Common mistakes and recovery</span>
 
 <panel type="seamless" header="Quick fixes" minimized>
 <ul>
@@ -463,8 +452,7 @@ Format: `find parent [n/NAME_KEYWORDS] [p/PHONE_KEYWORDS] [e/EMAIL_KEYWORDS]`
 
 --------------------------------------------------------------------------------------------------------------------
 
-<a id="billing-payment-management"></a>
-## Billing & Payment Management
+## <span id="billing-payment-management">Billing & Payment Management</span>
 
 ![highlighted billing](images/highlight-billing.png =587x)
 
@@ -542,8 +530,7 @@ Format: `find billing d/YYYY-MM`
 * `find billing d/2026-03`
 * `find billing d/2025-12`
 
-<a id="billing-common-mistakes"></a>
-### Common mistakes and recovery
+### <span id="billing-common-mistakes">Common mistakes and recovery</span>
 
 <panel type="seamless" header="Quick fixes" minimized>
 <markdown>
@@ -556,8 +543,7 @@ Format: `find billing d/YYYY-MM`
 
 --------------------------------------------------------------------------------------------------------------------
 
-<a id="appointment-attendance-management"></a>
-## Appointment & Attendance Management
+## <span id="appointment-attendance-management">Appointment & Attendance Management</span>
 ![highlighted appointments](images/highlight-attd.png =569x)
 
 Use these commands to schedule lessons, see weekly appointments, and record whether a lesson happened.
@@ -678,8 +664,7 @@ Format: `delete attd INDEX s/SESSION_INDEX d/DATE_OR_DATE_TIME`
 * `delete attd 1 s/2 d/2026-01-29`
 * `delete attd 1 s/2 d/2026-01-29T08:00:00`
 
-<a id="appt-common-mistakes"></a>
-### Common mistakes and recovery
+### <span id="appt-common-mistakes">Common mistakes and recovery</span>
 
 <panel type="seamless" header="Quick fixes" minimized>
 <ul>
@@ -694,8 +679,7 @@ Format: `delete attd INDEX s/SESSION_INDEX d/DATE_OR_DATE_TIME`
 
 --------------------------------------------------------------------------------------------------------------------
 
-<a id="general-commands"></a>
-## General Commands
+## <span id="general-commands">General Commands</span>
 
 ### Viewing help : `help`
 
@@ -725,8 +709,7 @@ Format: `exit`
 
 The `up` and `down` arrow keys on your keyboard can be used to navigate through the past commands you have entered.
 
-<a id="general-common-mistakes"></a>
-### Common mistakes and recovery
+### <span id="general-common-mistakes">Common mistakes and recovery</span>
 
 <panel type="seamless" header="Quick fixes" minimized>
 <ul>
@@ -738,8 +721,7 @@ The `up` and `down` arrow keys on your keyboard can be used to navigate through 
 
 --------------------------------------------------------------------------------------------------------------------
 
-<a id="data-management"></a>
-## Data Management
+## <span id="data-management">Data Management</span>
 
 ### Saving the data
 
@@ -759,8 +741,7 @@ If you edit the data file into an invalid format, TutorFlow may fail to load the
 
 --------------------------------------------------------------------------------------------------------------------
 
-<a id="faq"></a>
-## FAQ
+## <span id="faq">FAQ</span>
 
 **Q:** How do I move my TutorFlow data to another computer?
 
@@ -768,8 +749,7 @@ If you edit the data file into an invalid format, TutorFlow may fail to load the
 
 --------------------------------------------------------------------------------------------------------------------
 
-<a id="troubleshooting"></a>
-## Troubleshooting
+## <span id="troubleshooting">Troubleshooting</span>
 
 If a command fails, go to the matching section below for common fixes:
 
@@ -783,8 +763,7 @@ If a command fails, go to the matching section below for common fixes:
 
 --------------------------------------------------------------------------------------------------------------------
 
-<a id="known-issues"></a>
-## Known issues
+## <span id="known-issues">Known issues</span>
 
 1. **Multiple screens:** if you move the app to a secondary display and later switch back to a single-display setup, the window may reopen off-screen. Delete the `preferences.json` file before launching TutorFlow again.
 2. **Help window:** if the Help window is minimized and you run `help` again, TutorFlow does not open a second Help window. Restore the minimized Help window manually.
@@ -793,8 +772,7 @@ If a command fails, go to the matching section below for common fixes:
 
 --------------------------------------------------------------------------------------------------------------------
 
-<a id="command-summary"></a>
-## Command summary
+## <span id="command-summary">Command summary</span>
 
 ### Student Management
 
@@ -863,8 +841,7 @@ Action | Format | Example
 
 --------------------------------------------------------------------------------------------------------------------
 
-<a id="prefix-reference"></a>
-## Prefix reference
+## <span id="prefix-reference">Prefix reference</span>
 
 Prefix | Stands for | Used in
 -------|------------|--------
