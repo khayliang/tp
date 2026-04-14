@@ -53,7 +53,7 @@ The ***Architecture Diagram*** above shows the high-level design of the app.
 
 The next diagram focuses on runtime collaboration between components for a typical mutating command.
 
-<img src="images/ArchitectureSequenceDiagram.png" width="620" />
+<puml src="diagrams/ArchitectureSequenceDiagram.puml" width="620" />
 
 Given below is a high-level overview of the main components and their responsibilities.
 
@@ -211,7 +211,7 @@ The `delete` family uses subcommand dispatch. A representative example is `delet
 
 The sequence diagram below shows the high-level execution flow.
 
-<img src="images/DeleteSequenceDiagram.png" width="720" />
+<puml src="diagrams/DeleteSequenceDiagram.puml" width="720" />
 
 How the `delete` command works:
 
@@ -834,3 +834,13 @@ Team size: 5
 
    The current parent / guardian update flow does not check whether a parent name matches any student (tutee) name in the address book, which can lead to avoidable data-entry confusion.
    We plan to add a warning check in parent-related commands so users are alerted when such a name match is detected; this warning will not block the update but will highlight the issue in the command result display.
+
+7. Improve duplicate detection for student identity
+
+   The current duplicate detection for students treats `Name` and `Email` as exact string matches, which allows near-duplicate entries that differ only by letter case.
+   We plan to normalize identity comparisons (for example, case-insensitive matching and whitespace normalization) and provide clearer feedback when a near-duplicate is detected.
+
+8. Relax appointment description uniqueness within a student
+
+   The current appointment model enforces unique session descriptions per student, which can block realistic schedules where recurring or separate sessions share the same description (for example, repeated "Math revision").
+   We plan to remove or refine this restriction so users can reuse practical descriptions while preserving stable appointment editing and deletion behavior.
