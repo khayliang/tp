@@ -126,12 +126,34 @@ mark {
 
 /* Hide site navigation when printing */
 @media print {
+  @page {
+    margin: 12mm;
+  }
+
+  header,
+  footer,
+  scroll-top-button {
+    display: none !important;
+  }
+
+  #flex-body {
+    display: block;
+  }
+
   #site-nav {
     display: none;
   }
 
   #page-nav {
     display: none;
+  }
+
+  #content-wrapper {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
   }
 
   /* Reduce font size when printing */
