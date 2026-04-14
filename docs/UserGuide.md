@@ -492,7 +492,9 @@ Format: `edit billing INDEX [a/AMOUNT] [d/DATE]`
 Details:
 * At least one of `a/` or `d/` must be provided.
 * `a/AMOUNT` must be a non-negative number.
-* `d/DATE` must be in ISO 8601 date format: `YYYY-MM-DD`.
+* Amounts are displayed to 2 decimal places in the UI. If you enter more decimal places,
+  the displayed value is rounded to 2 decimal places.
+* `d/DATE` must be in ISO 8601 local date format: `YYYY-MM-DD`.
 * This command changes billing settings only. It does not add a payment record.
 
 Examples:
