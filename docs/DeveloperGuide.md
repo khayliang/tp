@@ -735,19 +735,37 @@ Team size: 5
 
 1. Fix inconsistent parsing behavior in appointment and academic commands
 
-   The current parser for appointment and academic commands may incorrectly handle certain input sequences, leading to unexpected parsing results or ignored fields (e.g., description `dsc/` being misinterpreted or dropped).  
+   The current parser for appointment and academic commands may incorrectly handle certain input sequences, leading to unexpected parsing results or ignored fields (e.g., description `dsc/` being misinterpreted or dropped).
    We plan to refine the parser logic to enforce stricter prefix handling and ensure all valid fields are correctly captured and validated during parsing.
 
 2. Improve appointment model and date-time handling to enforce temporal consistency
 
-   The current appointment model and date-time handling do not strictly enforce logical constraints such as start time being before end time, may allow overlapping appointments, and have limited validation for edge cases (e.g., invalid formats or boundary values).  
+   The current appointment model and date-time handling do not strictly enforce logical constraints such as start time being before end time, may allow overlapping appointments, and have limited validation for edge cases (e.g., invalid formats or boundary values).
    We plan to standardize date-time parsing, enhance validation for invalid or ambiguous inputs, enforce temporal consistency (e.g., start < end), and introduce checks to prevent conflicting appointments, supported by improved test coverage.
 
-3. Extend academic model to better support subject-level details and tutor requirements 
+3. Extend academic model to better support subject-level details and tutor requirements
 
-   The current academic model has limited flexibility in representing subject-related information (e.g., levels, notes, or multiple attributes per subject), which may not fully meet tutor needs.  
+   The current academic model has limited flexibility in representing subject-related information (e.g., levels, notes, or multiple attributes per subject), which may not fully meet tutor needs.
    We plan to refine the model structure to better support richer subject metadata while maintaining compatibility with existing commands.
 
-4. Lack of detailed error feedback     
+4. Lack of detailed error feedback
 
-   Generic error messages: some command failures return general error messages without specifying the exact cause, making it harder for users to correct their input.
+   Several parser failures currently surface the same generic message in the command result display: `Invalid command format!` followed only by usage text.
+   For example:
+   * `add attd` uses the same generic message for different causes such as missing `s/SESSION_INDEX`, malformed preamble/session arguments, or conflicting attendance status placement.
+   * `delete attd` uses the same generic message for missing/blank `d/DATE_OR_DATE_TIME` and other argument-shape errors.
+   * `find billing` uses the same generic message for missing `d/` prefix, blank month values, and invalid month formats.
+   We plan to return cause-specific messages (e.g., missing required prefix vs invalid date/month format) so users can correct inputs faster.
+
+5. Use of `BigDecimal` for amount in `Billing` and `Payment` models for accuracy
+
+   The current billing flow stores monetary values as `double` (for example, tuition fee in `Billing`), while amount parsing accepts decimal text and then converts it to `double` for storage.
+   This can introduce binary floating-point precision artifacts (e.g. values like `0.1` not being represented exactly), which may lead to subtle inconsistencies in comparisons, equality checks, displayed currency values, and JSON round-tripping over repeated edits.
+   We plan to migrate amount storage and operations to `BigDecimal`, define a consistent scale and rounding policy for money values, and update parser/formatting and storage adapter logic accordingly.
+
+6. Add validation to prevent parent names from matching student names
+
+   The current parent/guardian update flow does not prevent a parent name from being identical to any student (tutee) name in the address book.
+   Although this is uncommon in normal usage, it can introduce avoidable data-entry errors and confusing records during search and review.
+   We plan to add a warning check in parent-related commands so parent names are compared against existing student names and users are alerted when a match is detected.
+   This warning will not block the update, but will highlight the potential data-entry issue in the command result display.
