@@ -308,7 +308,6 @@ Format: `find tag t/TAG [t/TAG]...`
   <li><strong><code>add tag</code>, <code>delete tag</code>, or <code>find tag</code> fails even though the command looks close:</strong> Check that each tag input uses <code>t/</code>.</li>
   <li><strong><code>delete tag</code> removes the wrong tag or says index is invalid:</strong> Use <code>view INDEX</code> first and take <code>TAG_INDEX</code> from that selected student's tag list.</li>
   <li><strong><code>edit tag</code> with <code>t/</code> behaves differently from expected:</strong> Use <code>edit tag INDEX t/</code> to clear all tags. Do not mix an empty <code>t/</code> with normal tag values.</li>
-  <li><strong>Tag appears with different capitalization:</strong> TutorFlow normalizes tags to title case (for example, <code>jc</code> becomes <code>Jc</code>).</li>
 </ul>
 </panel>
 

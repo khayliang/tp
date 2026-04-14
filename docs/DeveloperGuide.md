@@ -53,7 +53,7 @@ The ***Architecture Diagram*** above shows the high-level design of the app.
 
 The next diagram focuses on runtime collaboration between components for a typical mutating command.
 
-<img src="images/ArchitectureSequenceDiagram.png" width="620" />
+<puml src="diagrams/ArchitectureSequenceDiagram.puml" width="620" />
 
 Given below is a high-level overview of the main components and their responsibilities.
 
@@ -211,7 +211,7 @@ The `delete` family uses subcommand dispatch. A representative example is `delet
 
 The sequence diagram below shows the high-level execution flow.
 
-<img src="images/DeleteSequenceDiagram.png" width="720" />
+<puml src="diagrams/DeleteSequenceDiagram.puml" width="720" />
 
 How the `delete` command works:
 
@@ -807,16 +807,40 @@ Team size: 5
 
 1. Make `dsc/` handling stricter in appointment commands
 
-   In some `add appt` and `edit appt` inputs, malformed prefix sequences can cause the description field to be ignored or parsed unexpectedly. We plan to tighten parser validation so that invalid prefix order or malformed trailing text is rejected with a clear error instead of being silently misinterpreted.
+   The current `add appt` and `edit appt` parsing flow may mishandle malformed prefix sequences, which can cause `dsc/` content to be ignored or interpreted unexpectedly.
+   We plan to tighten parser validation so invalid prefix order and malformed trailing text are rejected with clear, cause-specific errors instead of being silently misinterpreted.
 
 2. Make `dsc/` handling stricter in academic commands
 
-   In some `edit acad` inputs, malformed subject-level sequences can interfere with how `dsc/` is interpreted. We plan to validate the boundary between repeated `s/` `l/` pairs and the single `dsc/` field more strictly so that invalid combinations fail clearly and valid descriptions are always preserved.
+   The current `edit acad` parser may allow malformed subject-level sequences to interfere with how the `dsc/` field is interpreted.
+   We plan to validate the boundary between repeated `s/` `l/` pairs and the single `dsc/` field more strictly so invalid combinations fail clearly while valid descriptions are always preserved.
 
 3. Reject overlapping appointments for the same student
 
-   TutorFlow currently allows a student to have appointments whose time slots can overlap, which can produce unrealistic schedules. We plan to detect overlaps when adding or editing an appointment and reject the command with an error that identifies the conflicting existing session.
+   TutorFlow currently allows a student to have appointments with overlapping time slots, which can produce unrealistic schedules.
+   We plan to detect overlaps during `add appt` and `edit appt`, and reject conflicting updates with an error that identifies the existing overlapping session.
 
 4. Make invalid-index error messages more specific
 
-   Some commands currently report index-related failures in a generic way, which makes recovery slower for users. We plan to update these messages so they state whether the student index or sub-item index was invalid and remind the user whether the value should come from the current list or the selected student's detail panel.
+   Some commands currently report index-related failures in a generic way, which slows user recovery.
+   We plan to update these messages so they specify whether the invalid value is a student index or a sub-item index, and remind users whether the value should come from the student list or the selected student's detail panel.
+
+5. Use `BigDecimal` for amounts in `Billing` and `Payment` models for accuracy
+
+   The current billing flow stores monetary values as `double` (for example, tuition fee in `Billing`), which can introduce binary floating-point precision artifacts such as `0.1` not being represented exactly.
+   We plan to migrate amount storage and operations to `BigDecimal`, define a consistent scale and rounding policy for money values, and update parser, formatting, and storage adapter logic accordingly.
+
+6. Add warnings when parent / guardian names match student names
+
+   The current parent / guardian update flow does not check whether a parent name matches any student (tutee) name in the address book, which can lead to avoidable data-entry confusion.
+   We plan to add a warning check in parent-related commands so users are alerted when such a name match is detected; this warning will not block the update but will highlight the issue in the command result display.
+
+7. Improve duplicate detection for student identity
+
+   The current duplicate detection for students treats `Name` and `Email` as exact string matches, which allows near-duplicate entries that differ only by letter case.
+   We plan to normalize identity comparisons (for example, case-insensitive matching and whitespace normalization) and provide clearer feedback when a near-duplicate is detected.
+
+8. Relax appointment description uniqueness within a student
+
+   The current appointment model enforces unique session descriptions per student, which can block realistic schedules where recurring or separate sessions share the same description (for example, repeated "Math revision").
+   We plan to remove or refine this restriction so users can reuse practical descriptions while preserving stable appointment editing and deletion behavior.
