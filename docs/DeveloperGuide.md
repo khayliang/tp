@@ -30,17 +30,36 @@ The `.puml` files used to create diagrams are in this document `docs/diagrams` f
 </md>
 </box>
 
+### Diagram conventions used in this guide
+
+The diagrams in this guide follow UML notation used in the course:
+
+* solid line with hollow triangle: inheritance
+* solid line with simple arrow: navigable association (one-way dependency)
+* dashed line with hollow triangle: interface realization
+* dashed line with simple arrow: usage dependency
+
+To keep diagrams readable:
+
+* architecture diagrams show components and dependencies only (not parser-level classes)
+* class diagrams show only classes relevant to the discussion
+* sequence diagrams are used for command flows where ordering of interactions matters
+
 ### Architecture
 
 <puml src="diagrams/ArchitectureDiagram.puml" width="280" />
 
-The ***Architecture Diagram*** given above explains the high-level design of the App.
+The ***Architecture Diagram*** above shows the high-level design of the app.
 
-Given below is a quick overview of main components and how they interact with each other.
+The next diagram focuses on runtime collaboration between components for a typical mutating command.
+
+<img src="images/ArchitectureSequenceDiagram.png" width="620" />
+
+Given below is a high-level overview of the main components and their responsibilities.
 
 **Main components of the architecture**
 
-**`Main`** (consisting of classes [`Main`](https://github.com/AY2526S2-CS2103T-T09-3/tp/tree/master/src/main/java/seedu/address/Main.java) and [`MainApp`](https://github.com/AY2526S2-CS2103T-T09-3/tp/tree/master/src/main/java/seedu/address/MainApp.java)) is in charge of the app launch and shut down.
+**`Main`** (consisting of classes [`Main`](https://github.com/AY2526S2-CS2103T-T09-3/tp/tree/master/src/main/java/seedu/address/Main.java) and [`MainApp`](https://github.com/AY2526S2-CS2103T-T09-3/tp/tree/master/src/main/java/seedu/address/MainApp.java)) is in charge of app startup and shutdown.
 * At app launch, it initializes the other components in the correct sequence, and connects them up with each other.
 * At shut down, it shuts down the other components and invokes cleanup methods where necessary.
 
@@ -53,7 +72,7 @@ The bulk of the app's work is done by the following four components:
 
 [**`Commons`**](#common-classes) represents a collection of classes used by multiple other components.
 
-**How the architecture components interact with each other**
+**How the architecture components interact**
 
 For a typical mutating command such as `delete student 1`, the components interact in this order:
 
@@ -64,10 +83,10 @@ For a typical mutating command such as `delete student 1`, the components intera
 
 Each of the four main components (also shown in the diagram above),
 
-* defines its *API* in an `interface` with the same name as the Component.
-* implements its functionality using a concrete manager class that follows the corresponding component `interface`.
+* defines its API in an `interface` with the same name as the component.
+* implements its functionality using a concrete manager class that follows that `interface`.
 
-For example, the `Logic` component defines its API in the `Logic.java` interface and implements its functionality using the `LogicManager.java` class which follows the `Logic` interface. Other components interact with a given component through its interface rather than the concrete class (reason: to prevent outside component's being coupled to the implementation of a component), as illustrated in the (partial) class diagram below.
+For example, the `Logic` component defines its API in `Logic.java` and implements it in `LogicManager.java`. Other components interact with `Logic` through that interface to reduce coupling.
 
 <puml src="diagrams/ComponentManagers.puml" width="300" />
 
@@ -100,15 +119,13 @@ Here's a (partial) class diagram of the `Logic` component:
 
 The `Logic` component receives raw command text such as `delete student 1`, parses it into a concrete `Command` object, executes that command, and returns a `CommandResult`.
 
-How the `Logic` component works:
+How the `Logic` component works at a high level:
 
-1. When `Logic` is called upon to execute a command, it forwards the raw input to `AddressBookParser`.
-1. `AddressBookParser` identifies the top-level command word and delegates to the matching parser family such as `AddCommandParser`, `EditCommandParser`, `DeleteCommandParser`, or `FindCommandParser`.
-1. For command families that support subcommands, the family parser uses `SubcommandDispatcherParser` to route the remaining input to the correct concrete parser such as `DeletePersonCommandParser` or `FindTagCommandParser`.
-1. Parsing produces a concrete `Command` object which is then executed by `LogicManager`.
-1. The command can communicate with the `Model` when it is executed (e.g. to delete a person).<br>
-   Note that although this is shown as a single step in the diagram above (for simplicity), in the code it can take several interactions (between the command object and the `Model`) to achieve.
-1. The result of the command execution is encapsulated as a `CommandResult` object which is returned back from `Logic`.
+1. `LogicManager` forwards the raw user input to the parser layer.
+1. The parser layer identifies the command family and subcommand, then builds a concrete `Command` object.
+1. `LogicManager` executes that `Command` against the `Model`.
+1. If the command mutates persistent data, `LogicManager` triggers a save through `Storage`.
+1. `Logic` returns a `CommandResult` to the `UI`.
 
 Here are the other classes in `Logic` (omitted from the class diagram above) that are used for parsing a user command:
 
@@ -116,8 +133,9 @@ Here are the other classes in `Logic` (omitted from the class diagram above) tha
 
 How the parsing works:
 * `AddressBookParser` first dispatches on the top-level command word.
-* Family parsers for `add`, `edit`, `delete`, and `find` then dispatch on the first subcommand token using `SubcommandDispatcherParser`.
+* Family parsers for `add`, `edit`, `delete`, and `find` then dispatch on the first subcommand token.
 * All concrete parser classes implement the `Parser<T>` interface so they can be used consistently in production code and tests.
+* Detailed parser flow for specific features is documented in the [Implementation](#implementation) section.
 
 ### Model component
 **API** : [`Model.java`](https://github.com/AY2526S2-CS2103T-T09-3/tp/tree/master/src/main/java/seedu/address/model/Model.java)
@@ -173,6 +191,11 @@ This section describes some noteworthy details on how certain features are imple
 
 The `edit` family uses subcommand dispatch. A representative example is `edit student 1 p/98765432`.
 
+The flow is shown in these UML sequence diagrams:
+
+<img src="images/EditCommandParsingSequenceDiagram.png" width="720" />
+<img src="images/EditCommandExecutionSequenceDiagram.png" width="720" />
+
 How the `edit` command works:
 
 1. `AddressBookParser` recognizes `edit` as the command word and forwards the remaining input to `EditCommandParser`.
@@ -182,10 +205,37 @@ How the `edit` command works:
 1. The command updates the `Model`, which replaces the target `Person` in the student registry. If a filter is active, the edited person is temporarily preserved in the displayed list.
 1. `LogicManager` detects that persisted student data changed and persists the updated state through `Storage`.
 
+### Delete command
+
+The `delete` family uses subcommand dispatch. A representative example is `delete student 1`.
+
+The sequence diagram below shows the high-level execution flow.
+
+<img src="images/DeleteSequenceDiagram.png" width="720" />
+
+How the `delete` command works:
+
+1. `AddressBookParser` recognizes `delete` as the command word and forwards the remaining input to `DeleteCommandParser`.
+1. `DeleteCommandParser` dispatches by subcommand name and currently supports `student`, `tag`, `acad`, `parent`, `billing`, `appt`, and `attd`.
+1. The concrete parser parses the target index and command-specific arguments, then constructs the corresponding `Delete...Command`.
+1. During execution, the command resolves the target student from the currently displayed list and checks any command-specific constraints.
+1. The command updates the `Model`, which removes the target data from the student registry.
+1. `LogicManager` detects that persisted student data changed and persists the updated state through `Storage`.
+
 
 ### Find command
 
 The `find` family uses subcommand dispatch similar to `edit`. A representative example is `find tag t/JC`.
+
+The command and parser hierarchies are shown below.
+
+<img src="images/FindCommandHierachyClassDiagram.png" width="700" />
+<img src="images/FindCommandParserHierachyClassDiagram.png" width="700" />
+
+For `find tag`, the parsing and execution interactions are shown in these UML sequence diagrams.
+
+<img src="images/FindTagCommandParsingSequenceDiagram.png" width="720" />
+<img src="images/FindTagCommandExecutionSequenceDiagram.png" width="720" />
 
 How the `find` command works:
 
@@ -195,9 +245,36 @@ How the `find` command works:
 1. During execution, the command applies the predicate to the `Model` using `updateFilteredPersonListWithAnd(...)`, which narrows the currently displayed list further instead of resetting it to the full student list.
 1. `LogicManager` checks whether the underlying persisted student data has changed. Since `find` only modifies transient model state (the filtered list), no persisted changes are detected, and the storage step is therefore skipped.
 
+### Find tag command
+
+The `find tag` flow is a good example of a command family that uses both parser and execution diagrams.
+
+The command hierarchy and flow are shown below.
+
+<img src="images/FindCommandHierachyClassDiagram.png" width="700" />
+<img src="images/FindCommandParserHierachyClassDiagram.png" width="700" />
+
+The sequence diagrams below show parsing and execution for `find tag`.
+
+<img src="images/FindTagCommandParsingSequenceDiagram.png" width="720" />
+<img src="images/FindTagCommandExecutionSequenceDiagram.png" width="720" />
+
+How the `find tag` command works:
+
+1. `AddressBookParser` recognizes `find` as the command word and forwards the remaining input to `FindCommandParser`.
+1. `FindCommandParser` dispatches the `tag` subcommand to `FindTagCommandParser`.
+1. The parser validates the tag argument and constructs a `FindTagCommand` with the matching predicate.
+1. During execution, the command applies that predicate to the `Model` using `updateFilteredPersonListWithAnd(...)`.
+1. The command returns a `CommandResult` summarizing the filtered result.
+1. Because only the filtered list changes, `LogicManager` does not persist any data.
+
 ### Find appointments command
 
 The example command for this flow is `find appt d/2026-02-13`.
+
+The flow is shown in the UML sequence diagram below.
+
+<img src="images/FindApptSequenceDiagram.png" width="720" />
 
 How the `find appt` command works:
 
@@ -212,6 +289,10 @@ How the `find appt` command works:
 ### Subject-related commands
 
 The subject-related feature is centered on `edit acad`, which updates a student's `Academics` object.
+
+The command relationships for the subject feature are shown in the UML class diagram below.
+
+<img src="images/SubjectCommandClassDiagram.png" width="700" />
 
 How the subject-related feature works:
 
@@ -242,6 +323,21 @@ How the payment and billing feature works:
 1. `FindBillingCommandParser` parses `find billing d/YYYY-MM` and creates a `PaymentDueMonthPredicate`.
 1. `FindBillingCommand` applies that predicate to the displayed list so only students with matching billing due months remain visible.
 1. `Billing` stores the recurrence schedule, current due date, tuition fee, and `PaymentHistory`, while `PaymentHistory` stores the set of recorded paid dates.
+
+### Appointment and attendance commands
+
+The appointment and attendance feature covers:
+`add appt`, `edit appt`, `delete appt`, `add attd`, and `delete attd`.
+
+How the appointment and attendance feature works:
+
+1. Appointment commands (`add appt`, `edit appt`, `delete appt`) update a student's scheduled sessions.
+1. Attendance commands (`add attd`, `delete attd`) target one appointment session and then update its `AttendanceHistory`.
+1. For recurring sessions, attendance updates can affect the computed next session date when the latest record changes.
+1. Commands validate date/date-time formats and prevent invalid state transitions (for example, duplicate attendance records for the same recurring session date).
+1. All successful updates replace the target `Person` in the model and persist through `Storage`.
+
+`find appt` sequence behavior is already shown in the [Find appointments command](#find-appointments-command) section above.
 
 ### Future work
 
@@ -279,16 +375,16 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 | Priority | As a …​ | I want to …​ | So that I can…​ |
 | -------- | ------- | ------------ | ---------------- |
-| `* * *` | tutor | add a new student contact to TutorFlow | track which tutees I currently teach |
-| `* * *` | new user | delete a student record | remove records that I no longer need |
-| `* * *` | tutor | add appointment details to a student | track lesson schedules with students |
-| `* * *` | freelance tutor | view what appointments I have for the week | plan my tutoring schedule appropriately |
-| `* * *` | tutor | track whether a client has paid tuition fees for the month | keep track of outstanding payments |
-| `* *` | tutor | view the payment dates | know when my clients have paid for lessons |
-| `* *` | tutor | add and view student attendance | evaluate lesson attendance and consistency |
-| `* *` | tutor | store the name of the tutee alongside the parent’s name | easily identify the student and their guardian |
-| `*` | tutor | filter students by tags or subject keywords | quickly narrow the displayed student list |
-| `*` | tutor with multiple students | tag students based on subject or level | organize students for possible group tuition |                                 |
+| `* * *` | tutor | add a new student record | keep track of all students I teach |
+| `* * *` | tutor | edit student contact and profile details | keep each student's information up to date |
+| `* * *` | tutor | delete a student record | remove students I no longer teach |
+| `* * *` | tutor | schedule, edit, and remove appointments | maintain an accurate lesson schedule |
+| `* * *` | tutor | find appointments for a target week | plan my teaching week quickly |
+| `* * *` | tutor | record tuition payments and due dates | track outstanding payments |
+| `* *` | tutor | record attendance for a lesson | monitor student consistency |
+| `* *` | tutor | search by tag, subject, or parent details | narrow the list to relevant students |
+| `* *` | tutor | update parent or guardian information | contact the correct adult quickly |
+| `*` | tutor with many students | tag students by subject or level | organize students for lesson planning |
 
 ### Use cases
 
@@ -297,17 +393,17 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 ---
 
-**Use case: View all students**
+**Use case: List all students**
 
 **MSS**
 1. Tutor requests to view all students.
-2. TutorFlow shows all the students available in the system.
+2. TutorFlow displays all students.
 
 Use case ends.
 
 **Extensions**
-* 2a. There are no students available in the system
-    * 2a1. TutorFlow informs the tutor that there are no students recorded.
+* 2a. There are no student records.
+   * 2a1. TutorFlow displays an empty list.
 
 Use case ends.
 
@@ -316,62 +412,61 @@ Use case ends.
 
 **MSS**
 1. Tutor requests to view appointments for a given week.
-2. TutorFlow retrieves the appointments for the target week.
-3. TutorFlow displays the list of appointments and their details.
+2. TutorFlow filters students with appointments in that week.
+3. TutorFlow displays matching students.
 
 Use case ends.
 
 **Extensions**
-* 1a. Tutor provides an invalid request.
-    * 1a1. TutorFlow indicates that the request is invalid and asks for a valid date.
-    * 1a2. Steps 1 to 1a2 are repeated until a valid request is provided.
-* Use case resumes at step 2.
+* 1a. Tutor provides an invalid date format.
+   * 1a1. TutorFlow displays an error message with the expected format.
+   * 1a2. Tutor enters a corrected command.
+   * Use case resumes at step 1.
 
 * 3a. No appointments exist for the target week.
-   * 3a1. TutorFlow indicates that there are no appointments.
-* Use case ends.
+   * 3a1. TutorFlow displays zero matches.
 
 ---
-**Use case: Add appointment details for a student**
+**Use case: Add an appointment for a student**
 
 **MSS**
 1. Tutor requests to view all students.
 2. Tutor identifies the target student by index.
 3. Tutor enters appointment details for the student.
-4. TutorFlow records the appointment details and displays confirmation.
+4. TutorFlow validates and records the appointment.
+5. TutorFlow displays confirmation.
 
 Use case ends.
 
 **Extensions**
 
 * 3a. The tutor enters invalid appointment details.
-    * 3a1. TutorFlow shows an error message.
-    * 3a2. Tutor re-enters the appointment details.
-    * Steps 3a1 to 3a2 are repeated until the tutor enters valid appointment details.
-* Use case resumes at step 4.
+   * 3a1. TutorFlow displays an error message.
+   * 3a2. Tutor enters corrected details.
+   * Use case resumes at step 3.
 
 ---
-**Use case: Record student attendance**
+**Use case: Record attendance for an appointment**
 
 **MSS**
 1. Tutor requests to view all students.
 2. TutorFlow shows all students.
 3. Tutor selects a student.
-4. Tutor records that the student has attended today’s lesson.
+4. Tutor specifies an appointment and records attendance.
 5. TutorFlow updates the student’s attendance and displays confirmation.
 
 Use case ends.
 
 **Extensions**
 
-* 3a. Tutor records that the student has attended a previous lesson.
-* Use case resumes at step 5.
+* 4a. Tutor enters an invalid attendance date/date-time.
+   * 4a1. TutorFlow displays an error message.
+   * 4a2. Tutor enters corrected data.
+   * Use case resumes at step 4.
 
-* 4a. TutorFlow detects an error in the entered data.
-   * 4a1. TutorFlow requests the correct data.
-   * 4a2. Tutor enters new data.
-* Steps 4a1 to 4a2 are repeated until the data entered is correct.
-* Use case resumes at step 5.
+* 4b. Attendance for that target is already recorded.
+   * 4b1. TutorFlow rejects the duplicate attendance update.
+   * Use case ends.
 
 ---
 **Use case: Record tuition payment for a student**
@@ -381,7 +476,7 @@ Use case ends.
 1. Tutor requests to list students.
 2. TutorFlow shows the list of students.
 3. Tutor selects a student.
-4. Tutor records that the student has paid tuition for the month.
+4. Tutor records a payment date for the student.
 5. TutorFlow updates the student’s payment status and displays confirmation.
 
 Use case ends.
@@ -389,16 +484,17 @@ Use case ends.
 **Extensions**
 
 * 2a. The student list is empty.
-
-   * 2a1. TutorFlow informs the tutor that there are no students recorded.
-* Use case ends.
+   * 2a1. TutorFlow displays an empty list.
+   * Use case ends.
 
 * 4a. The tutor enters invalid payment information.
+   * 4a1. TutorFlow displays an error message.
+   * 4a2. Tutor enters corrected payment information.
+   * Use case resumes at step 4.
 
-   * 4a1. TutorFlow shows an error message.
-   * 4a2. Tutor re-enters the payment information.
-   * Steps 4a1 to 4a2 are repeated until the tutor enters valid payment details.
-* Use case resumes at step 5.
+* 4b. The payment date already exists in the student's payment history.
+   * 4b1. TutorFlow rejects the duplicate payment date.
+   * Use case ends.
 
 ---
 
@@ -418,39 +514,112 @@ Use case ends.
 **Extensions**
 
 * 4a. The tutor enters invalid parent details.
-    * 4a1. TutorFlow shows an error message.
-    * 4a2. Tutor re-enters the parent details.
-    * Steps 4a1 to 4a2 are repeated until the tutor enters valid details.
-* Use case resumes at step 5.
+   * 4a1. TutorFlow shows an error message.
+   * 4a2. Tutor re-enters the parent details.
+   * Use case resumes at step 4.
+
+---
+
+**Use case: Edit billing details for a student**
+
+**MSS**
+1. Tutor requests to list students.
+2. TutorFlow shows the list of students.
+3. Tutor identifies the target student by index.
+4. Tutor enters updated billing details.
+5. TutorFlow validates and updates the billing data.
+6. TutorFlow displays confirmation.
+
+Use case ends.
+
+**Extensions**
+
+* 3a. The target index is invalid.
+   * 3a1. TutorFlow displays an error message.
+   * 3a2. Tutor enters a valid index.
+   * Use case resumes at step 3.
+
+* 4a. The tutor provides invalid billing amount or due date.
+   * 4a1. TutorFlow displays an error message.
+   * 4a2. Tutor enters corrected billing details.
+   * Use case resumes at step 4.
+
+---
+
+**Use case: Find students by billing due month**
+
+**MSS**
+1. Tutor requests to find students by billing month.
+2. TutorFlow validates the target month.
+3. TutorFlow filters students whose billing due date falls in that month.
+4. TutorFlow displays the filtered list.
+
+Use case ends.
+
+**Extensions**
+
+* 1a. The tutor provides an invalid month format.
+   * 1a1. TutorFlow displays an error message with the expected format.
+   * 1a2. Tutor enters a corrected command.
+   * Use case resumes at step 1.
+
+* 4a. No students match the target month.
+   * 4a1. TutorFlow displays zero matches.
+
+---
+
+**Use case: Delete attendance for an appointment**
+
+**MSS**
+1. Tutor requests to view all students.
+2. TutorFlow shows all students.
+3. Tutor identifies the target student and appointment.
+4. Tutor specifies the attendance record to remove.
+5. TutorFlow validates and removes the attendance record.
+6. TutorFlow displays confirmation.
+
+Use case ends.
+
+**Extensions**
+
+* 4a. The tutor provides an invalid attendance date/date-time.
+   * 4a1. TutorFlow displays an error message.
+   * 4a2. Tutor enters corrected data.
+   * Use case resumes at step 4.
+
+* 5a. No attendance record exists for the specified target.
+   * 5a1. TutorFlow displays an error message.
+   * Use case ends.
 
 ### Non-Functional Requirements
 
-1.  Application should work on any _mainstream OS_ as long as it has Java `17` or above installed.
-2.  Should be able to hold up to 1000 student records without a noticeable sluggishness in performance for typical usage.
-3.  A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
-4.  Application should respond within one second.
-5.  Core features should remain usable without requiring internet access.
-6.  Not required to handle communication between Tutors and Students.
-7.  Not required to process real monetary transactions between Tutors and Students (e.g., payment gateway integration); only payment tracking records are in scope.
+1.  The application should work on any _mainstream OS_ with Java `17` or above.
+2.  With up to 1000 student records, typical commands should complete within 1 second on a laptop with at least 8 GB RAM.
+3.  On first use, a tutor should be able to perform add, find, edit, and delete operations after at most 15 minutes of reading the User Guide.
+4.  The application should not require an internet connection for core features (student, appointment, attendance, and billing management).
+5.  Data should be persisted automatically after each successful mutating command so progress is not lost on normal app shutdown.
+6.  The application should provide clear and actionable validation messages for invalid command formats.
+7.  Not required to handle communication between Tutors and Students.
+8.  Not required to process real monetary transactions between Tutors and Students (e.g., payment gateway integration); only payment tracking records are in scope.
 
 ### Glossary
 
-* **Mainstream OS**: Windows, Linux, Unix, MacOS
-* **Tutor**: A freelance private tutor who uses TutorFlow to manage students, schedules, and billing
-* **Student**: A person who is being taught by the tutor
-* **Tuition Fee**: Amount of money that is owed or paid by a student to the tutor for the lessons
-* **Appointment**: A scheduled tutoring session between a tutor and student, including date, time and subject
-* **Attendance**: A record of whether a student attended a scheduled lesson
-* **Tag**: A label attached to a student's contact details for grouping or filtering
-* **Subject**: An academic subject stored in a student's academics profile
-* **Level**: An optional level associated with a subject
-* **Parent / Guardian**: Optional adult contact details linked to a student
+* **Mainstream OS**: Windows, macOS, and Linux.
+* **Tutor**: A freelance private tutor who uses TutorFlow to manage students, schedules, and billing.
+* **Student**: A person taught by the tutor.
+* **Appointment**: A scheduled lesson entry associated with a student.
+* **Attendance**: A recorded present/absent outcome for a specific appointment date or date-time.
+* **Tuition fee**: The amount charged for lessons according to a student's billing setup.
+* **Billing due date**: The next date on which payment is expected.
+* **Payment history**: The set of dates on which payments have been recorded.
+* **Subject**: An academic subject in a student's academics profile.
+* **Level**: An optional academic level associated with a subject.
+* **Parent / Guardian**: Optional adult contact details linked to a student.
 * **CLI (Command Line Interface)**: A text-based interface where the user interacts with the application by typing commands
 * **GUI (Graphical User Interface)**: A visual interface that allows interaction through graphical elements such as windows and buttons
 * **API (Application Programming Interface)**: A defined set of methods and contracts through which software components communicate with each other
 * **JSON**: JavaScript Object Notation, a data format used to persist data to disk
 * **ObservableList**: A list data structure that notifies listeners (e.g. the UI) automatically when its contents change
-
 --------------------------------------------------------------------------------------------------------------------
 
 ## **Appendix: Instructions for manual testing**
