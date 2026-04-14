@@ -210,7 +210,7 @@ Format: `find student KEYWORD [MORE_KEYWORDS]`
 
 ![Result for 'find student bernice david'](images/find_student_bernice_david.png)
 
-### <span id="student-common-mistakes">Common mistakes and recovery</span>
+<h3 id="student-common-mistakes">Common mistakes and recovery</h3>
 
 <panel type="seamless" header="Quick fixes" minimized>
 <ul>
@@ -295,7 +295,7 @@ Format: `find tag t/TAG [t/TAG]...`
 * `find tag t/JC`
 * `find tag t/Upper t/Programming`
 
-### <span id="tag-common-mistakes">Common mistakes and recovery</span>
+<h3 id="tag-common-mistakes">Common mistakes and recovery</h3>
 
 <panel type="seamless" header="Quick fixes" minimized>
 <ul>
@@ -384,7 +384,7 @@ Format: `find acad s/SUBJECT [s/SUBJECT]...`
 * `find acad s/Math`
 * `find acad s/Math s/Science`
 
-### <span id="academic-common-mistakes">Common mistakes and recovery</span>
+<h3 id="academic-common-mistakes">Common mistakes and recovery</h3>
 
 <panel type="seamless" header="Quick fixes" minimized>
 <ul>
@@ -439,7 +439,7 @@ Format: `find parent [n/NAME_KEYWORDS] [p/PHONE_KEYWORDS] [e/EMAIL_KEYWORDS]`
 * `find parent n/Susan p/9999`
 * `find parent e/example.com`
 
-### <span id="parent-common-mistakes">Common mistakes and recovery</span>
+<h3 id="parent-common-mistakes">Common mistakes and recovery</h3>
 
 <panel type="seamless" header="Quick fixes" minimized>
 <ul>
@@ -530,7 +530,7 @@ Format: `find billing d/YYYY-MM`
 * `find billing d/2026-03`
 * `find billing d/2025-12`
 
-### <span id="billing-common-mistakes">Common mistakes and recovery</span>
+<h3 id="billing-common-mistakes">Common mistakes and recovery</h3>
 
 <panel type="seamless" header="Quick fixes" minimized>
 <markdown>
@@ -664,7 +664,7 @@ Format: `delete attd INDEX s/SESSION_INDEX d/DATE_OR_DATE_TIME`
 * `delete attd 1 s/2 d/2026-01-29`
 * `delete attd 1 s/2 d/2026-01-29T08:00:00`
 
-### <span id="appt-common-mistakes">Common mistakes and recovery</span>
+<h3 id="appt-common-mistakes">Common mistakes and recovery</h3>
 
 <panel type="seamless" header="Quick fixes" minimized>
 <ul>
@@ -709,7 +709,7 @@ Format: `exit`
 
 The `up` and `down` arrow keys on your keyboard can be used to navigate through the past commands you have entered.
 
-### <span id="general-common-mistakes">Common mistakes and recovery</span>
+<h3 id="general-common-mistakes">Common mistakes and recovery</h3>
 
 <panel type="seamless" header="Quick fixes" minimized>
 <ul>
