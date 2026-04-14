@@ -45,7 +45,16 @@ public class EditBillingCommandParserTest {
     public void parse_invalidValue_failure() {
         assertParseFailure(parser, "1" + INVALID_AMOUNT_DESC, ParserUtil.MESSAGE_INVALID_AMOUNT);
         assertParseFailure(parser, "1 a/notANumber", ParserUtil.MESSAGE_INVALID_AMOUNT);
+        assertParseFailure(parser, "1 a/9999999999999999", ParserUtil.MESSAGE_INVALID_AMOUNT_PRECISION);
         assertParseFailure(parser, "1 d/invalidDate", ParserUtil.MESSAGE_INVALID_DATE);
+    }
+
+    @Test
+    public void parse_amountMoreThanTwoDecimalPlaces_success() {
+        Index targetIndex = INDEX_FIRST_PERSON;
+        String userInput = targetIndex.getOneBased() + " a/0.19999999";
+        EditBillingCommand expectedCommand = new EditBillingCommand(targetIndex, 0.19999999);
+        assertParseSuccess(parser, userInput, expectedCommand);
     }
 
     @Test

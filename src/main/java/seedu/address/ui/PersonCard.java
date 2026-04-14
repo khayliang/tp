@@ -14,6 +14,7 @@ import seedu.address.commons.util.AppClock;
 import seedu.address.model.academic.Subject;
 import seedu.address.model.attendance.Attendance;
 import seedu.address.model.person.Person;
+import seedu.address.model.recurrence.Recurrence;
 import seedu.address.model.session.ScheduledSession;
 import seedu.address.model.tag.Tag;
 
@@ -157,7 +158,11 @@ public class PersonCard extends UiPart<Region> {
     }
 
     private String formatNextSessionSummary(Person person) {
-        return person.getNextAppointment()
+        return person.getAppointment().getSessions().stream()
+            .filter(session -> session.getRecurrence() != Recurrence.NONE
+                || session.getAttendanceHistory().isEmpty())
+            .filter(session -> !session.getNext().isBefore(AppClock.now()))
+            .min((first, second) -> first.getNext().compareTo(second.getNext()))
                 .map(this::formatNextSessionSummary)
                 .orElse("Next: No upcoming sessions");
     }

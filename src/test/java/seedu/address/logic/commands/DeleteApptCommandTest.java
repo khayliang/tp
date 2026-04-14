@@ -11,6 +11,7 @@ import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 import static seedu.address.testutil.TypicalPersons.getPersonBuilder;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -66,6 +67,25 @@ public class DeleteApptCommandTest {
         DeleteApptCommand deleteCommand = new DeleteApptCommand(INDEX_FIRST_PERSON, Index.fromOneBased(3));
 
         assertCommandFailure(deleteCommand, model, DeleteApptCommand.MESSAGE_INVALID_APPOINTMENT_INDEX);
+    }
+
+    @Test
+    public void execute_duplicateAppointmentIndices_success() {
+        Person personToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        DeleteApptCommand deleteCommand = new DeleteApptCommand(INDEX_FIRST_PERSON,
+                List.of(INDEX_FIRST_PERSON, INDEX_FIRST_PERSON));
+
+        Person editedPerson = new PersonBuilder(personToEdit)
+                .withAppointment(new Appointment(personToEdit.getAppointment().getSessions().subList(1, 2)))
+                .build();
+        String expectedMessage = String.format(DeleteApptCommand.MESSAGE_DELETE_APPT_SUCCESS,
+                Messages.format(editedPerson), "2026-01-10T10:00:00");
+
+        Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
+        expectedModel.setPerson(personToEdit, editedPerson);
+
+        CommandResult expectedCommandResult = new CommandResult(expectedMessage, editedPerson);
+        assertCommandSuccess(deleteCommand, model, expectedCommandResult, expectedModel);
     }
 
     @Test

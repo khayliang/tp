@@ -23,6 +23,7 @@ import seedu.address.commons.util.AppClock;
 import seedu.address.model.academic.Subject;
 import seedu.address.model.attendance.Attendance;
 import seedu.address.model.person.Person;
+import seedu.address.model.recurrence.Recurrence;
 import seedu.address.model.session.ScheduledSession;
 import seedu.address.model.tag.Tag;
 
@@ -295,6 +296,12 @@ public class PersonDetailPanel extends UiPart<Region> {
     }
 
     private String formatAppointmentMeta(ScheduledSession session) {
+        if (session.getRecurrence() == Recurrence.NONE && !session.getAttendanceHistory().isEmpty()) {
+            LocalDateTime completedAt = session.getAttendanceHistory().getLastRecord()
+                    .map(Attendance::getRecordedAt)
+                    .orElse(session.getNext());
+            return "Completed: " + formatAttendanceDate(completedAt);
+        }
         return "Next: " + formatDateTime(session.getNext());
     }
 
@@ -324,10 +331,12 @@ public class PersonDetailPanel extends UiPart<Region> {
 
     private String formatNextSessionSummary(Person person) {
         return person.getAppointment().getSessions().stream()
-                .map(ScheduledSession::getNext)
-                .filter(next -> next != null)
-                .min(Comparator.naturalOrder())
-                .map(this::formatDateTime)
+            .filter(session -> session.getRecurrence() != Recurrence.NONE
+                || session.getAttendanceHistory().isEmpty())
+            .filter(session -> !session.getNext().isBefore(AppClock.now()))
+            .map(ScheduledSession::getNext)
+            .min(Comparator.naturalOrder())
+            .map(this::formatDateTime)
                 .orElse("No upcoming sessions");
     }
 

@@ -74,6 +74,7 @@ public class DeleteApptCommand extends DeleteCommand {
 
     private String formatSessions(List<ScheduledSession> sessions) {
         List<String> formattedSessions = sessionIndices.stream()
+            .distinct()
             .map(index -> sessions.get(index.getZeroBased()).getStart()
                 .format(DateTimeUtil.ISO_LOCAL_DATE_TIME_FORMATTER))
                 .toList();

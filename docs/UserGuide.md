@@ -243,8 +243,8 @@ Format: `add tag INDEX t/TAG [t/TAG]...`
 #### Details
 * Adds the given tag or tags to the student at `INDEX`.
 * At least one `t/` prefix is required.
-* Existing tags are kept; tags already present are ignored.
-* Duplicate tag names within the same command are also ignored.
+* Existing tags are kept; tags already present are ignored (case-insensitive).
+* Duplicate tag names within the same command are also ignored (case-insensitive).
 
 #### Examples
 * `add tag 1 t/JC`
@@ -273,7 +273,7 @@ Format: `delete tag INDEX t/TAG_INDEX [t/TAG_INDEX]...`
 
 #### Details
 * Each `TAG_INDEX` is taken from the numbered tag list in that student's detail panel.
-* Tag names are stored and displayed in **title case** (e.g. `jc` -> `Jc`) and listed in **case-insensitive alphabetical order**.
+* Tag names keep the user's input casing and are listed in **case-insensitive alphabetical order**.
 * At least one `t/` prefix is required.
 
 #### Examples
@@ -332,8 +332,9 @@ Format: `add acad INDEX s/SUBJECT [l/LEVEL] [s/SUBJECT [l/LEVEL]]...`
 * `l/LEVEL` is optional and applies to the subject immediately before it.
 * Accepted levels are `basic` and `strong` (case-insensitive).
 * Existing subjects not named in the command are kept unchanged.
-* If the student already has a subject with the same name, that subject is replaced by the new entry.
-* Duplicate subject names within the same command are invalid.
+* If the student already has a subject with the same name (case-insensitive), that subject is replaced by the new entry.
+* If the replacement is identical to the existing entry, there is no visible change.
+* Duplicate subject names within the same command are invalid (case-insensitive).
 
 #### Examples
 * `add acad 1 s/Math l/Strong`
@@ -351,7 +352,7 @@ Format: `edit acad INDEX [s/SUBJECT [l/LEVEL]]... [dsc/DESCRIPTION]`
 * Use `s/` with no value to clear all subjects.
 * Use `dsc/` with no value to clear the academic description.
 * Only one `dsc/` field is allowed per command.
-* Duplicate subject names within the same command are invalid.
+* Duplicate subject names within the same command are invalid (case-insensitive).
 
 #### Examples
 * `edit acad 1 s/Math l/Strong s/Science`
@@ -367,7 +368,7 @@ Format: `delete acad INDEX s/SUBJECT_INDEX [s/SUBJECT_INDEX]...`
 
 #### Details
 * Each `SUBJECT_INDEX` is taken from the numbered subject list in that student's detail panel.
-* Subject names are stored and displayed in **title case** (e.g. `math` -> `Math`) and listed in **case-insensitive alphabetical order**.
+* Subject names keep the user's input casing and are listed in **case-insensitive alphabetical order**.
 * At least one `s/` prefix is required.
 
 #### Examples
@@ -479,7 +480,9 @@ Format: `edit billing INDEX [a/AMOUNT] [d/DATE]`
 #### Details
 * At least one of `a/` or `d/` must be provided.
 * `a/AMOUNT` must be a non-negative number.
-* `d/DATE` must be in ISO 8601 date format: `YYYY-MM-DD`.
+* Amounts are displayed to 2 decimal places in the UI. If you enter more decimal places,
+  the displayed value is rounded to 2 decimal places.
+* `d/DATE` must be in ISO 8601 local date format: `YYYY-MM-DD`.
 * This command changes billing settings only. It does not add a payment record.
 
 #### Examples

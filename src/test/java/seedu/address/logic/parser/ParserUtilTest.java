@@ -232,6 +232,22 @@ public class ParserUtilTest {
     }
 
     @Test
+    public void parseAmount_precisionLossValue_throwsParseException() {
+        assertThrows(ParseException.class, ParserUtil.MESSAGE_INVALID_AMOUNT_PRECISION, () ->
+            ParserUtil.parseAmount("9999999999999999"));
+    }
+
+    @Test
+    public void parseAmount_moreThanTwoDecimalPlaces_returnsAmount() throws Exception {
+        assertEquals(Double.parseDouble("0.19999999"), ParserUtil.parseAmount("0.19999999"));
+    }
+
+    @Test
+    public void parseAmount_trailingZeroDecimals_returnsAmount() throws Exception {
+        assertEquals(0.2, ParserUtil.parseAmount("0.2000"));
+    }
+
+    @Test
     public void parseAmount_infiniteValue_throwsParseException() {
         assertThrows(ParseException.class, () -> ParserUtil.parseAmount("-Infinity"));
         assertThrows(ParseException.class, () -> ParserUtil.parseAmount("Infinity"));
@@ -246,6 +262,11 @@ public class ParserUtilTest {
     public void parseAmount_validValueWithWhitespace_returnsAmount() throws Exception {
         String valueWithWhitespace = WHITESPACE + VALID_AMOUNT + WHITESPACE;
         assertEquals(Double.parseDouble(VALID_AMOUNT), ParserUtil.parseAmount(valueWithWhitespace));
+    }
+
+    @Test
+    public void parseAmount_zeroValue_returnsAmount() throws Exception {
+        assertEquals(0.0, ParserUtil.parseAmount("0"));
     }
 
     @Test

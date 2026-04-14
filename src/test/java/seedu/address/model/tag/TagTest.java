@@ -22,19 +22,19 @@ public class TagTest {
     @Test
     public void constructor_validTagNameWithSpaces_success() {
         Tag tag = new Tag("close friend");
-        assertEquals("Close Friend", tag.tagName);
+        assertEquals("close friend", tag.tagName);
     }
 
     @Test
     public void constructor_trimsWhitespace_success() {
         Tag tag = new Tag("   best buddy   ");
-        assertEquals("Best Buddy", tag.tagName);
+        assertEquals("best buddy", tag.tagName);
     }
 
     @Test
-    public void constructor_normalizesCase_success() {
+    public void constructor_preservesCase_success() {
         Tag tag = new Tag("mIxEd CaSe");
-        assertEquals("Mixed Case", tag.tagName);
+        assertEquals("mIxEd CaSe", tag.tagName);
     }
 
     @Test

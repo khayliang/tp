@@ -317,6 +317,15 @@
     -fx-padding: 8 1 8 1;
 }
 
+/* Keep scrollbar corner regions consistent with dark theme on small windows. */
+.list-view .corner,
+.scroll-pane .corner,
+.text-area .corner,
+#resultDisplay .corner,
+.detail-panel .corner {
+    -fx-background-color: derive(#1d1d1d, 20%);
+}
+
 #cardPane {
     -fx-background-color: #343a41;
     -fx-background-radius: 8;

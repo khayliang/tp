@@ -7,6 +7,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_SUBJECT;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.academic.Level;
@@ -17,6 +18,8 @@ import seedu.address.model.academic.Subject;
  * Utility class for parsing subject and level sequences in academics commands.
  */
 public class AcademicsParserUtil {
+
+    private static final Pattern UNKNOWN_PREFIX_TOKEN = Pattern.compile("\\b[\\p{Alnum}]+/");
 
     /**
      * Parses a string containing subject and level prefixes into a list of subjects.
@@ -57,6 +60,11 @@ public class AcademicsParserUtil {
                 int next = findNextPrefix(input, start);
 
                 String name = input.substring(start, next).trim();
+
+                if (containsUnknownPrefixToken(name)) {
+                    throw new ParseException(
+                            String.format(MESSAGE_INVALID_COMMAND_FORMAT, commandUsage));
+                }
 
                 if (name.isEmpty()) {
                     if (allowClear) {
@@ -123,5 +131,19 @@ public class AcademicsParserUtil {
         }
 
         return Math.min(nextSubject, nextLevel);
+    }
+
+    private static boolean containsUnknownPrefixToken(String value) {
+        if (value.isEmpty()) {
+            return false;
+        }
+
+        String normalized = value.trim().toLowerCase();
+        if (normalized.startsWith(PREFIX_SUBJECT.getPrefix())
+                || normalized.startsWith(PREFIX_LEVEL.getPrefix())) {
+            return false;
+        }
+
+        return UNKNOWN_PREFIX_TOKEN.matcher(normalized).find();
     }
 }
